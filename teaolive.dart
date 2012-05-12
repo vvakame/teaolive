@@ -1,53 +1,108 @@
+/*
+ * Copyright 2012 vvakame <vvakame@gmail.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 #library('teaolive');
 
-void describe(String name, Function test){
+/**
+ * "describe".
+ * If you want to start writing BDD test, start with this function.
+ */
+void describe(String description, Function test){
   if(_runner == null){
     _runner = new TeaoliveRunner();
   }
-  _runner.addSuite(new TeaoliveSuite(name, test));
+  _runner.addSuite(new TeaoliveSuite(description, test));
 }
 
-void it(String name, Function test){
+/**
+ * "it".
+ * If you want to describe the behavior, start with this function.
+ * usually, this method is under "describe" function.
+ */
+void it(String description, Function test){
   if(_runner == null){
     _runner = new TeaoliveRunner();
   }
   if(_currentSuite == null){
-    _runner.addSpec(new TeaoliveSpec(name, test));
+    _runner.addSpec(new TeaoliveSpec(description, test));
   } else {
-    _currentSuite.addSpec(new TeaoliveSpec(name, test));
+    _currentSuite.addSpec(new TeaoliveSpec(description, test));
   }
 }
 
-Expection expect(Object obj){
+/**
+ * Be the first to call for inspection of the expected value.
+ * The rest is just going to write that may the intellisense be with you.
+ */
+/* I was not like current implementation. I'm really want to like this.
+<T> Expection<T> expect(T obj){
+  return new Exception.expect(obj);
+}
+ * because type checking is perform.
+ * expect("hoge").toBe(1) // error at compile-time. like hamcrest library (Java).
+ */
+Expection expect(var obj){
   return new Expection.expect(obj);
 }
+
+/**
+ * start testing.
+ * "describe" and "it" functions were already call?
+ */
+void teaoliveRun() {
+  _runner.run();
+}
+
+/**
+ * set TeaoliveReporter.
+ * the default is to use the TeaoliveTextReporter class.
+ * It's use a "print" function.
+ */
+void setTeaoliveReporter(TeaoliveReporter reporter) {
+  _reporter = reporter;
+}
+
+/**
+ * this class takes the test results and convert it to a human-readable format.
+ * and more. if reporter output the TAP( http://en.wikipedia.org/wiki/Test_Anything_Protocol ) format. Dart can be a CI friendly.
+ */
+interface TeaoliveReporter default TeaoliveTextReporter {
+
+  TeaoliveReporter();
+
+  /** this method called when start test running. */
+  void onRunnerStart();
+  
+  /** this method called when finish test running. */
+  void onRunnerResult(TeaoliveRunner runner);
+  
+  /** this method called when finish one of "describe". */
+  void onSuiteResult(TeaoliveSuite suite);
+
+  /** this method called when finish one of "it". */
+  void onSpecResult(TeaoliveSpec spec);
+}
+
+// implementation from here.
 
 TeaoliveReporter _reporter;
 TeaoliveRunner _runner;
 TeaoliveSuite _currentSuite;
 
-void teaoliveRun() {
-  _runner.run();
-}
-
-void setTeaoliveReporter(TeaoliveReporter reporter) {
-  _reporter = reporter;
-}
-
-interface TeaoliveReporter default TeaoliceTextReporter {
-
-  TeaoliveReporter();
-  
-  void onRunnerStart();
-  
-  void onRunnerResult(TeaoliveRunner runner);
-  
-  void onSuiteResult(TeaoliveSuite suite);
-
-  void onSpecResult(TeaoliveSpec spec);
-}
-
-class TeaoliceTextReporter implements TeaoliveReporter {
+class TeaoliveTextReporter implements TeaoliveReporter {
   
   TeaoliveReporter(){}
   
@@ -86,7 +141,7 @@ class TeaoliceTextReporter implements TeaoliveReporter {
 class TeaoliveRunner {
   List<TeaoliveSuite> suites;
   
-  TeaoliveSuite topLevelSuite;
+  TeaoliveSuite _topLevelSuite;
   
   TeaoliveRunner(): suites = new List<TeaoliveSuite>();
   
@@ -111,10 +166,10 @@ class TeaoliveRunner {
   }
   
   void addSpec(TeaoliveSpec spec){
-    if(topLevelSuite == null){
-      topLevelSuite = new TeaoliveSuite("top level", (){});
+    if(_topLevelSuite == null){
+      _topLevelSuite = new TeaoliveSuite("top level", (){});
     }
-    topLevelSuite.addSpec(spec);
+    _topLevelSuite.addSpec(spec);
   }
 }
 
@@ -191,12 +246,12 @@ class AssersionException implements Exception {
   AssersionException.msg(this.msg) : super() ;
 }
 
-class Expection {
+class Expection<T> {
   
-  Object expect;
+  T expect;
   List<Function> opList;
   
-  Expection.expect(this.expect): opList = new List<Function>();
+  Expection.expect(T this.expect): opList = new List<Function>();
 
   Expection._expectWithOp(Expection expection, Function op): this.expect(expection.expect){
     opList.addAll(expection.opList);
@@ -207,7 +262,7 @@ class Expection {
     return new Expection._expectWithOp(this, (bool result)=> !result);
   }
   
-  void toBe(var obj){
+  void toBe(T obj){
     bool result = _toBe(obj);
     
     for(Function f in opList){
@@ -219,7 +274,7 @@ class Expection {
     }
   }
   
-  bool _toBe(var obj){
+  bool _toBe(T obj){
     return expect !== obj;
   }
 }

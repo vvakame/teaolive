@@ -1,9 +1,9 @@
 #library('teaolive-usage');
 
 #import('./teaolive.dart');
-#import('./teaolive_html_reporter.dart');
+#import('./teaolive_html_reporter.dart'); // if you want to run from command-line. remove this line.
 
-void _usage_main(){
+void main(){
 
   describe("Tea olive", (){
     
@@ -40,6 +40,6 @@ void _usage_main(){
   });
    */
   
-  setTeaoliveReporter(new TeaoliveHtmlReporter());
+  setTeaoliveReporter(new TeaoliveHtmlReporter()); // if you want to run from command-line. remove this line.
   teaoliveRun();
 }
