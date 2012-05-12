@@ -1,0 +1,17 @@
+@charset "utf-8";
+
+.teaolieve-describe {
+    margin-bottom: 1em;
+}
+
+.teaolieve-it {
+    margin-left: 3em;
+}
+
+.teaolive-success {
+    background-color: #adff2f;
+}
+
+.teaolive-failure {
+    background-color: #ffc0cb;
+}
