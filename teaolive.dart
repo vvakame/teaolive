@@ -62,6 +62,10 @@ interface Expection<T> {
   Expection<T> get not();
   
   void toBe(T obj);
+
+  void toEqual(T obj);
+
+  void toBeNull();
 }
 
 /**
@@ -269,18 +273,24 @@ class _ExpectionImpl<T> implements Expection<T> {
   }
   
   void toBe(T obj){
-    bool result = _toBe(obj);
-    
+    _check(expect === obj, obj);
+  }
+
+  void toBeNull(){
+    _check(expect == null);
+  }
+
+  void toEqual(T obj){
+    _check(expect == obj, obj);
+  }
+
+  void _check(bool result, [T obj = null]){
     for(Function f in opList){
       result = f(result);
     }
     
-    if(result){
+    if(result == false){
       throw new AssersionException.msg("expected ${expect}, but got ${obj}.");
     }
-  }
-  
-  bool _toBe(T obj){
-    return expect !== obj;
   }
 }

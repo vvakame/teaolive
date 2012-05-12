@@ -15,14 +15,38 @@ void main(){
       expect(1).toBe(2);
     });
   
-    it("not op", (){
-      expect(1).not.toBe(2);
-      expect(1).not.not.toBe(1);
-  
-      expect(1).not.toBe(1);
-      expect(1).not.not.toBe(2);
+    it("toBe is valid.", (){
+      expect(1).toBe(1);
+      expect("hoge").toBe("hoge");
+
+      var a = new Sample();
+      var b = new Sample();
+      
+      expect(a).toBe(a);
+      expect(a).not.toBe(b);
     });
     
+    it("not is valid.", (){
+      expect(1).not.toBe(2);
+      expect(1).not.not.toBe(1);
+    });
+    
+    it("toBeNull is valid.", (){
+      expect(null).toBeNull();
+      expect("hoge").not.toBeNull();
+    });
+
+    it("toEqual is valid.", (){
+      expect(1).toEqual(1);
+      expect("hoge").toEqual("hoge");
+
+      var a = new Sample();
+      var b = new Sample();
+      
+      expect(a).toEqual(a);
+      expect(a).toEqual(b);
+    });
+
     describe("child", (){
   
       it("not op", (){
@@ -42,4 +66,10 @@ void main(){
   
   setTeaoliveReporter(new TeaoliveHtmlReporter()); // if you want to run from command-line. remove this line.
   teaoliveRun();
+}
+
+class Sample {
+  operator ==(Sample other) {
+    return true;
+  }
 }
