@@ -12,7 +12,7 @@ void main(){
     });
   
     it("failure...", (){
-      expect(1).toBe(2); // this test is fail.
+      expect(1).not.toBe(1); // this test is fail.
     });
   
     it("toBe is valid.", (){

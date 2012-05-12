@@ -256,41 +256,52 @@ class AssersionException implements Exception {
   AssersionException.msg(this.msg) : super() ;
 }
 
+typedef bool _op(StringBuffer buffer, bool result);
+
 class _ExpectionImpl<T> implements Expection<T> {
   
   T expect;
-  List<Function> opList;
+  List<_op> opList;
   
-  _ExpectionImpl.expect(T this.expect): opList = new List<Function>();
+  _ExpectionImpl.expect(T this.expect): opList = new List<_op>();
 
-  _ExpectionImpl._expectWithOp(_ExpectionImpl expection, Function op): this.expect(expection.expect){
+  _ExpectionImpl._expectWithOp(_ExpectionImpl expection, _op op): this.expect(expection.expect){
     opList.addAll(expection.opList);
     opList.add(op);
   }
 
-  _ExpectionImpl get not(){
-    return new _ExpectionImpl._expectWithOp(this, (bool result)=> !result);
+  Function _createOp(){
   }
   
-  void toBe(T obj){
-    _check(expect === obj, obj);
+  _ExpectionImpl get not(){
+
+    _op op = (buffer, result){
+      buffer.add("not ");
+      return !result;
+    };
+    return new _ExpectionImpl._expectWithOp(this, op);
+  }
+  
+  void toBe(T actual){
+    _check(expect === actual, actual);
   }
 
   void toBeNull(){
     _check(expect == null);
   }
 
-  void toEqual(T obj){
-    _check(expect == obj, obj);
+  void toEqual(T actual){
+    _check(expect == actual, actual);
   }
 
-  void _check(bool result, [T obj = null]){
-    for(Function f in opList){
-      result = f(result);
+  void _check(bool result, [T actual = null]){
+    StringBuffer buffer = new StringBuffer();
+    for(_op op in opList){
+      result = op(buffer, result);
     }
-    
+
     if(result == false){
-      throw new AssersionException.msg("expected ${expect}, but got ${obj}.");
+      throw new AssersionException.msg("expected is ${buffer.toString()}<${expect}>, but got <${actual}>.");
     }
   }
 }
