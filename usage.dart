@@ -12,7 +12,7 @@ void main(){
     });
   
     it("failure...", (){
-      expect(1).toBe(2);
+      expect(1).toBe(2); // this test is fail.
     });
   
     it("toBe is valid.", (){
@@ -22,8 +22,8 @@ void main(){
       var a = new Sample();
       var b = new Sample();
       
-      expect(a).toBe(a);
-      expect(a).not.toBe(b);
+      expect(a).toBe(a);     // a === a is true
+      expect(a).not.toBe(b); // a === b is false
     });
     
     it("not is valid.", (){
@@ -43,8 +43,8 @@ void main(){
       var a = new Sample();
       var b = new Sample();
       
-      expect(a).toEqual(a);
-      expect(a).toEqual(b);
+      expect(a).toEqual(a); // a == a is true
+      expect(a).toEqual(b); // a == b is true (overwrite operator ==)
     });
 
     describe("child", (){
