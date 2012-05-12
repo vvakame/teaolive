@@ -236,7 +236,7 @@ class TeaoliveSpec {
     start = true;
     try{
       test();
-    } catch(AssersionException e) {
+    } catch(AssertionException e) {
       errorMessage = e.msg;
       error = e;
       return;
@@ -250,10 +250,10 @@ class TeaoliveSpec {
   }
 }
 
-class AssersionException implements Exception {
+class AssertionException implements Exception {
   String msg;
   
-  AssersionException.msg(this.msg) : super() ;
+  AssertionException.msg(this.msg) : super() ;
 }
 
 typedef bool _op(StringBuffer buffer, bool result);
@@ -301,7 +301,7 @@ class _ExpectionImpl<T> implements Expection<T> {
     }
 
     if(result == false){
-      throw new AssersionException.msg("expected is ${buffer.toString()}<${expect}>, but got <${actual}>.");
+      throw new AssertionException.msg("expected is ${buffer.toString()}<${expect}>, but got <${actual}>.");
     }
   }
 }
