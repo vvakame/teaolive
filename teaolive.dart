@@ -55,7 +55,13 @@ void it(String description, Function test){
  * expect("hoge").toBe(1) // error at compile-time. like hamcrest library (Java).
  */
 Expection expect(var obj){
-  return new Expection.expect(obj);
+  return new _ExpectionImpl.expect(obj);
+}
+
+interface Expection<T> {
+  Expection<T> get not();
+  
+  void toBe(T obj);
 }
 
 /**
@@ -246,20 +252,20 @@ class AssersionException implements Exception {
   AssersionException.msg(this.msg) : super() ;
 }
 
-class Expection<T> {
+class _ExpectionImpl<T> implements Expection<T> {
   
   T expect;
   List<Function> opList;
   
-  Expection.expect(T this.expect): opList = new List<Function>();
+  _ExpectionImpl.expect(T this.expect): opList = new List<Function>();
 
-  Expection._expectWithOp(Expection expection, Function op): this.expect(expection.expect){
+  _ExpectionImpl._expectWithOp(_ExpectionImpl expection, Function op): this.expect(expection.expect){
     opList.addAll(expection.opList);
     opList.add(op);
   }
 
-  Expection get not(){
-    return new Expection._expectWithOp(this, (bool result)=> !result);
+  _ExpectionImpl get not(){
+    return new _ExpectionImpl._expectWithOp(this, (bool result)=> !result);
   }
   
   void toBe(T obj){
