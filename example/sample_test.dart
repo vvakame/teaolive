@@ -55,6 +55,19 @@ void testCase(){
     });
   });
   
+  describe("ignore tests.", (){
+    
+    xdescribe("ignore this description", (){
+      it("unknown failing test.", (){
+        throw "I don't know why raise a error!?";
+      });
+    });
+    
+    xit("unknown failing test.", (){
+      throw "I don't know why raise a error!?";
+    });
+  });
+  
   // TODO top-level it
   /*
   it("top-level it", (){

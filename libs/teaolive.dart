@@ -28,6 +28,12 @@ void describe(String description, Function test){
 }
 
 /**
+ * If you do not want to use to "description" temporarily, you can use this function.
+ */
+void xdescribe(String description, Function test){
+}
+
+/**
  * "it".
  * If you want to describe the behavior, start with this function.
  * usually, this method is under "describe" function.
@@ -41,6 +47,12 @@ void it(String description, Function test){
   } else {
     _currentSuite.addSpec(new TeaoliveSpec(description, test));
   }
+}
+
+/**
+ * If you do not want to use to "it" temporarily, you can use this function.
+ */
+void xit(String description, Function test){
 }
 
 /**
