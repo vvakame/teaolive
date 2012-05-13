@@ -1,10 +1,9 @@
-#library('teaolive-usage');
+#library('sample_test');
 
-#import('./teaolive.dart');
-#import('./teaolive_html_reporter.dart'); // if you want to run from command-line. remove this line.
+#import('../libs/teaolive.dart');
 
-void main(){
-
+void testCase(){
+  
   describe("Tea olive", (){
     
     it("makes testing Dart is awesome!", (){
@@ -64,8 +63,6 @@ void main(){
   });
    */
   
-  setTeaoliveReporter(new TeaoliveHtmlReporter()); // if you want to run from command-line. remove this line.
-  teaoliveRun();
 }
 
 class Sample {

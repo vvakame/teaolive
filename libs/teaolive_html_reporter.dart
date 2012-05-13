@@ -6,13 +6,18 @@
 
 class TeaoliveHtmlReporter implements TeaoliveReporter {
   
-  Element result;
+  
+  Element _parent;
   
   TeaoliveReporter(){}
+
+  TeaoliveHtmlReporter.withParent(this._parent);
   
   void onRunnerStart(){
-    result = document.query("#result");
-    result.innerHTML = "test is started...";
+    if(_parent == null){
+      _parent = document.query("#teaolive-result");
+    }
+    _parent.innerHTML = "test is started...";
   }
   
   void onSuiteResult(TeaoliveSuite suite){}
@@ -20,10 +25,10 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
   void onSpecResult(TeaoliveSpec spec){}
 
   void onRunnerResult(TeaoliveRunner runner){
-    result.nodes.clear();
+    _parent.nodes.clear();
     
     for(TeaoliveSuite suite in runner.suites){
-      addSuite2dom(result, suite);
+      addSuite2dom(_parent, suite);
     }
   }
   
@@ -40,7 +45,7 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
       el.classes.add("teaolive-failure");
       el.innerHTML = "describe ${suite.description} is failure...";
       
-      result.nodes.add(el);
+      _parent.nodes.add(el);
 
       for(TeaoliveSpec spec in suite.specs){
         addSpec2dom(el, spec);

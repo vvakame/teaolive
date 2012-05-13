@@ -68,6 +68,10 @@ interface Expection<T> {
   void toBeNull();
 }
 
+void addTest(void testCase()){
+  testCase();
+}
+
 /**
  * start testing.
  * "describe" and "it" functions were already call?
