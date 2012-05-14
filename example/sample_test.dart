@@ -48,9 +48,12 @@ void testCase(){
 
     describe("child", (){
   
-      it("not op", (){
-        
-        expect(1).toBe(1);
+      it("ok", (){
+        expect(1).not.toBe(2);
+      });
+
+      it("ng", (){
+        expect(1).not.toBe(1);
       });
     });
   });
@@ -68,13 +71,10 @@ void testCase(){
     });
   });
   
-  // TODO top-level it
-  /*
   it("top-level it", (){
     
     expect(1).toBe(1);
   });
-   */
   
 }
 

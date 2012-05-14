@@ -42,17 +42,20 @@ void it(String description, Function test){
   if(_runner == null){
     _runner = new TeaoliveRunner();
   }
-  if(_currentSuite == null){
-    _runner.addSpec(new TeaoliveSpec(description, test));
-  } else {
-    _currentSuite.addSpec(new TeaoliveSpec(description, test));
-  }
+  _runner.addSpec(new TeaoliveSpec(description, test));
 }
 
 /**
  * If you do not want to use to "it" temporarily, you can use this function.
  */
 void xit(String description, Function test){
+}
+
+/**
+ * Helper function for integrated test case of some source codes.
+ */
+void addTest(void testCase()){
+  testCase();
 }
 
 /**
@@ -80,9 +83,6 @@ interface Expection<T> {
   void toBeNull();
 }
 
-void addTest(void testCase()){
-  testCase();
-}
 
 /**
  * start testing.
@@ -126,7 +126,6 @@ interface TeaoliveReporter default TeaoliveTextReporter {
 
 TeaoliveReporter _reporter;
 TeaoliveRunner _runner;
-TeaoliveSuite _currentSuite;
 
 class TeaoliveTextReporter implements TeaoliveReporter {
   
@@ -134,6 +133,7 @@ class TeaoliveTextReporter implements TeaoliveReporter {
   
   void onRunnerStart(){
     print("test is started...");
+    print("");
   }
   
   void onSuiteResult(TeaoliveSuite suite){}
@@ -141,35 +141,111 @@ class TeaoliveTextReporter implements TeaoliveReporter {
   void onSpecResult(TeaoliveSpec spec){}
 
   void onRunnerResult(TeaoliveRunner runner){
-    for(TeaoliveSuite suite in runner.suites){
-      if(suite.result){
-        print("describe ${suite.description} is success!");
-      } else {
-        print("describe ${suite.description} is failure...");
-        
-        for(TeaoliveSpec spec in suite.specs){
-          if(spec.result){
-            print("  it ${spec.description} is success!");
-          } else {
-            print("  it ${spec.description} is failure...");
-            if(spec.errorMessage != null){
-              print("    ${spec.errorMessage}");
-            } else {
-              print("    unknown error ${spec.error}");
-            }
-          }
-        }
+    for(TeaoliveTestHolder holder in runner.tests){
+      printHolder(holder, 0);
+    }
+  }
+  
+  void printHolder(TeaoliveTestHolder holder, int depth){
+    if(holder.isSuite()){
+      printSuite(holder.suite, depth);
+    } else {
+      printSpec(holder.spec, depth);
+    }
+  }
+  
+  void printSuite(TeaoliveSuite suite, int depth){
+    if(suite.result){
+      put("describe ${suite.description} is success!", depth);
+    } else {
+      put("describe ${suite.description} is failure...", depth);
+      
+      for(TeaoliveTestHolder holder in suite.tests){
+        printHolder(holder, depth + 1);
       }
+    }
+  }
+  
+  void printSpec(TeaoliveSpec spec, int depth){
+    if(spec.result){
+      put("it ${spec.description} is success!", depth);
+    } else {
+      put("it ${spec.description} is failure...", depth);
+      if(spec.errorMessage != null){
+        put("${spec.errorMessage}", depth + 1);
+      } else {
+        put("unknown error ${spec.error}", depth + 1);
+      }
+    }
+  }
+  
+  void put(String msg, int depth){
+    StringBuffer buffer = new StringBuffer();
+    for(int i = 0; i < depth; i++){
+      buffer.add("  ");
+    }
+    buffer.add(msg);
+    print(buffer.toString());
+  }
+}
+
+class TeaoliveTestHolder {
+  TeaoliveSuite _suite;
+  TeaoliveSpec _spec;
+  
+  TeaoliveTestHolder.suite(this._suite);
+  TeaoliveTestHolder.spec(this._spec);
+  
+  bool isSuite(){
+    return _suite != null;
+  }
+
+  bool isSpec(){
+    return _spec != null;
+  }
+  
+  TeaoliveSuite get suite(){
+    assert(_suite != null);
+    return _suite;
+  }
+  
+  TeaoliveSpec get spec(){
+    assert(_spec != null);
+    return _spec;
+  }
+  
+  bool get result(){
+    if(isSuite()){
+      return _suite.result;
+    } else {
+      return _spec.result;
+    }
+  }
+
+  bool get start(){
+    if(isSuite()){
+      return _suite.start;
+    } else {
+      return _spec.start;
+    }
+  }
+
+  bool get finish(){
+    if(isSuite()){
+      return _suite.finish;
+    } else {
+      return _spec.finish;
     }
   }
 }
 
 class TeaoliveRunner {
-  List<TeaoliveSuite> suites;
   
-  TeaoliveSuite _topLevelSuite;
-  
-  TeaoliveRunner(): suites = new List<TeaoliveSuite>();
+  List<TeaoliveTestHolder> tests;
+
+  TeaoliveSuite _currentSuite;
+
+  TeaoliveRunner(): tests = new List<TeaoliveTestHolder>();
   
   void run(){
     if(_reporter == null){
@@ -178,24 +254,42 @@ class TeaoliveRunner {
     
     _reporter.onRunnerStart();
     
-    for(TeaoliveSuite suite in suites){
-      suite.run();
-
-      _reporter.onSuiteResult(suite);
+    for(TeaoliveTestHolder holder in tests){
+      if(holder.isSuite()){
+        _executeSuite(holder.suite);
+      } else {
+        _executeSpec(holder.spec);
+      }
     }
     
     _reporter.onRunnerResult(this);
   }
-  
+    
   void addSuite(TeaoliveSuite suite){
-    suites.add(suite);
+    if(_currentSuite != null){
+      _currentSuite.addSuite(suite);
+    } else {
+      tests.add(new TeaoliveTestHolder.suite(suite));
+    }
   }
   
   void addSpec(TeaoliveSpec spec){
-    if(_topLevelSuite == null){
-      _topLevelSuite = new TeaoliveSuite("top level", (){});
+    if(_currentSuite != null){
+      _currentSuite.addSpec(spec);
+    } else {
+      tests.add(new TeaoliveTestHolder.spec(spec));
     }
-    _topLevelSuite.addSpec(spec);
+  }
+  
+  void _executeSuite(TeaoliveSuite suite){
+    TeaoliveSuite tmp = _currentSuite;
+    _currentSuite = suite;
+    _currentSuite.run();
+    _currentSuite = tmp;
+  }
+
+  void _executeSpec(TeaoliveSpec spec){
+    spec.run();
   }
 }
 
@@ -203,34 +297,41 @@ class TeaoliveSuite {
   String description;
   Function test;
 
-  List<TeaoliveSpec> specs;
+  List<TeaoliveTestHolder> tests;
   
   bool result = false;
   bool start = false;
   bool finish = false;
 
-  TeaoliveSuite(this.description, this.test): specs = new List<TeaoliveSpec>();
+  TeaoliveSuite(this.description, this.test): tests = new List<TeaoliveTestHolder>();
   
   void run(){
-    start = true;
-    _currentSuite = this;
-    test();
-    _currentSuite = null;
-    finish = true;
-    
-    result = true;
-    for(TeaoliveSpec spec in specs){
-      if(spec.start == true && spec.finish == true && spec.result == true){
-        continue;
+    try{
+      start = true;
+      test();
+      finish = true;
+      
+      result = true;
+
+      for(TeaoliveTestHolder holder in tests){
+        if(holder.start == true && holder.finish == true && holder.result == true){
+          continue;
+        }
+        result = false;
       }
-      result = false;
+    } finally {
+      _reporter.onSuiteResult(this);
     }
+  }
+
+  void addSuite(TeaoliveSuite suite){
+    tests.add(new TeaoliveTestHolder.suite(suite));
+    _runner._executeSuite(suite);
   }
   
   void addSpec(TeaoliveSpec spec){
-    specs.add(spec);
-    spec.run();
-    _reporter.onSpecResult(spec);
+    tests.add(new TeaoliveTestHolder.spec(spec));
+    _runner._executeSpec(spec);
   }
 }
 
@@ -245,24 +346,29 @@ class TeaoliveSpec {
   String errorMessage;
   var error;
   
-  
   TeaoliveSpec(this.description, this.test);
   
   void run(){
-    start = true;
     try{
-      test();
-    } catch(AssertionException e) {
-      errorMessage = e.msg;
-      error = e;
-      return;
-    } catch(var e) {
-      error = e;
-      return;
+      start = true;
+
+      try{
+        test();
+      } catch(AssertionException e) {
+        errorMessage = e.msg;
+        error = e;
+        return;
+      } catch(var e) {
+        error = e;
+        return;
+      } finally {
+        finish = true;
+      }
+      result = true;
+
     } finally {
-      finish = true;
+      _reporter.onSpecResult(this);
     }
-    result = true;
   }
 }
 

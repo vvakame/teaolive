@@ -27,8 +27,12 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
   void onRunnerResult(TeaoliveRunner runner){
     _parent.nodes.clear();
     
-    for(TeaoliveSuite suite in runner.suites){
-      addSuite2dom(_parent, suite);
+    for(TeaoliveTestHolder holder in runner.tests){
+      if(holder.isSuite()){
+        addSuite2dom(_parent, holder.suite);
+      } else {
+        addSpec2dom(_parent, holder.spec);
+      }
     }
   }
   
@@ -47,8 +51,12 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
       
       _parent.nodes.add(el);
 
-      for(TeaoliveSpec spec in suite.specs){
-        addSpec2dom(el, spec);
+      for(TeaoliveTestHolder holder in suite.tests){
+        if(holder.isSuite()){
+          addSuite2dom(el, holder.suite);
+        } else {
+          addSpec2dom(el, holder.spec);
+        }
       }
     }
     parent.nodes.add(el);
