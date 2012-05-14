@@ -69,12 +69,12 @@ void addTest(void testCase()){
  * because type checking is perform.
  * expect("hoge").toBe(1) // error at compile-time. like hamcrest library (Java).
  */
-Expection expect(var obj){
-  return new _ExpectionImpl.expect(obj);
+Expectation expect(var obj){
+  return new _ExpectationImpl.expect(obj);
 }
 
-interface Expection<T> {
-  Expection<T> get not();
+interface Expectation<T> {
+  Expectation<T> get not();
   
   void toBe(T obj);
 
@@ -380,14 +380,14 @@ class AssertionException implements Exception {
 
 typedef bool _op(StringBuffer buffer, bool result);
 
-class _ExpectionImpl<T> implements Expection<T> {
+class _ExpectationImpl<T> implements Expectation<T> {
   
   T expect;
   List<_op> opList;
   
-  _ExpectionImpl.expect(T this.expect): opList = new List<_op>();
+  _ExpectationImpl.expect(T this.expect): opList = new List<_op>();
 
-  _ExpectionImpl._expectWithOp(_ExpectionImpl expection, _op op): this.expect(expection.expect){
+  _ExpectationImpl._expectWithOp(_ExpectationImpl expection, _op op): this.expect(expection.expect){
     opList.addAll(expection.opList);
     opList.add(op);
   }
@@ -395,13 +395,13 @@ class _ExpectionImpl<T> implements Expection<T> {
   Function _createOp(){
   }
   
-  _ExpectionImpl get not(){
+  _ExpectationImpl get not(){
 
     _op op = (buffer, result){
       buffer.add("not ");
       return !result;
     };
-    return new _ExpectionImpl._expectWithOp(this, op);
+    return new _ExpectationImpl._expectWithOp(this, op);
   }
   
   void toBe(T actual){

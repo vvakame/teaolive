@@ -49,7 +49,7 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
       el.classes.add("teaolive-failure");
       el.innerHTML = "describe ${suite.description} is failure...";
       
-      _parent.nodes.add(el);
+      parent.nodes.add(el);
 
       for(TeaoliveTestHolder holder in suite.tests){
         if(holder.isSuite()){
