@@ -69,8 +69,8 @@ void addTest(void testCase()){
  * because type checking is perform.
  * expect("hoge").toBe(1) // error at compile-time. like hamcrest library (Java).
  */
-Expectation expect(var obj){
-  return new _ExpectationImpl.expect(obj);
+Expectation expect(var actual){
+  return new _ExpectationImpl.actual(actual);
 }
 
 interface Expectation<T> {
@@ -382,14 +382,14 @@ typedef bool _op(StringBuffer buffer, bool result);
 
 class _ExpectationImpl<T> implements Expectation<T> {
   
-  T expect;
-  List<_op> opList;
+  T _actual;
+  List<_op> _opList;
   
-  _ExpectationImpl.expect(T this.expect): opList = new List<_op>();
+  _ExpectationImpl.actual(T this._actual): _opList = new List<_op>();
 
-  _ExpectationImpl._expectWithOp(_ExpectationImpl expection, _op op): this.expect(expection.expect){
-    opList.addAll(expection.opList);
-    opList.add(op);
+  _ExpectationImpl._actualWithOp(_ExpectationImpl expectation, _op op): this.actual(expectation._actual){
+    _opList.addAll(expectation._opList);
+    _opList.add(op);
   }
 
   Function _createOp(){
@@ -401,29 +401,29 @@ class _ExpectationImpl<T> implements Expectation<T> {
       buffer.add("not ");
       return !result;
     };
-    return new _ExpectationImpl._expectWithOp(this, op);
+    return new _ExpectationImpl._actualWithOp(this, op);
   }
   
-  void toBe(T actual){
-    _check(expect === actual, actual);
+  void toBe(T _expect){
+    _check(_expect === _actual, _expect);
   }
 
   void toBeNull(){
-    _check(expect == null);
+    _check(_actual == null);
   }
 
-  void toEqual(T actual){
-    _check(expect == actual, actual);
+  void toEqual(T _expect){
+    _check(_expect == _actual, _expect);
   }
 
-  void _check(bool result, [T actual = null]){
+  void _check(bool result, [T _expect = null]){
     StringBuffer buffer = new StringBuffer();
-    for(_op op in opList){
+    for(_op op in _opList){
       result = op(buffer, result);
     }
 
     if(result == false){
-      throw new AssertionException.msg("expected is ${buffer.toString()}<${expect}>, but got <${actual}>.");
+      throw new AssertionException.msg("expected is ${buffer.toString()}<${_expect}>, but got <${_actual}>.");
     }
   }
 }
