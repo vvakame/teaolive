@@ -52,7 +52,15 @@ class TeaoliveTapReporter implements TeaoliveReporter {
     }
   }
 
+  int _seq = 0;
+  
+  int getNo(){
+    _seq++;
+    return _seq;
+  }
+  
   void processSuite(TeaoliveSuite suite){
+    print("# describe ${suite.description}");
     for(TeaoliveTestHolder holder in suite.tests){
       if(holder.isSuite()){
         processSuite(holder.suite);
@@ -64,9 +72,13 @@ class TeaoliveTapReporter implements TeaoliveReporter {
 
   void processSpec(TeaoliveSpec spec){
     if(spec.result){
-      print("ok");
+      print("ok ${getNo()} it ${spec.description}");
     } else {
-      print("not ok");
+      if(spec.errorMessage != null){
+        print("not ok ${getNo()} it ${spec.description}, ${spec.errorMessage}");
+      } else {
+        print("not ok ${getNo()} it ${spec.description}");
+      }
     }
   }
 }
