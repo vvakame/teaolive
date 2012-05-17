@@ -1,0 +1,201 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>teaolive Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="styles.css">
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="favicon.ico">
+        
+        </head>
+        <body data-library="teaolive">
+        <div class="page">
+        <div class="header">
+          <a href="index.html"><div class="logo"></div></a>
+          <a href="index.html">Dart Documentation</a>
+         &rsaquo; <a href="teaolive.html">teaolive</a></div>
+        <div class="nav">
+        
+</div>
+<div class="content">
+<h2><strong>teaolive</strong> library</h2>
+<div class="doc"></div>
+<h3>Functions</h3>
+<div class="method"><h4 id="addTest">
+<span class="show-code">Code</span>
+<a href="dart_core/void.html">void</a> <strong>addTest</strong>(<a href="dart_core/void.html">void</a> testCase()) <a class="anchor-link" href="#addTest"
+              title="Permalink to null.addTest">#</a></h4>
+<div class="doc">
+<p>Helper function for integrated test case of some source codes.</p>
+<pre class="source">
+void addTest(void testCase()){
+  testCase();
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="describe">
+<span class="show-code">Code</span>
+<a href="dart_core/void.html">void</a> <strong>describe</strong>(<a href="dart_core/String.html">String</a> description, <a href="dart_core/Function.html">Function</a> test) <a class="anchor-link" href="#describe"
+              title="Permalink to null.describe">#</a></h4>
+<div class="doc">
+<p>"describe".
+If you want to start writing BDD test, start with this function.</p>
+<pre class="source">
+void describe(String description, Function test){
+  if(_runner == null){
+    _runner = new TeaoliveRunner();
+  }
+  _runner.addSuite(new TeaoliveSuite(description, test));
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="expect">
+<span class="show-code">Code</span>
+<a href="teaolive/Expectation.html">Expectation</a> <strong>expect</strong>(actual) <a class="anchor-link" href="#expect"
+              title="Permalink to null.expect">#</a></h4>
+<div class="doc">
+<p>Be the first to call for inspection of the expected value.
+The rest is just going to write that may the intellisense be with you.</p>
+<pre class="source">
+Expectation expect(var actual){
+  return new _ExpectationImpl.actual(actual);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="it">
+<span class="show-code">Code</span>
+<a href="dart_core/void.html">void</a> <strong>it</strong>(<a href="dart_core/String.html">String</a> description, <a href="dart_core/Function.html">Function</a> test) <a class="anchor-link" href="#it"
+              title="Permalink to null.it">#</a></h4>
+<div class="doc">
+<p>"it".
+If you want to describe the behavior, start with this function.
+usually, this method is under "describe" function.</p>
+<pre class="source">
+void it(String description, Function test){
+  if(_runner == null){
+    _runner = new TeaoliveRunner();
+  }
+  _runner.addSpec(new TeaoliveSpec(description, test));
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="setTeaoliveReporter">
+<span class="show-code">Code</span>
+<a href="dart_core/void.html">void</a> <strong>setTeaoliveReporter</strong>(<a href="teaolive/TeaoliveReporter.html">TeaoliveReporter</a> reporter) <a class="anchor-link" href="#setTeaoliveReporter"
+              title="Permalink to null.setTeaoliveReporter">#</a></h4>
+<div class="doc">
+<p>set TeaoliveReporter.
+the default is to use the TeaoliveTextReporter class.
+It's use a "print" function.</p>
+<pre class="source">
+void setTeaoliveReporter(TeaoliveReporter reporter) {
+  _reporter = reporter;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="teaoliveRun">
+<span class="show-code">Code</span>
+<a href="dart_core/void.html">void</a> <strong>teaoliveRun</strong>() <a class="anchor-link" href="#teaoliveRun"
+              title="Permalink to null.teaoliveRun">#</a></h4>
+<div class="doc">
+<p>start testing.
+"describe" and "it" functions were already call?</p>
+<pre class="source">
+void teaoliveRun() {
+  _runner.run();
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="xdescribe">
+<span class="show-code">Code</span>
+<a href="dart_core/void.html">void</a> <strong>xdescribe</strong>(<a href="dart_core/String.html">String</a> description, <a href="dart_core/Function.html">Function</a> test) <a class="anchor-link" href="#xdescribe"
+              title="Permalink to null.xdescribe">#</a></h4>
+<div class="doc">
+<p>If you do not want to use to "description" temporarily, you can use this function.</p>
+<pre class="source">
+void xdescribe(String description, Function test){
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="xit">
+<span class="show-code">Code</span>
+<a href="dart_core/void.html">void</a> <strong>xit</strong>(<a href="dart_core/String.html">String</a> description, <a href="dart_core/Function.html">Function</a> test) <a class="anchor-link" href="#xit"
+              title="Permalink to null.xit">#</a></h4>
+<div class="doc">
+<p>If you do not want to use to "it" temporarily, you can use this function.</p>
+<pre class="source">
+void xit(String description, Function test){
+}
+</pre>
+</div>
+</div>
+<h3>Classes</h3>
+          <div class="type">
+          <h4>
+            <a href="teaolive/TeaoliveRunner.html"><strong>TeaoliveRunner</strong></a>
+          </h4>
+          </div>
+          
+          <div class="type">
+          <h4>
+            <a href="teaolive/TeaoliveSpec.html"><strong>TeaoliveSpec</strong></a>
+          </h4>
+          </div>
+          
+          <div class="type">
+          <h4>
+            <a href="teaolive/TeaoliveSuite.html"><strong>TeaoliveSuite</strong></a>
+          </h4>
+          </div>
+          
+          <div class="type">
+          <h4>
+            <a href="teaolive/TeaoliveTestHolder.html"><strong>TeaoliveTestHolder</strong></a>
+          </h4>
+          </div>
+          
+          <div class="type">
+          <h4>
+            <a href="teaolive/TeaoliveTextReporter.html"><strong>TeaoliveTextReporter</strong></a>
+          </h4>
+          </div>
+          
+<h3>Interfaces</h3>
+          <div class="type">
+          <h4>
+            <a href="teaolive/Expectation.html"><strong>Expectation&lt;T&gt;</strong></a>
+          </h4>
+          </div>
+          
+          <div class="type">
+          <h4>
+            <a href="teaolive/TeaoliveReporter.html"><strong>TeaoliveReporter</strong></a>
+          </h4>
+          </div>
+          
+<h3>Exceptions</h3>
+          <div class="type">
+          <h4>
+            <a href="teaolive/AssertionException.html"><strong>AssertionException</strong></a>
+          </h4>
+          </div>
+          
+        </div>
+        <div class="clear"></div>
+        </div>
+        
+        <div class="footer">
+          <p>This page generated at 2012-05-17 10:38:28.724</p>
+          <div></div>
+        </div>
+        <script async src="client-live-nav.js"></script>
+        </body></html>
+        

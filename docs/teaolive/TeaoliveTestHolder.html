@@ -1,0 +1,168 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>TeaoliveTestHolder Class / teaolive Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="teaolive" data-type="TeaoliveTestHolder">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../teaolive.html">teaolive</a> &rsaquo; <a href="../teaolive/TeaoliveTestHolder.html">TeaoliveTestHolder</a></div>
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>TeaoliveTestHolder</strong>
+          Class
+        </h2>
+        
+<div class="doc">
+
+</div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="TeaoliveTestHolder">
+<span class="show-code">Code</span>
+new <strong>TeaoliveTestHolder</strong>.spec(_spec) <a class="anchor-link" href="#TeaoliveTestHolder"
+              title="Permalink to TeaoliveTestHolder.TeaoliveTestHolder">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+TeaoliveTestHolder.spec(this._spec);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="TeaoliveTestHolder">
+<span class="show-code">Code</span>
+new <strong>TeaoliveTestHolder</strong>.suite(_suite) <a class="anchor-link" href="#TeaoliveTestHolder"
+              title="Permalink to TeaoliveTestHolder.TeaoliveTestHolder">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+TeaoliveTestHolder.suite(this._suite);
+</pre>
+</div>
+</div>
+<h3>Methods</h3>
+<div class="method"><h4 id="get:finish">
+<span class="show-code">Code</span>
+<a href="../dart_core/bool.html">bool</a> <strong>get finish</strong>() <a class="anchor-link" href="#get:finish"
+              title="Permalink to TeaoliveTestHolder.get finish">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+bool get finish(){
+  if(isSuite()){
+    return _suite.finish;
+  } else {
+    return _spec.finish;
+  }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="isSpec">
+<span class="show-code">Code</span>
+<a href="../dart_core/bool.html">bool</a> <strong>isSpec</strong>() <a class="anchor-link" href="#isSpec"
+              title="Permalink to TeaoliveTestHolder.isSpec">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+bool isSpec(){
+  return _spec != null;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="isSuite">
+<span class="show-code">Code</span>
+<a href="../dart_core/bool.html">bool</a> <strong>isSuite</strong>() <a class="anchor-link" href="#isSuite"
+              title="Permalink to TeaoliveTestHolder.isSuite">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+bool isSuite(){
+  return _suite != null;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="get:result">
+<span class="show-code">Code</span>
+<a href="../dart_core/bool.html">bool</a> <strong>get result</strong>() <a class="anchor-link" href="#get:result"
+              title="Permalink to TeaoliveTestHolder.get result">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+bool get result(){
+  if(isSuite()){
+    return _suite.result;
+  } else {
+    return _spec.result;
+  }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="get:spec">
+<span class="show-code">Code</span>
+<a href="../teaolive/TeaoliveSpec.html">TeaoliveSpec</a> <strong>get spec</strong>() <a class="anchor-link" href="#get:spec"
+              title="Permalink to TeaoliveTestHolder.get spec">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+TeaoliveSpec get spec(){
+  assert(_spec != null);
+  return _spec;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="get:start">
+<span class="show-code">Code</span>
+<a href="../dart_core/bool.html">bool</a> <strong>get start</strong>() <a class="anchor-link" href="#get:start"
+              title="Permalink to TeaoliveTestHolder.get start">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+bool get start(){
+  if(isSuite()){
+    return _suite.start;
+  } else {
+    return _spec.start;
+  }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="get:suite">
+<span class="show-code">Code</span>
+<a href="../teaolive/TeaoliveSuite.html">TeaoliveSuite</a> <strong>get suite</strong>() <a class="anchor-link" href="#get:suite"
+              title="Permalink to TeaoliveTestHolder.get suite">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+TeaoliveSuite get suite(){
+  assert(_suite != null);
+  return _suite;
+}
+</pre>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        
+        <div class="footer">
+          <p>This page generated at 2012-05-17 10:38:28.920</p>
+          <div></div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

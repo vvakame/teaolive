@@ -1,0 +1,103 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>TeaoliveReporter Interface / teaolive Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="teaolive" data-type="TeaoliveReporter">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../teaolive.html">teaolive</a> &rsaquo; <a href="../teaolive/TeaoliveReporter.html">TeaoliveReporter</a></div>
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>TeaoliveReporter</strong>
+          Interface
+        </h2>
+        
+<div class="doc">
+<p>this class takes the test results and convert it to a human-readable format.
+and more. if reporter output the TAP( http://en.wikipedia.org/wiki/Test<em>Anything</em>Protocol ) format. Dart can be a CI friendly.</p>
+</div>
+<h3>Default class</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../teaolive/TeaoliveTextReporter.html">TeaoliveTextReporter</a></span></p>
+<h3>Implemented by</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../teaolive/TeaoliveTextReporter.html">TeaoliveTextReporter</a></span>, <span class="type-box"><span class="icon-class"></span><a href="../teaolive_html_reporter/TeaoliveHtmlReporter.html">TeaoliveHtmlReporter</a></span></p>
+<h3>Constructors</h3>
+<div class="method"><h4 id="TeaoliveReporter">
+<span class="show-code">Code</span>
+new <strong>TeaoliveReporter</strong>() <a class="anchor-link" href="#TeaoliveReporter"
+              title="Permalink to TeaoliveReporter.TeaoliveReporter">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+TeaoliveReporter();
+</pre>
+</div>
+</div>
+<h3>Methods</h3>
+<div class="method"><h4 id="onRunnerResult">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>onRunnerResult</strong>(<a href="../teaolive/TeaoliveRunner.html">TeaoliveRunner</a> runner) <a class="anchor-link" href="#onRunnerResult"
+              title="Permalink to TeaoliveReporter.onRunnerResult">#</a></h4>
+<div class="doc">
+<p>this method called when finish test running.</p>
+<pre class="source">
+void onRunnerResult(TeaoliveRunner runner);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="onRunnerStart">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>onRunnerStart</strong>() <a class="anchor-link" href="#onRunnerStart"
+              title="Permalink to TeaoliveReporter.onRunnerStart">#</a></h4>
+<div class="doc">
+<p>this method called when start test running.</p>
+<pre class="source">
+void onRunnerStart();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="onSpecResult">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>onSpecResult</strong>(<a href="../teaolive/TeaoliveSpec.html">TeaoliveSpec</a> spec) <a class="anchor-link" href="#onSpecResult"
+              title="Permalink to TeaoliveReporter.onSpecResult">#</a></h4>
+<div class="doc">
+<p>this method called when finish one of "it".</p>
+<pre class="source">
+void onSpecResult(TeaoliveSpec spec);
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="onSuiteResult">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>onSuiteResult</strong>(<a href="../teaolive/TeaoliveSuite.html">TeaoliveSuite</a> suite) <a class="anchor-link" href="#onSuiteResult"
+              title="Permalink to TeaoliveReporter.onSuiteResult">#</a></h4>
+<div class="doc">
+<p>this method called when finish one of "describe".</p>
+<pre class="source">
+void onSuiteResult(TeaoliveSuite suite);
+</pre>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        
+        <div class="footer">
+          <p>This page generated at 2012-05-17 10:38:28.917</p>
+          <div></div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

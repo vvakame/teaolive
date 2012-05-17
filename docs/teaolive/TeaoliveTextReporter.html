@@ -1,0 +1,183 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>TeaoliveTextReporter Class / teaolive Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="teaolive" data-type="TeaoliveTextReporter">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../teaolive.html">teaolive</a> &rsaquo; <a href="../teaolive/TeaoliveTextReporter.html">TeaoliveTextReporter</a></div>
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>TeaoliveTextReporter</strong>
+          Class
+        </h2>
+        
+<div class="doc">
+
+</div>
+<h3>Implements</h3>
+<p>
+<span class="type-box"><span class="icon-interface"></span><a href="../teaolive/TeaoliveReporter.html">TeaoliveReporter</a></span></p>
+<h3>Methods</h3>
+<div class="method"><h4 id="onRunnerResult">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>onRunnerResult</strong>(<a href="../teaolive/TeaoliveRunner.html">TeaoliveRunner</a> runner) <a class="anchor-link" href="#onRunnerResult"
+              title="Permalink to TeaoliveTextReporter.onRunnerResult">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+void onRunnerResult(TeaoliveRunner runner){
+  for(TeaoliveTestHolder holder in runner.tests){
+    printHolder(holder, 0);
+  }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="onRunnerStart">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>onRunnerStart</strong>() <a class="anchor-link" href="#onRunnerStart"
+              title="Permalink to TeaoliveTextReporter.onRunnerStart">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+void onRunnerStart(){
+  print("test is started...");
+  print("");
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="onSpecResult">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>onSpecResult</strong>(<a href="../teaolive/TeaoliveSpec.html">TeaoliveSpec</a> spec) <a class="anchor-link" href="#onSpecResult"
+              title="Permalink to TeaoliveTextReporter.onSpecResult">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+void onSpecResult(TeaoliveSpec spec){}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="onSuiteResult">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>onSuiteResult</strong>(<a href="../teaolive/TeaoliveSuite.html">TeaoliveSuite</a> suite) <a class="anchor-link" href="#onSuiteResult"
+              title="Permalink to TeaoliveTextReporter.onSuiteResult">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+void onSuiteResult(TeaoliveSuite suite){}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="printHolder">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>printHolder</strong>(<a href="../teaolive/TeaoliveTestHolder.html">TeaoliveTestHolder</a> holder, <a href="../dart_core/int.html">int</a> depth) <a class="anchor-link" href="#printHolder"
+              title="Permalink to TeaoliveTextReporter.printHolder">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+void printHolder(TeaoliveTestHolder holder, int depth){
+  if(holder.isSuite()){
+    printSuite(holder.suite, depth);
+  } else {
+    printSpec(holder.spec, depth);
+  }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="printSpec">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>printSpec</strong>(<a href="../teaolive/TeaoliveSpec.html">TeaoliveSpec</a> spec, <a href="../dart_core/int.html">int</a> depth) <a class="anchor-link" href="#printSpec"
+              title="Permalink to TeaoliveTextReporter.printSpec">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+void printSpec(TeaoliveSpec spec, int depth){
+  if(spec.result){
+    put("it ${spec.description} is success!", depth);
+  } else {
+    put("it ${spec.description} is failure...", depth);
+    if(spec.errorMessage != null){
+      put("${spec.errorMessage}", depth + 1);
+    } else {
+      put("unknown error ${spec.error}", depth + 1);
+    }
+  }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="printSuite">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>printSuite</strong>(<a href="../teaolive/TeaoliveSuite.html">TeaoliveSuite</a> suite, <a href="../dart_core/int.html">int</a> depth) <a class="anchor-link" href="#printSuite"
+              title="Permalink to TeaoliveTextReporter.printSuite">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+void printSuite(TeaoliveSuite suite, int depth){
+  if(suite.result){
+    put("describe ${suite.description} is success!", depth);
+  } else {
+    put("describe ${suite.description} is failure...", depth);
+    
+    for(TeaoliveTestHolder holder in suite.tests){
+      printHolder(holder, depth + 1);
+    }
+  }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="put">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>put</strong>(<a href="../dart_core/String.html">String</a> msg, <a href="../dart_core/int.html">int</a> depth) <a class="anchor-link" href="#put"
+              title="Permalink to TeaoliveTextReporter.put">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+void put(String msg, int depth){
+  StringBuffer buffer = new StringBuffer();
+  for(int i = 0; i &lt; depth; i++){
+    buffer.add("  ");
+  }
+  buffer.add(msg);
+  print(buffer.toString());
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="TeaoliveReporter">
+<span class="show-code">Code</span>
+<strong>TeaoliveReporter</strong>() <a class="anchor-link" href="#TeaoliveReporter"
+              title="Permalink to TeaoliveTextReporter.TeaoliveReporter">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+TeaoliveReporter(){}
+</pre>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        
+        <div class="footer">
+          <p>This page generated at 2012-05-17 10:38:28.918</p>
+          <div></div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

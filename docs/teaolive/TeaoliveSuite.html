@@ -1,0 +1,187 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>TeaoliveSuite Class / teaolive Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="teaolive" data-type="TeaoliveSuite">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../teaolive.html">teaolive</a> &rsaquo; <a href="../teaolive/TeaoliveSuite.html">TeaoliveSuite</a></div>
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>TeaoliveSuite</strong>
+          Class
+        </h2>
+        
+<div class="doc">
+
+</div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="TeaoliveSuite">
+<span class="show-code">Code</span>
+new <strong>TeaoliveSuite</strong>(description, test) <a class="anchor-link" href="#TeaoliveSuite"
+              title="Permalink to TeaoliveSuite.TeaoliveSuite">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+TeaoliveSuite(this.description, this.test): tests = new List&lt;TeaoliveTestHolder&gt;();
+</pre>
+</div>
+</div>
+<h3>Methods</h3>
+<div class="method"><h4 id="addSpec">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>addSpec</strong>(<a href="../teaolive/TeaoliveSpec.html">TeaoliveSpec</a> spec) <a class="anchor-link" href="#addSpec"
+              title="Permalink to TeaoliveSuite.addSpec">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+void addSpec(TeaoliveSpec spec){
+  tests.add(new TeaoliveTestHolder.spec(spec));
+  _runner._executeSpec(spec);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="addSuite">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>addSuite</strong>(<a href="../teaolive/TeaoliveSuite.html">TeaoliveSuite</a> suite) <a class="anchor-link" href="#addSuite"
+              title="Permalink to TeaoliveSuite.addSuite">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+void addSuite(TeaoliveSuite suite){
+  tests.add(new TeaoliveTestHolder.suite(suite));
+  _runner._executeSuite(suite);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="run">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>run</strong>() <a class="anchor-link" href="#run"
+              title="Permalink to TeaoliveSuite.run">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+void run(){
+  try{
+    start = true;
+    test();
+    finish = true;
+    
+    result = true;
+
+    for(TeaoliveTestHolder holder in tests){
+      if(holder.start == true &amp;&amp; holder.finish == true &amp;&amp; holder.result == true){
+        continue;
+      }
+      result = false;
+    }
+  } finally {
+    _reporter.onSuiteResult(this);
+  }
+}
+</pre>
+</div>
+</div>
+<h3>Fields</h3>
+<div class="field"><h4 id="description">
+<span class="show-code">Code</span>
+<a href="../dart_core/String.html">String</a>         <strong>description</strong> <a class="anchor-link"
+            href="#description"
+            title="Permalink to TeaoliveSuite.description">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+String description;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="finish">
+<span class="show-code">Code</span>
+<a href="../dart_core/bool.html">bool</a>         <strong>finish</strong> <a class="anchor-link"
+            href="#finish"
+            title="Permalink to TeaoliveSuite.finish">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+bool finish = false;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="result">
+<span class="show-code">Code</span>
+<a href="../dart_core/bool.html">bool</a>         <strong>result</strong> <a class="anchor-link"
+            href="#result"
+            title="Permalink to TeaoliveSuite.result">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+bool result = false;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="start">
+<span class="show-code">Code</span>
+<a href="../dart_core/bool.html">bool</a>         <strong>start</strong> <a class="anchor-link"
+            href="#start"
+            title="Permalink to TeaoliveSuite.start">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+bool start = false;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="test">
+<span class="show-code">Code</span>
+<a href="../dart_core/Function.html">Function</a>         <strong>test</strong> <a class="anchor-link"
+            href="#test"
+            title="Permalink to TeaoliveSuite.test">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+Function test;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="tests">
+<span class="show-code">Code</span>
+<a href="../dart_core/List.html">List</a>         <strong>tests</strong> <a class="anchor-link"
+            href="#tests"
+            title="Permalink to TeaoliveSuite.tests">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+List&lt;TeaoliveTestHolder&gt; tests;
+</pre>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        
+        <div class="footer">
+          <p>This page generated at 2012-05-17 10:38:28.927</p>
+          <div></div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        
