@@ -60,7 +60,11 @@ class TeaoliveTapReporter implements TeaoliveReporter {
   }
   
   void processSuite(TeaoliveSuite suite){
-    print("# describe ${suite.description}");
+    if(suite.ignore){
+      print("# describe ${suite.description} # SKIP");
+    } else {
+      print("# describe ${suite.description}");
+    }
     for(TeaoliveTestHolder holder in suite.tests){
       if(holder.isSuite()){
         processSuite(holder.suite);
@@ -71,7 +75,9 @@ class TeaoliveTapReporter implements TeaoliveReporter {
   }
 
   void processSpec(TeaoliveSpec spec){
-    if(spec.result){
+    if(spec.ignore){
+      print("ok ${getNo()} it ${spec.description} # SKIP");
+    } else if(spec.result){
       print("ok ${getNo()} it ${spec.description}");
     } else {
       if(spec.errorMessage != null){

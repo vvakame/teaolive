@@ -31,6 +31,10 @@ void describe(String description, Function test){
  * If you do not want to use to "description" temporarily, you can use this function.
  */
 void xdescribe(String description, Function test){
+  if(_runner == null){
+    _runner = new TeaoliveRunner();
+  }
+  _runner.addSuite(new TeaoliveSuite.ignore(description, test));
 }
 
 /**
@@ -49,6 +53,10 @@ void it(String description, Function test){
  * If you do not want to use to "it" temporarily, you can use this function.
  */
 void xit(String description, Function test){
+  if(_runner == null){
+    _runner = new TeaoliveRunner();
+  }
+  _runner.addSpec(new TeaoliveSpec.ignore(description, test));
 }
 
 /**
@@ -155,7 +163,9 @@ class TeaoliveTextReporter implements TeaoliveReporter {
   }
   
   void printSuite(TeaoliveSuite suite, int depth){
-    if(suite.result){
+    if(suite.ignore){
+      put("describe ${suite.description} is skipped", depth);
+    } else if(suite.result){
       put("describe ${suite.description} is success!", depth);
     } else {
       put("describe ${suite.description} is failure...", depth);
@@ -167,7 +177,9 @@ class TeaoliveTextReporter implements TeaoliveReporter {
   }
   
   void printSpec(TeaoliveSpec spec, int depth){
-    if(spec.result){
+    if(spec.ignore){
+      put("it ${spec.description} is skipped", depth);
+    } else if(spec.result){
       put("it ${spec.description} is success!", depth);
     } else {
       put("it ${spec.description} is failure...", depth);
@@ -281,6 +293,14 @@ class TeaoliveRunner {
     }
   }
   
+  void addIgnoreSuite(TeaoliveSuite suite){
+    if(_currentSuite != null){
+      _currentSuite.addSuite(suite);
+    } else {
+      tests.add(new TeaoliveTestHolder.suite(suite));
+    }
+  }
+  
   void _executeSuite(TeaoliveSuite suite){
     TeaoliveSuite tmp = _currentSuite;
     _currentSuite = suite;
@@ -297,6 +317,7 @@ class TeaoliveSuite {
   String description;
   Function test;
 
+  bool ignore = false;
   List<TeaoliveTestHolder> tests;
   
   bool result = false;
@@ -304,10 +325,16 @@ class TeaoliveSuite {
   bool finish = false;
 
   TeaoliveSuite(this.description, this.test): tests = new List<TeaoliveTestHolder>();
-  
+
+  TeaoliveSuite.ignore(this.description, this.test): tests = new List<TeaoliveTestHolder>(), ignore = true;
+
   void run(){
     try{
       start = true;
+      if(ignore){
+        finish = true;
+        return;
+      }
       test();
       finish = true;
       
@@ -339,6 +366,7 @@ class TeaoliveSpec {
   String description;
   Function test;
   
+  bool ignore = false;
   bool result = false;
   bool start = false;
   bool finish = false;
@@ -347,12 +375,17 @@ class TeaoliveSpec {
   var error;
   
   TeaoliveSpec(this.description, this.test);
+  TeaoliveSpec.ignore(this.description, this.test): ignore = true;
   
   void run(){
     try{
       start = true;
 
       try{
+        if(ignore){
+          finish = true;
+          return;
+        }
         test();
       } catch(AssertionException e) {
         errorMessage = e.msg;

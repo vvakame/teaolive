@@ -41,7 +41,11 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
     final Element el = new Element.tag("div");
     el.classes.add("teaolieve-describe");
 
-    if(suite.result){
+    if(suite.ignore){
+      el.classes.add("teaolive-skipped");
+      el.innerHTML = "describe ${suite.description} is skipped";
+
+    } else if(suite.result){
       el.classes.add("teaolive-success");
       el.innerHTML = "describe ${suite.description} is success!";
 
@@ -67,7 +71,11 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
     final Element el = new Element.tag("div");
     el.classes.add("teaolieve-it");
 
-    if(spec.result){
+    if(spec.ignore){
+      el.classes.add("teaolive-skipped");
+      el.innerHTML = "it ${spec.description} is skipped";
+    
+    } else if(spec.result){
       el.classes.add("teaolive-success");
       el.innerHTML = "it ${spec.description} is success!";
 

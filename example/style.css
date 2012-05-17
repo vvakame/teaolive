@@ -18,3 +18,7 @@
 .teaolive-failure {
     background-color: #ffc0cb;
 }
+
+.teaolive-skipped {
+    background-color: #89c3eb;
+}
