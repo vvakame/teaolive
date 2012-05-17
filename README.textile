@@ -1,10 +1,25 @@
 h1. Teaolive
 
-h3. A Dart Testing Framework
+h2. A Dart Testing Framework
 
 Teaolive is a Behavior Driven Development testing framework for Dart. It does not rely on browser. Thus it's suited for Server Application or Web Application.
 I like Jasmine Test Framework. (http://pivotal.github.com/jasmine/)
 It's really cool when use with CoffeeScript.
+
+h2. How to run
+
+# on command line
+$ dart example/usage_for_commandline.dart
+# on browser
+open example/teaolive.html by Dartium or any other browser.
+# on CI
+only once
+$ sudo cpan TAP::Harness::JUnit
+and everytime if you want.
+$ cd example ; ./run_ci_test.sh
+$ cat junit_output.xml
+
+Do you know someone how to running browser test on CI? phantom-js?
 
 h2. Support
 
