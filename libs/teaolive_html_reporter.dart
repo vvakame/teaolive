@@ -9,8 +9,7 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
   
   Element _parent;
   
-  TeaoliveReporter(){}
-
+  TeaoliveHtmlReporter();
   TeaoliveHtmlReporter.withParent(this._parent);
   
   void onRunnerStart(){

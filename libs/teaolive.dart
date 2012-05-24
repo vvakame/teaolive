@@ -290,6 +290,14 @@ class TeaoliveTestHolder {
       return _spec.finish;
     }
   }
+  
+  bool get ignore(){
+    if(isSuite()){
+      return _suite.ignore;
+    } else {
+      return _spec.ignore;
+    }
+  }
 }
 
 class TeaoliveRunner {
@@ -378,7 +386,9 @@ class TeaoliveSuite {
       result = true;
 
       for(TeaoliveTestHolder holder in tests){
-        if(holder.start == true && holder.finish == true && holder.result == true){
+        if(holder.start && holder.finish && holder.result){
+          continue;
+        } else if(holder.ignore){
           continue;
         }
         result = false;
