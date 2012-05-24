@@ -21,20 +21,16 @@
  * If you want to start writing BDD test, start with this function.
  */
 void describe(String description, Function test){
-  if(_runner == null){
-    _runner = new TeaoliveRunner();
-  }
-  _runner.addSuite(new TeaoliveSuite(description, test));
+  checkEnvironment();
+  _environment.runner.addSuite(new TeaoliveSuite(description, test));
 }
 
 /**
  * If you do not want to use to "description" temporarily, you can use this function.
  */
 void xdescribe(String description, Function test){
-  if(_runner == null){
-    _runner = new TeaoliveRunner();
-  }
-  _runner.addSuite(new TeaoliveSuite.ignore(description, test));
+  checkEnvironment();
+  _environment.runner.addSuite(new TeaoliveSuite.ignore(description, test));
 }
 
 /**
@@ -43,20 +39,16 @@ void xdescribe(String description, Function test){
  * usually, this method is under "describe" function.
  */
 void it(String description, Function test){
-  if(_runner == null){
-    _runner = new TeaoliveRunner();
-  }
-  _runner.addSpec(new TeaoliveSpec(description, test));
+  checkEnvironment();
+  _environment.runner.addSpec(new TeaoliveSpec(description, test));
 }
 
 /**
  * If you do not want to use to "it" temporarily, you can use this function.
  */
 void xit(String description, Function test){
-  if(_runner == null){
-    _runner = new TeaoliveRunner();
-  }
-  _runner.addSpec(new TeaoliveSpec.ignore(description, test));
+  checkEnvironment();
+  _environment.runner.addSpec(new TeaoliveSpec.ignore(description, test));
 }
 
 /**
@@ -97,7 +89,8 @@ interface Expectation<T> {
  * "describe" and "it" functions were already call?
  */
 void teaoliveRun() {
-  _runner.run();
+  checkEnvironment();
+  _environment.run();
 }
 
 /**
@@ -106,7 +99,8 @@ void teaoliveRun() {
  * It's use a "print" function.
  */
 void setTeaoliveReporter(TeaoliveReporter reporter) {
-  _reporter = reporter;
+  checkEnvironment();
+  _environment.reporter = reporter;
 }
 
 /**
@@ -130,10 +124,57 @@ interface TeaoliveReporter default TeaoliveTextReporter {
   void onSpecResult(TeaoliveSpec spec);
 }
 
+/**
+ * get TeaoliveEnvironment.
+ * this function is use for self testing about Teaolive.
+ */
+TeaoliveEnvironment getCurrentTeaoliveEnvironment() => _environment;
+
+/**
+ * restore TeaoliveEnvironment.
+ * this function is use for self testing about Teaolive.
+ */
+void restoreTeaoliveEnvironment(TeaoliveEnvironment environment){
+  _environment = environment;
+}
+
+/**
+ * re-initialize TeaoliveEnvironment.
+ * this function is use for self testing about Teaolive.
+ */
+void resetTeoliveEnvironment(){
+  _environment = null;
+}
+
 // implementation from here.
 
-TeaoliveReporter _reporter;
-TeaoliveRunner _runner;
+TeaoliveEnvironment _environment;
+
+void checkEnvironment() {
+  if(_environment == null){
+    _environment = new TeaoliveEnvironment();
+  }
+}
+
+class TeaoliveEnvironment {
+  TeaoliveReporter _reporter;
+  TeaoliveRunner _runner;
+  
+  TeaoliveEnvironment(): _runner = new TeaoliveRunner(), _reporter = new TeaoliveReporter();
+  
+  void run() {
+    _runner.run();
+  }
+  
+  void set reporter(TeaoliveReporter reporter) {
+    assert(reporter != null);
+    _reporter = reporter;
+  }
+  
+  TeaoliveReporter get reporter() => _reporter;
+  
+  TeaoliveRunner get runner() => _runner;
+}
 
 class TeaoliveTextReporter implements TeaoliveReporter {
   
@@ -260,11 +301,7 @@ class TeaoliveRunner {
   TeaoliveRunner(): tests = new List<TeaoliveTestHolder>();
   
   void run(){
-    if(_reporter == null){
-      _reporter = new TeaoliveReporter();
-    }
-    
-    _reporter.onRunnerStart();
+    _environment.reporter.onRunnerStart();
     
     for(TeaoliveTestHolder holder in tests){
       if(holder.isSuite()){
@@ -274,7 +311,7 @@ class TeaoliveRunner {
       }
     }
     
-    _reporter.onRunnerResult(this);
+    _environment.reporter.onRunnerResult(this);
   }
     
   void addSuite(TeaoliveSuite suite){
@@ -347,18 +384,18 @@ class TeaoliveSuite {
         result = false;
       }
     } finally {
-      _reporter.onSuiteResult(this);
+      _environment.reporter.onSuiteResult(this);
     }
   }
 
   void addSuite(TeaoliveSuite suite){
     tests.add(new TeaoliveTestHolder.suite(suite));
-    _runner._executeSuite(suite);
+    _environment.runner._executeSuite(suite);
   }
   
   void addSpec(TeaoliveSpec spec){
     tests.add(new TeaoliveTestHolder.spec(spec));
-    _runner._executeSpec(spec);
+    _environment.runner._executeSpec(spec);
   }
 }
 
@@ -400,7 +437,7 @@ class TeaoliveSpec {
       result = true;
 
     } finally {
-      _reporter.onSpecResult(this);
+      _environment.reporter.onSpecResult(this);
     }
   }
 }
