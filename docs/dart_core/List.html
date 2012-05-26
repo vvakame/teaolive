@@ -113,7 +113,7 @@ void add(E value);
               title="Permalink to List&lt;E&gt;.addAll">#</a></h4>
 <div class="doc">
 <p>Appends all elements of the 
-<span class="param">collection</span> to the end of list.
+<span class="param">collection</span> to the end of the list.
 Extends the length of the list by the length of 
 <span class="param">collection</span>.
 Throws an <a class="crossref" href="../dart_core/UnsupportedOperationException.html">UnsupportedOperationException</a> if the list is not
@@ -155,16 +155,17 @@ void clear();
 <a href="../dart_core/List.html">List</a> <strong>getRange</strong>(<a href="../dart_core/int.html">int</a> start, <a href="../dart_core/int.html">int</a> length) <a class="anchor-link" href="#getRange"
               title="Permalink to List&lt;E&gt;.getRange">#</a></h4>
 <div class="doc">
-<p>Returns a sub list copy of this list, from 
-<span class="param">start</span> to
-<code>start + length</code>.
+<p>Returns a new list containing 
+<span class="param">length</span> elements from the list,
+starting at  
+<span class="param">start</span>.
 Returns an empty list if 
 <span class="param">length</span> is 0.
 Throws an <a class="crossref" href="../dart_core/IllegalArgumentException.html">IllegalArgumentException</a> if 
 <span class="param">length</span> is negative.
 Throws an <a class="crossref" href="../dart_core/IndexOutOfRangeException.html">IndexOutOfRangeException</a> if 
 <span class="param">start</span> or
-<code>start + length</code> are out of range.</p>
+<code>start + length - 1</code> are out of range.</p>
 <pre class="source">
 List&lt;E&gt; getRange(int start, int length);
 </pre>
@@ -176,7 +177,7 @@ List&lt;E&gt; getRange(int start, int length);
               title="Permalink to List&lt;E&gt;.indexOf">#</a></h4>
 <div class="doc">
 <p>Returns the first index of 
-<span class="param">element</span> in this list. Searches this
+<span class="param">element</span> in the list. Searches the
 list from index 
 <span class="param">start</span> to the length of the list. Returns
 -1 if 
@@ -191,22 +192,23 @@ int indexOf(E element, [int start]);
 <a href="../dart_core/void.html">void</a> <strong>insertRange</strong>(<a href="../dart_core/int.html">int</a> start, <a href="../dart_core/int.html">int</a> length, [initialValue]) <a class="anchor-link" href="#insertRange"
               title="Permalink to List&lt;E&gt;.insertRange">#</a></h4>
 <div class="doc">
-<p>Inserts a new range in the list, starting from 
+<p>Inserts a new range into the list, starting from 
 <span class="param">start</span> to
-<code>start + length</code>. The entries are filled with 
+<code>start + length - 1</code>. The entries are filled with 
 <span class="param">initialValue</span>.
 Throws an <a class="crossref" href="../dart_core/UnsupportedOperationException.html">UnsupportedOperationException</a> if the list is
 not extendable.
 If 
 <span class="param">length</span> is 0, this method does not do anything.
 If 
-<span class="param">start</span> is the length of the array, this method inserts the
-range at the end of the array.
+<span class="param">start</span> is the length of the list, this method inserts the
+range at the end of the list.
 Throws an <a class="crossref" href="../dart_core/IllegalArgumentException.html">IllegalArgumentException</a> if 
 <span class="param">length</span> is negative.
 Throws an <a class="crossref" href="../dart_core/IndexOutOfRangeException.html">IndexOutOfRangeException</a> if 
-<span class="param">start</span> or
-<code>start + length</code> are out of range.</p>
+<span class="param">start</span> is negative or if
+
+<span class="param">start</span> is greater than the length of the list.</p>
 <pre class="source">
 void insertRange(int start, int length, [E initialValue]);
 </pre>
@@ -230,7 +232,7 @@ E last();
               title="Permalink to List&lt;E&gt;.lastIndexOf">#</a></h4>
 <div class="doc">
 <p>Returns the last index of 
-<span class="param">element</span> in this list. Searches this
+<span class="param">element</span> in the list. Searches the
 list from index <a href="inclusive">start</a> to 0. Returns -1 if
 
 <span class="param">element</span> is not found.</p>
@@ -271,9 +273,9 @@ E removeLast();
 <a href="../dart_core/void.html">void</a> <strong>removeRange</strong>(<a href="../dart_core/int.html">int</a> start, <a href="../dart_core/int.html">int</a> length) <a class="anchor-link" href="#removeRange"
               title="Permalink to List&lt;E&gt;.removeRange">#</a></h4>
 <div class="doc">
-<p>Removes the range in the list starting from 
-<span class="param">start</span> to
-<code>start + length</code>.
+<p>Removes 
+<span class="param">length</span> elements from the list, beginning at 
+<span class="param">start</span>.
 Throws an <a class="crossref" href="../dart_core/UnsupportedOperationException.html">UnsupportedOperationException</a> if the list is
 not extendable.
 If 
@@ -282,7 +284,7 @@ Throws an <a class="crossref" href="../dart_core/IllegalArgumentException.html">
 <span class="param">length</span> is negative.
 Throws an <a class="crossref" href="../dart_core/IndexOutOfRangeException.html">IndexOutOfRangeException</a> if 
 <span class="param">start</span> or
-<code>start + length</code> are out of range.</p>
+<code>:start + length: - 1</code> are out of range.</p>
 <pre class="source">
 void removeRange(int start, int length);
 </pre>
@@ -294,10 +296,10 @@ void removeRange(int start, int length);
               title="Permalink to List&lt;E&gt;.setRange">#</a></h4>
 <div class="doc">
 <p>Copies 
-<span class="param">length</span> elements of the 
-<span class="param">from</span> array, starting
-from 
-<span class="param">startFrom</span>, into <code>this</code>, starting at 
+<span class="param">length</span> elements of 
+<span class="param">from</span>, starting
+at 
+<span class="param">startFrom</span>, into the list, starting at 
 <span class="param">start</span>.
 If 
 <span class="param">length</span> is 0, this method does not do anything.
@@ -305,9 +307,9 @@ Throws an <a class="crossref" href="../dart_core/IllegalArgumentException.html">
 <span class="param">length</span> is negative.
 Throws an <a class="crossref" href="../dart_core/IndexOutOfRangeException.html">IndexOutOfRangeException</a> if 
 <span class="param">start</span> or
-<code>start + length</code> are out of range for <code>this</code>, or if
+<code>start + length - 1</code> are out of range for <code>this</code>, or if
 
-<span class="param">startFrom</span> is out of range for 
+<span class="param">startFrom</span> or <code>startFrom + length - 1</code> are out of range for 
 <span class="param">from</span>.</p>
 <pre class="source">
 void setRange(int start, int length, List&lt;E&gt; from, [int startFrom]);
@@ -338,7 +340,7 @@ void sort(int compare(E a, E b));
         </div>
         
         <div class="footer">
-          <p>This page generated at 2012-05-17 10:38:07.344</p>
+          <p>This page generated at 2012-05-26 23:32:57.746</p>
           <div></div>
         </div>
         <script async src="../client-live-nav.js"></script>

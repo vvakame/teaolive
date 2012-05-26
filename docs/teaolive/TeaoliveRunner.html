@@ -34,41 +34,50 @@ new <strong>TeaoliveRunner</strong>() <a class="anchor-link" href="#TeaoliveRunn
 <div class="doc">
 
 <pre class="source">
-TeaoliveRunner(): tests = new List&lt;TeaoliveTestHolder&gt;();
+TeaoliveRunner(): tests = new List&lt;TestPiece&gt;();
 </pre>
 </div>
 </div>
 <h3>Methods</h3>
-<div class="method"><h4 id="addSpec">
+<div class="method"><h4 id="add">
 <span class="show-code">Code</span>
-<a href="../dart_core/void.html">void</a> <strong>addSpec</strong>(<a href="../teaolive/TeaoliveSpec.html">TeaoliveSpec</a> spec) <a class="anchor-link" href="#addSpec"
-              title="Permalink to TeaoliveRunner.addSpec">#</a></h4>
+<a href="../dart_core/void.html">void</a> <strong>add</strong>(<a href="../teaolive/TestPiece.html">TestPiece</a> piece) <a class="anchor-link" href="#add"
+              title="Permalink to TeaoliveRunner.add">#</a></h4>
 <div class="doc">
 
 <pre class="source">
-void addSpec(TeaoliveSpec spec){
-  if(_currentSuite != null){
-    _currentSuite.addSpec(spec);
+void add(TestPiece piece){
+  assert(piece != null);
+  piece.parent = _findAncestorSuite(_currentRunning);
+  if(piece.parent != null){
+    piece.parent.add(piece);
   } else {
-    tests.add(new TeaoliveTestHolder.spec(spec));
+    tests.add(piece);
   }
 }
 </pre>
 </div>
 </div>
-<div class="method"><h4 id="addSuite">
+<div class="method"><h4 id="get:currentRunning">
 <span class="show-code">Code</span>
-<a href="../dart_core/void.html">void</a> <strong>addSuite</strong>(<a href="../teaolive/TeaoliveSuite.html">TeaoliveSuite</a> suite) <a class="anchor-link" href="#addSuite"
-              title="Permalink to TeaoliveRunner.addSuite">#</a></h4>
+<a href="../teaolive/TestPiece.html">TestPiece</a> <strong>get currentRunning</strong>() <a class="anchor-link" href="#get:currentRunning"
+              title="Permalink to TeaoliveRunner.get currentRunning">#</a></h4>
 <div class="doc">
 
 <pre class="source">
-void addSuite(TeaoliveSuite suite){
-  if(_currentSuite != null){
-    _currentSuite.addSuite(suite);
-  } else {
-    tests.add(new TeaoliveTestHolder.suite(suite));
-  }
+TestPiece get currentRunning() =&gt; _currentRunning;
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="set:currentRunning">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>set currentRunning</strong>(<a href="../teaolive/TestPiece.html">TestPiece</a> currentRunning) <a class="anchor-link" href="#set:currentRunning"
+              title="Permalink to TeaoliveRunner.set currentRunning">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+void set currentRunning(TestPiece currentRunning){
+  _currentRunning = currentRunning;
 }
 </pre>
 </div>
@@ -81,21 +90,13 @@ void addSuite(TeaoliveSuite suite){
 
 <pre class="source">
 void run(){
-  if(_reporter == null){
-    _reporter = new TeaoliveReporter();
+  _environment.reporter.onRunnerStart();
+  
+  for(TestPiece piece in tests){
+    piece.run();
   }
   
-  _reporter.onRunnerStart();
-  
-  for(TeaoliveTestHolder holder in tests){
-    if(holder.isSuite()){
-      _executeSuite(holder.suite);
-    } else {
-      _executeSpec(holder.spec);
-    }
-  }
-  
-  _reporter.onRunnerResult(this);
+  _environment.reporter.onRunnerResult(this);
 }
 </pre>
 </div>
@@ -110,7 +111,7 @@ void run(){
         <div class="doc">
 
 <pre class="source">
-List&lt;TeaoliveTestHolder&gt; tests;
+List&lt;TestPiece&gt; tests;
 </pre>
 </div>
 </div>
@@ -119,7 +120,7 @@ List&lt;TeaoliveTestHolder&gt; tests;
         </div>
         
         <div class="footer">
-          <p>This page generated at 2012-05-17 10:38:28.923</p>
+          <p>This page generated at 2012-05-26 23:32:59.417</p>
           <div></div>
         </div>
         <script async src="../client-live-nav.js"></script>

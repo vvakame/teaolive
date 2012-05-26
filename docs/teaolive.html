@@ -35,6 +35,21 @@ void addTest(void testCase()){
 </pre>
 </div>
 </div>
+<div class="method"><h4 id="checkEnvironment">
+<span class="show-code">Code</span>
+<a href="dart_core/void.html">void</a> <strong>checkEnvironment</strong>() <a class="anchor-link" href="#checkEnvironment"
+              title="Permalink to null.checkEnvironment">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+void checkEnvironment() {
+  if(_environment == null){
+    _environment = new TeaoliveEnvironment();
+  }
+}
+</pre>
+</div>
+</div>
 <div class="method"><h4 id="describe">
 <span class="show-code">Code</span>
 <a href="dart_core/void.html">void</a> <strong>describe</strong>(<a href="dart_core/String.html">String</a> description, <a href="dart_core/Function.html">Function</a> test) <a class="anchor-link" href="#describe"
@@ -44,10 +59,8 @@ void addTest(void testCase()){
 If you want to start writing BDD test, start with this function.</p>
 <pre class="source">
 void describe(String description, Function test){
-  if(_runner == null){
-    _runner = new TeaoliveRunner();
-  }
-  _runner.addSuite(new TeaoliveSuite(description, test));
+  checkEnvironment();
+  _environment.runner.add(new TestPiece.describe(description, test));
 }
 </pre>
 </div>
@@ -66,6 +79,18 @@ Expectation expect(var actual){
 </pre>
 </div>
 </div>
+<div class="method"><h4 id="getCurrentTeaoliveEnvironment">
+<span class="show-code">Code</span>
+<a href="teaolive/TeaoliveEnvironment.html">TeaoliveEnvironment</a> <strong>getCurrentTeaoliveEnvironment</strong>() <a class="anchor-link" href="#getCurrentTeaoliveEnvironment"
+              title="Permalink to null.getCurrentTeaoliveEnvironment">#</a></h4>
+<div class="doc">
+<p>get TeaoliveEnvironment.
+this function is use for self testing about Teaolive.</p>
+<pre class="source">
+TeaoliveEnvironment getCurrentTeaoliveEnvironment() =&gt; _environment;
+</pre>
+</div>
+</div>
 <div class="method"><h4 id="it">
 <span class="show-code">Code</span>
 <a href="dart_core/void.html">void</a> <strong>it</strong>(<a href="dart_core/String.html">String</a> description, <a href="dart_core/Function.html">Function</a> test) <a class="anchor-link" href="#it"
@@ -76,10 +101,36 @@ If you want to describe the behavior, start with this function.
 usually, this method is under "describe" function.</p>
 <pre class="source">
 void it(String description, Function test){
-  if(_runner == null){
-    _runner = new TeaoliveRunner();
-  }
-  _runner.addSpec(new TeaoliveSpec(description, test));
+  checkEnvironment();
+  _environment.runner.add(new TestPiece.it(description, test));
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="resetTeoliveEnvironment">
+<span class="show-code">Code</span>
+<a href="dart_core/void.html">void</a> <strong>resetTeoliveEnvironment</strong>() <a class="anchor-link" href="#resetTeoliveEnvironment"
+              title="Permalink to null.resetTeoliveEnvironment">#</a></h4>
+<div class="doc">
+<p>re-initialize TeaoliveEnvironment.
+this function is use for self testing about Teaolive.</p>
+<pre class="source">
+void resetTeoliveEnvironment(){
+  _environment = null;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="restoreTeaoliveEnvironment">
+<span class="show-code">Code</span>
+<a href="dart_core/void.html">void</a> <strong>restoreTeaoliveEnvironment</strong>(<a href="teaolive/TeaoliveEnvironment.html">TeaoliveEnvironment</a> environment) <a class="anchor-link" href="#restoreTeaoliveEnvironment"
+              title="Permalink to null.restoreTeaoliveEnvironment">#</a></h4>
+<div class="doc">
+<p>restore TeaoliveEnvironment.
+this function is use for self testing about Teaolive.</p>
+<pre class="source">
+void restoreTeaoliveEnvironment(TeaoliveEnvironment environment){
+  _environment = environment;
 }
 </pre>
 </div>
@@ -94,7 +145,8 @@ the default is to use the TeaoliveTextReporter class.
 It's use a "print" function.</p>
 <pre class="source">
 void setTeaoliveReporter(TeaoliveReporter reporter) {
-  _reporter = reporter;
+  checkEnvironment();
+  _environment.reporter = reporter;
 }
 </pre>
 </div>
@@ -108,7 +160,8 @@ void setTeaoliveReporter(TeaoliveReporter reporter) {
 "describe" and "it" functions were already call?</p>
 <pre class="source">
 void teaoliveRun() {
-  _runner.run();
+  checkEnvironment();
+  _environment.run();
 }
 </pre>
 </div>
@@ -121,6 +174,8 @@ void teaoliveRun() {
 <p>If you do not want to use to "description" temporarily, you can use this function.</p>
 <pre class="source">
 void xdescribe(String description, Function test){
+  checkEnvironment();
+  _environment.runner.add(new TestPiece.xdescribe(description, test));
 }
 </pre>
 </div>
@@ -133,11 +188,19 @@ void xdescribe(String description, Function test){
 <p>If you do not want to use to "it" temporarily, you can use this function.</p>
 <pre class="source">
 void xit(String description, Function test){
+  checkEnvironment();
+  _environment.runner.add(new TestPiece.xit(description, test));
 }
 </pre>
 </div>
 </div>
 <h3>Classes</h3>
+          <div class="type">
+          <h4>
+            <a href="teaolive/TeaoliveEnvironment.html"><strong>TeaoliveEnvironment</strong></a>
+          </h4>
+          </div>
+          
           <div class="type">
           <h4>
             <a href="teaolive/TeaoliveRunner.html"><strong>TeaoliveRunner</strong></a>
@@ -146,25 +209,7 @@ void xit(String description, Function test){
           
           <div class="type">
           <h4>
-            <a href="teaolive/TeaoliveSpec.html"><strong>TeaoliveSpec</strong></a>
-          </h4>
-          </div>
-          
-          <div class="type">
-          <h4>
-            <a href="teaolive/TeaoliveSuite.html"><strong>TeaoliveSuite</strong></a>
-          </h4>
-          </div>
-          
-          <div class="type">
-          <h4>
-            <a href="teaolive/TeaoliveTestHolder.html"><strong>TeaoliveTestHolder</strong></a>
-          </h4>
-          </div>
-          
-          <div class="type">
-          <h4>
-            <a href="teaolive/TeaoliveTextReporter.html"><strong>TeaoliveTextReporter</strong></a>
+            <a href="teaolive/TestPiece.html"><strong>TestPiece</strong></a>
           </h4>
           </div>
           
@@ -193,7 +238,7 @@ void xit(String description, Function test){
         </div>
         
         <div class="footer">
-          <p>This page generated at 2012-05-17 10:38:28.724</p>
+          <p>This page generated at 2012-05-26 23:32:59.391</p>
           <div></div>
         </div>
         <script async src="client-live-nav.js"></script>

@@ -571,6 +571,33 @@ Date subtract(Duration duration);
 </pre>
 </div>
 </div>
+<div class="method"><h4 id="get:timeZoneName">
+<span class="show-code">Code</span>
+<a href="../dart_core/String.html">String</a> <strong>get timeZoneName</strong>() <a class="anchor-link" href="#get:timeZoneName"
+              title="Permalink to Date.get timeZoneName">#</a></h4>
+<div class="doc">
+<p>Returns the abbreviated time-zone name.</p>
+<p>Examples: <code>"CET"</code> or <code>"CEST"</code>.</p>
+<pre class="source">
+String get timeZoneName();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="get:timeZoneOffset">
+<span class="show-code">Code</span>
+<a href="../dart_core/Duration.html">Duration</a> <strong>get timeZoneOffset</strong>() <a class="anchor-link" href="#get:timeZoneOffset"
+              title="Permalink to Date.get timeZoneOffset">#</a></h4>
+<div class="doc">
+<p>The time-zone offset is the difference between local time and UTC. That is,
+the offset is positive for time zones west of UTC.</p>
+<p>Note, that JavaScript, Python and C return the difference between UTC and
+local time. Java, C# and Ruby return the difference between local time and
+UTC.</p>
+<pre class="source">
+Duration get timeZoneOffset();
+</pre>
+</div>
+</div>
 <div class="method"><h4 id="toString">
 <span class="show-code">Code</span>
 <a href="../dart_core/String.html">String</a> <strong>toString</strong>() <a class="anchor-link" href="#toString"
@@ -638,7 +665,7 @@ final int value;
         </div>
         
         <div class="footer">
-          <p>This page generated at 2012-05-17 10:38:07.656</p>
+          <p>This page generated at 2012-05-26 23:32:57.943</p>
           <div></div>
         </div>
         <script async src="../client-live-nav.js"></script>
