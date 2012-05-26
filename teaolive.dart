@@ -16,7 +16,7 @@
 
 #library('teaolive');
 
-#import('teaolive_text_reporter.dart');
+#import('reporter/teaolive_text_reporter.dart');
 
 /**
  * "describe".

@@ -1,6 +1,6 @@
 #library('teaolive_text_reporter');
 
-#import('./teaolive.dart');
+#import('../teaolive.dart');
 
 class TeaoliveTextReporter implements TeaoliveReporter {
   

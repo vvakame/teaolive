@@ -1,6 +1,6 @@
 #library('teaolive_tap_reporter');
 
-#import('./teaolive.dart');
+#import('../teaolive.dart');
 
 class TeaoliveTapReporter implements TeaoliveReporter {
     

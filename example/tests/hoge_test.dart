@@ -1,6 +1,7 @@
 #library('hoge_test');
 
-#import('../libs/teaolive.dart');
+// #import('package:teaolive/teaolive.dart');
+#import('../../teaolive.dart');
 
 void testCase(){
   describe("sample hoge test case.", (){

@@ -2,7 +2,7 @@
 
 #import('dart:html');
 
-#import('./teaolive.dart');
+#import('../teaolive.dart');
 
 class TeaoliveHtmlReporter implements TeaoliveReporter {
   

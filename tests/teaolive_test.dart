@@ -2,8 +2,8 @@
 
 #import('helper/test_util.dart');
 
-#import('../libs/teaolive.dart');
-#import('../libs/teaolive_tap_reporter.dart');
+#import('../teaolive.dart');
+#import('../reporter/teaolive_tap_reporter.dart');
 
 
 // #import('../libs/teaolive_html_reporter.dart'); // if you want to run from command-line. remove this line.

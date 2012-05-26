@@ -1,6 +1,6 @@
 #library('teaolive_test_util');
 
-#import('../../libs/teaolive.dart');
+#import('../../teaolive.dart');
 
 class Sniffer implements TeaoliveReporter {
   
