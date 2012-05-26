@@ -10,9 +10,9 @@ class Sniffer implements TeaoliveReporter {
   
   void onRunnerStart(){}
   
-  void onSuiteResult(TeaoliveSuite suite){}
+  void onSuiteResult(TestPiece suite){}
 
-  void onSpecResult(TeaoliveSpec spec){}
+  void onSpecResult(TestPiece spec){}
 
   void onRunnerResult(TeaoliveRunner runner){
     _runner = runner;
@@ -35,8 +35,8 @@ class Sniffer implements TeaoliveReporter {
   }
 
   int _countSuccessDescribe(TeaoliveRunner runner){
-    return _countResult(runner.tests, (TeaoliveTestHolder holder){
-      if(holder.isSuite() && holder.result){
+    return _countResult(runner.tests, (TestPiece piece){
+      if(piece.isSuite() && piece.result){
         return true;
       } else {
         return false;
@@ -45,8 +45,8 @@ class Sniffer implements TeaoliveReporter {
   }
   
   int _countSuccessIt(TeaoliveRunner runner){
-    return _countResult(runner.tests, (TeaoliveTestHolder holder){
-      if(holder.isSpec() && holder.result){
+    return _countResult(runner.tests, (TestPiece piece){
+      if(piece.isSpec() && piece.result){
         return true;
       } else {
         return false;
@@ -55,8 +55,8 @@ class Sniffer implements TeaoliveReporter {
   }
   
   int _countIgnoreDescribe(TeaoliveRunner runner){
-    return _countResult(runner.tests, (TeaoliveTestHolder holder){
-      if(holder.isSuite() && holder.suite.ignore){
+    return _countResult(runner.tests, (TestPiece piece){
+      if(piece.isSuite() && piece.ignore){
         return true;
       } else {
         return false;
@@ -65,8 +65,8 @@ class Sniffer implements TeaoliveReporter {
   }
   
   int _countIgnoreIt(TeaoliveRunner runner){
-    return _countResult(runner.tests, (TeaoliveTestHolder holder){
-      if(holder.isSpec() && holder.spec.ignore){
+    return _countResult(runner.tests, (TestPiece piece){
+      if(piece.isSpec() && piece.ignore){
         return true;
       } else {
         return false;
@@ -75,8 +75,8 @@ class Sniffer implements TeaoliveReporter {
   }
   
   int _countFailureDescribe(TeaoliveRunner runner){
-    return _countResult(runner.tests, (TeaoliveTestHolder holder){
-      if(holder.isSuite() && !holder.suite.ignore && !holder.result){
+    return _countResult(runner.tests, (TestPiece piece){
+      if(piece.isSuite() && !piece.ignore && !piece.result){
         return true;
       } else {
         return false;
@@ -85,8 +85,8 @@ class Sniffer implements TeaoliveReporter {
   }
   
   int _countFailureIt(TeaoliveRunner runner){
-    return _countResult(runner.tests, (TeaoliveTestHolder holder){
-      if(holder.isSpec() && !holder.spec.ignore && !holder.result){
+    return _countResult(runner.tests, (TestPiece piece){
+      if(piece.isSpec() && !piece.ignore && !piece.result){
         return true;
       } else {
         return false;
@@ -94,14 +94,14 @@ class Sniffer implements TeaoliveReporter {
     });
   }
   
-  int _countResult(List<TeaoliveTestHolder> holderList, bool counter(TeaoliveTestHolder)){
+  int _countResult(List<TestPiece> pieces, bool counter(TestPiece)){
     int result = 0;
-    for(TeaoliveTestHolder holder in holderList){
-      if(counter(holder)){
+    for(TestPiece piece in pieces){
+      if(counter(piece)){
         result += 1;
       }
-      if(holder.isSuite()){
-        result += _countResult(holder.suite.tests, counter);
+      if(piece.isSuite()){
+        result += _countResult(piece.tests, counter);
       }
     }
     return result;

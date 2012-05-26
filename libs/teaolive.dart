@@ -22,7 +22,7 @@
  */
 void describe(String description, Function test){
   checkEnvironment();
-  _environment.runner.addSuite(new TeaoliveSuite(description, test));
+  _environment.runner.add(new TestPiece.describe(description, test));
 }
 
 /**
@@ -30,7 +30,7 @@ void describe(String description, Function test){
  */
 void xdescribe(String description, Function test){
   checkEnvironment();
-  _environment.runner.addSuite(new TeaoliveSuite.ignore(description, test));
+  _environment.runner.add(new TestPiece.xdescribe(description, test));
 }
 
 /**
@@ -40,7 +40,7 @@ void xdescribe(String description, Function test){
  */
 void it(String description, Function test){
   checkEnvironment();
-  _environment.runner.addSpec(new TeaoliveSpec(description, test));
+  _environment.runner.add(new TestPiece.it(description, test));
 }
 
 /**
@@ -48,7 +48,7 @@ void it(String description, Function test){
  */
 void xit(String description, Function test){
   checkEnvironment();
-  _environment.runner.addSpec(new TeaoliveSpec.ignore(description, test));
+  _environment.runner.add(new TestPiece.xit(description, test));
 }
 
 /**
@@ -82,7 +82,6 @@ interface Expectation<T> {
 
   void toBeNull();
 }
-
 
 /**
  * start testing.
@@ -118,10 +117,10 @@ interface TeaoliveReporter default TeaoliveTextReporter {
   void onRunnerResult(TeaoliveRunner runner);
   
   /** this method called when finish one of "describe". */
-  void onSuiteResult(TeaoliveSuite suite);
+  void onSuiteResult(TestPiece piece);
 
   /** this method called when finish one of "it". */
-  void onSpecResult(TeaoliveSpec spec);
+  void onSpecResult(TestPiece piece);
 }
 
 /**
@@ -185,25 +184,25 @@ class TeaoliveTextReporter implements TeaoliveReporter {
     print("");
   }
   
-  void onSuiteResult(TeaoliveSuite suite){}
+  void onSuiteResult(TestPiece suite){}
 
-  void onSpecResult(TeaoliveSpec spec){}
+  void onSpecResult(TestPiece spec){}
 
   void onRunnerResult(TeaoliveRunner runner){
-    for(TeaoliveTestHolder holder in runner.tests){
-      printHolder(holder, 0);
+    for(TestPiece piece in runner.tests){
+      printPiece(piece, 0);
     }
   }
   
-  void printHolder(TeaoliveTestHolder holder, int depth){
-    if(holder.isSuite()){
-      printSuite(holder.suite, depth);
+  void printPiece(TestPiece piece, int depth){
+    if(piece.isSuite()){
+      printSuite(piece, depth);
     } else {
-      printSpec(holder.spec, depth);
+      printSpec(piece, depth);
     }
   }
   
-  void printSuite(TeaoliveSuite suite, int depth){
+  void printSuite(TestPiece suite, int depth){
     if(suite.ignore){
       put("describe ${suite.description} is skipped", depth);
     } else if(suite.result){
@@ -211,13 +210,13 @@ class TeaoliveTextReporter implements TeaoliveReporter {
     } else {
       put("describe ${suite.description} is failure...", depth);
       
-      for(TeaoliveTestHolder holder in suite.tests){
-        printHolder(holder, depth + 1);
+      for(TestPiece piece in suite.tests){
+        printPiece(piece, depth + 1);
       }
     }
   }
   
-  void printSpec(TeaoliveSpec spec, int depth){
+  void printSpec(TestPiece spec, int depth){
     if(spec.ignore){
       put("it ${spec.description} is skipped", depth);
     } else if(spec.result){
@@ -242,212 +241,124 @@ class TeaoliveTextReporter implements TeaoliveReporter {
   }
 }
 
-class TeaoliveTestHolder {
-  TeaoliveSuite _suite;
-  TeaoliveSpec _spec;
-  
-  TeaoliveTestHolder.suite(this._suite);
-  TeaoliveTestHolder.spec(this._spec);
-  
-  bool isSuite(){
-    return _suite != null;
-  }
-
-  bool isSpec(){
-    return _spec != null;
-  }
-  
-  TeaoliveSuite get suite(){
-    assert(_suite != null);
-    return _suite;
-  }
-  
-  TeaoliveSpec get spec(){
-    assert(_spec != null);
-    return _spec;
-  }
-  
-  bool get result(){
-    if(isSuite()){
-      return _suite.result;
-    } else {
-      return _spec.result;
-    }
-  }
-
-  bool get start(){
-    if(isSuite()){
-      return _suite.start;
-    } else {
-      return _spec.start;
-    }
-  }
-
-  bool get finish(){
-    if(isSuite()){
-      return _suite.finish;
-    } else {
-      return _spec.finish;
-    }
-  }
-  
-  bool get ignore(){
-    if(isSuite()){
-      return _suite.ignore;
-    } else {
-      return _spec.ignore;
-    }
-  }
-}
-
 class TeaoliveRunner {
   
-  List<TeaoliveTestHolder> tests;
+  List<TestPiece> tests;
 
-  TeaoliveSuite _currentSuite;
+  TestPiece _currentRunning;
 
-  TeaoliveRunner(): tests = new List<TeaoliveTestHolder>();
+  TeaoliveRunner(): tests = new List<TestPiece>();
   
   void run(){
     _environment.reporter.onRunnerStart();
     
-    for(TeaoliveTestHolder holder in tests){
-      if(holder.isSuite()){
-        _executeSuite(holder.suite);
-      } else {
-        _executeSpec(holder.spec);
-      }
+    for(TestPiece piece in tests){
+      piece.run();
     }
     
     _environment.reporter.onRunnerResult(this);
   }
-    
-  void addSuite(TeaoliveSuite suite){
-    if(_currentSuite != null){
-      _currentSuite.addSuite(suite);
-    } else {
-      tests.add(new TeaoliveTestHolder.suite(suite));
-    }
-  }
-  
-  void addSpec(TeaoliveSpec spec){
-    if(_currentSuite != null){
-      _currentSuite.addSpec(spec);
-    } else {
-      tests.add(new TeaoliveTestHolder.spec(spec));
-    }
-  }
-  
-  void addIgnoreSuite(TeaoliveSuite suite){
-    if(_currentSuite != null){
-      _currentSuite.addSuite(suite);
-    } else {
-      tests.add(new TeaoliveTestHolder.suite(suite));
-    }
-  }
-  
-  void _executeSuite(TeaoliveSuite suite){
-    TeaoliveSuite tmp = _currentSuite;
-    _currentSuite = suite;
-    _currentSuite.run();
-    _currentSuite = tmp;
-  }
 
-  void _executeSpec(TeaoliveSpec spec){
-    spec.run();
+  void add(TestPiece piece){
+    assert(piece != null);
+    piece.parent = _findAncestorSuite(_currentRunning);
+    if(piece.parent != null){
+      piece.parent.add(piece);
+    } else {
+      tests.add(piece);
+    }
   }
+  
+  TestPiece _findAncestorSuite(TestPiece current){
+    if(current == null){
+      return null;
+    } else if(current.isSuite()){
+      return current;
+    } else {
+      return _findAncestorSuite(current.parent);
+    }
+  }
+  
+  void set currentRunning(TestPiece currentRunning){
+    _currentRunning = currentRunning;
+  }
+  
+  TestPiece get currentRunning() => _currentRunning;
 }
 
-class TeaoliveSuite {
+class TestPiece {
+  TestPiece parent;
   String description;
-  Function test;
+  Function _test;
+  List<TestPiece> tests;
 
-  bool ignore = false;
-  List<TeaoliveTestHolder> tests;
-  
+  bool _describe;
+  bool ignore;
+
   bool result = false;
   bool start = false;
   bool finish = false;
 
-  TeaoliveSuite(this.description, this.test): tests = new List<TeaoliveTestHolder>();
+  String errorMessage;
+  var error;
+  
+  TestPiece.describe(this.description, this._test, [this.parent = null]): _describe = true, ignore = false, tests = new List<TestPiece>();
+  TestPiece.it(this.description, this._test, [this.parent = null]): _describe = false, ignore = false, tests = new List<TestPiece>();
 
-  TeaoliveSuite.ignore(this.description, this.test): tests = new List<TeaoliveTestHolder>(), ignore = true;
+  TestPiece.xdescribe(this.description, this._test, [this.parent = null]): _describe = true, ignore = true, tests = new List<TestPiece>();
+  TestPiece.xit(this.description, this._test, [this.parent = null]): _describe = false, ignore = true, tests = new List<TestPiece>();
 
+  bool isSuite() => _describe;
+  bool isSpec() => !_describe;
+  
   void run(){
+    TeaoliveRunner runner = _environment.runner;
+    TestPiece pre = runner.currentRunning; 
+    runner.currentRunning = this;
     try{
       start = true;
       if(ignore){
         finish = true;
         return;
       }
-      test();
+      _test();
+      for(TestPiece piece in tests){
+        piece.run();
+      }
       finish = true;
-      
       result = true;
 
-      for(TeaoliveTestHolder holder in tests){
-        if(holder.start && holder.finish && holder.result){
+      List<TestPiece> fullset = new List<TestPiece>();
+      fullset.add(this);
+      fullset.addAll(tests);
+      for(TestPiece piece in fullset){
+        if(piece.start && piece.finish && piece.result){
           continue;
-        } else if(holder.ignore){
+        } else if(piece.ignore){
           continue;
         }
         result = false;
       }
+    } catch(AssertionException e) {
+      errorMessage = e.msg;
+      error = e;
+      return;
+    } catch(var e) {
+      error = e;
+      return;
     } finally {
-      _environment.reporter.onSuiteResult(this);
+      runner.currentRunning = pre;
+      finish = true;
     }
   }
-
-  void addSuite(TeaoliveSuite suite){
-    tests.add(new TeaoliveTestHolder.suite(suite));
-    _environment.runner._executeSuite(suite);
-  }
   
-  void addSpec(TeaoliveSpec spec){
-    tests.add(new TeaoliveTestHolder.spec(spec));
-    _environment.runner._executeSpec(spec);
-  }
-}
-
-class TeaoliveSpec {
-  String description;
-  Function test;
-  
-  bool ignore = false;
-  bool result = false;
-  bool start = false;
-  bool finish = false;
-  
-  String errorMessage;
-  var error;
-  
-  TeaoliveSpec(this.description, this.test);
-  TeaoliveSpec.ignore(this.description, this.test): ignore = true;
-  
-  void run(){
-    try{
-      start = true;
-
-      try{
-        if(ignore){
-          finish = true;
-          return;
-        }
-        test();
-      } catch(AssertionException e) {
-        errorMessage = e.msg;
-        error = e;
-        return;
-      } catch(var e) {
-        error = e;
-        return;
-      } finally {
-        finish = true;
-      }
-      result = true;
-
-    } finally {
-      _environment.reporter.onSpecResult(this);
+  void add(TestPiece piece){
+    assert(piece != null);
+    if(isSuite()){
+      tests.add(piece);
+    } else {
+      assert(parent != null);
+      parent.add(piece);
     }
   }
 }
@@ -455,11 +366,10 @@ class TeaoliveSpec {
 class AssertionException implements Exception {
   String msg;
   
-  AssertionException.msg(this.msg) : super() ;
+  AssertionException.msg(this.msg) : super();
 }
 
 typedef bool _op(StringBuffer buffer, bool result);
-
 class _ExpectationImpl<T> implements Expectation<T> {
   
   T _actual;

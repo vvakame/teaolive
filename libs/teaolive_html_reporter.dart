@@ -6,7 +6,6 @@
 
 class TeaoliveHtmlReporter implements TeaoliveReporter {
   
-  
   Element _parent;
   
   TeaoliveHtmlReporter();
@@ -19,23 +18,23 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
     _parent.innerHTML = "test is started...";
   }
   
-  void onSuiteResult(TeaoliveSuite suite){}
+  void onSuiteResult(TestPiece suite){}
 
-  void onSpecResult(TeaoliveSpec spec){}
+  void onSpecResult(TestPiece spec){}
 
   void onRunnerResult(TeaoliveRunner runner){
     _parent.nodes.clear();
     
-    for(TeaoliveTestHolder holder in runner.tests){
-      if(holder.isSuite()){
-        addSuite2dom(_parent, holder.suite);
+    for(TestPiece piece in runner.tests){
+      if(piece.isSuite()){
+        addSuite2dom(_parent, piece);
       } else {
-        addSpec2dom(_parent, holder.spec);
+        addSpec2dom(_parent, piece);
       }
     }
   }
   
-  void addSuite2dom(final Element parent, final TeaoliveSuite suite){
+  void addSuite2dom(final Element parent, final TestPiece suite){
     
     final Element el = new Element.tag("div");
     el.classes.add("teaolieve-describe");
@@ -54,18 +53,18 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
       
       parent.nodes.add(el);
 
-      for(TeaoliveTestHolder holder in suite.tests){
-        if(holder.isSuite()){
-          addSuite2dom(el, holder.suite);
+      for(TestPiece piece in suite.tests){
+        if(piece.isSuite()){
+          addSuite2dom(el, piece);
         } else {
-          addSpec2dom(el, holder.spec);
+          addSpec2dom(el, piece);
         }
       }
     }
     parent.nodes.add(el);
   }
   
-  void addSpec2dom(Element parent, TeaoliveSpec spec){
+  void addSpec2dom(Element parent, TestPiece spec){
     
     final Element el = new Element.tag("div");
     el.classes.add("teaolieve-it");

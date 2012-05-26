@@ -8,9 +8,9 @@ class TeaoliveTapReporter implements TeaoliveReporter {
 
   void onRunnerStart(){}
   
-  void onSuiteResult(TeaoliveSuite suite){}
+  void onSuiteResult(TestPiece suite){}
 
-  void onSpecResult(TeaoliveSpec spec){}
+  void onSpecResult(TestPiece spec){}
 
   void onRunnerResult(TeaoliveRunner runner){
     printHeader(runner);
@@ -24,18 +24,18 @@ class TeaoliveTapReporter implements TeaoliveReporter {
   
   int countSpec(TeaoliveRunner runner){
     int sum = 0;
-    for(TeaoliveTestHolder holder in runner.tests){
-      sum += _countSpec(holder);
+    for(TestPiece piece in runner.tests){
+      sum += _countSpec(piece);
     }
     return sum;
   }
   
-  int _countSpec(TeaoliveTestHolder holder){
-    if(holder.isSpec()){
+  int _countSpec(TestPiece piece){
+    if(piece.isSpec()){
       return 1;
     } else {
       int sum = 0;
-      for(TeaoliveTestHolder child in holder.suite.tests){
+      for(TestPiece child in piece.tests){
         sum += _countSpec(child);
       }
       return sum;
@@ -43,11 +43,11 @@ class TeaoliveTapReporter implements TeaoliveReporter {
   }
   
   void printBody(TeaoliveRunner runner){
-    for(TeaoliveTestHolder holder in runner.tests){
-      if(holder.isSuite()){
-        processSuite(holder.suite);
+    for(TestPiece piece in runner.tests){
+      if(piece.isSuite()){
+        processSuite(piece);
       } else {
-        processSpec(holder.spec);
+        processSpec(piece);
       }
     }
   }
@@ -59,22 +59,22 @@ class TeaoliveTapReporter implements TeaoliveReporter {
     return _seq;
   }
   
-  void processSuite(TeaoliveSuite suite){
+  void processSuite(TestPiece suite){
     if(suite.ignore){
       print("# describe ${suite.description} # SKIP");
     } else {
       print("# describe ${suite.description}");
     }
-    for(TeaoliveTestHolder holder in suite.tests){
-      if(holder.isSuite()){
-        processSuite(holder.suite);
+    for(TestPiece piece in suite.tests){
+      if(piece.isSuite()){
+        processSuite(piece);
       } else {
-        processSpec(holder.spec);
+        processSpec(piece);
       }
     }
   }
 
-  void processSpec(TeaoliveSpec spec){
+  void processSpec(TestPiece spec){
     if(spec.ignore){
       print("ok ${getNo()} it ${spec.description} # SKIP");
     } else if(spec.result){
