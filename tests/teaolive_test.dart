@@ -3,6 +3,7 @@
 #import('helper/test_util.dart');
 
 #import('../teaolive.dart');
+// #import('../reporter/teaolive_html_reporter.dart');
 #import('../reporter/teaolive_junit_xml_reporter.dart');
 
 // DO NOT USE print FUNCTION!!
@@ -12,6 +13,7 @@ void main(){
     
   addTest(testCase);
 
+  // setTeaoliveReporter(new TeaoliveHtmlReporter());
   setTeaoliveReporter(new TeaoliveJUnitXMLReporter());
   teaoliveRun();
 }

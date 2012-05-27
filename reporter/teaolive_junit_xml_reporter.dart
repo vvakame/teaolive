@@ -112,6 +112,9 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
   }
 
   void writeTestCaseFailure(String name, String reason, [String className = "default", time = 0.0]){
+    if(reason == null){
+      reason = "unknown";
+    }
     writeLine('<testcase name="${escape(name)}" classname="${escape(className)}" time="${time}">');
     writeLine('<failure message="${escape(reason)}" type="Teaolive"></failure>');
     writeLine('</testcase>');
