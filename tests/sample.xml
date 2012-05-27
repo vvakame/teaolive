@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuites>
+  <testsuite name="usage_for_ci_sh" errors="4" failures="0" tests="14" time="0.0325229167938232">
+    <system-out>1..14
+# describe Tea olive
+ok 1 it makes testing Dart is awesome!
+not ok 2 it failure..., expected is &lt;2&gt;, but got &lt;1&gt;.
+ok 3 it toBe is valid.
+ok 4 it not is valid.
+ok 5 it toBeNull is valid.
+ok 6 it toEqual is valid.
+# describe child
+ok 7 it ok
+not ok 8 it ng, expected is not &lt;1&gt;, but got &lt;1&gt;.
+# describe ignore tests.
+# describe ignore this description # SKIP
+ok 10 it top-level it
+# describe sample hoge test case.
+ok 11 it ok
+not ok 12 it ng
+# describe sample foobar test case.
+ok 13 it ok
+not ok 14 it ng
+</system-out>
+    <testcase name="it makes testing Dart is awesome!" classname="usage_for_ci_sh" time="0.000146865844726562" />
+    <testcase name="it failure..., expected is &lt;2&gt;, but got &lt;1&gt;." classname="usage_for_ci_sh" time="0.000118017196655273">
+      <failure message="not ok 2 it failure..., expected is &lt;2&gt;, but got &lt;1&gt;." type="TAP::Parser::Result::Test"></failure>
+    </testcase>
+    <testcase name="it toBe is valid." classname="usage_for_ci_sh" time="7.51018524169922e-05" />
+    <testcase name="it not is valid." classname="usage_for_ci_sh" time="7.10487365722656e-05" />
+    <testcase name="it toBeNull is valid." classname="usage_for_ci_sh" time="6.89029693603516e-05" />
+    <testcase name="it toEqual is valid." classname="usage_for_ci_sh" time="7.51018524169922e-05" />
+    <testcase name="it ok" classname="usage_for_ci_sh" time="6.91413879394531e-05" />
+    <testcase name="it ng, expected is not &lt;1&gt;, but got &lt;1&gt;." classname="usage_for_ci_sh" time="7.20024108886719e-05">
+      <failure message="not ok 8 it ng, expected is not &lt;1&gt;, but got &lt;1&gt;." type="TAP::Parser::Result::Test"></failure>
+    </testcase>
+    <testcase name="it top-level it" classname="usage_for_ci_sh" time="0.000124931335449219" />
+    <testcase name="it ok (2)" classname="usage_for_ci_sh" time="7.39097595214844e-05" />
+    <testcase name="it ng (2)" classname="usage_for_ci_sh" time="7.20024108886719e-05">
+      <failure message="not ok 12 it ng" type="TAP::Parser::Result::Test"></failure>
+    </testcase>
+    <testcase name="it ok (3)" classname="usage_for_ci_sh" time="7.20024108886719e-05" />
+    <testcase name="it ng (3)" classname="usage_for_ci_sh" time="6.98566436767578e-05">
+      <failure message="not ok 14 it ng" type="TAP::Parser::Result::Test"></failure>
+    </testcase>
+  </testsuite>
+</testsuites>
