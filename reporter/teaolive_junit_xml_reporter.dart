@@ -36,7 +36,8 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
     writeLine("<?xml version='1.0' encoding='utf-8'?>");
     
     writeLine("<testsuites>");
-    writeLine('<testsuite name="usage_for_ci_sh" errors="0" failures="0" tests="0" time="0.0325229167938232">');
+    writeLine('<testsuite name="usage_for_ci_sh" errors="0" failures="0" tests="1" time="0.0325229167938232">');
+    writeLine('<testcase name="it toBe is valid." classname="usage_for_ci_sh" time="7.51018524169922e-05" />');
     writeLine("</testsuite>");
     writeLine("</testsuites>");
     
