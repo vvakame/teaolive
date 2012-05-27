@@ -3,10 +3,7 @@
 #import('helper/test_util.dart');
 
 #import('../teaolive.dart');
-#import('../reporter/teaolive_tap_reporter.dart');
-
-
-// #import('../libs/teaolive_html_reporter.dart'); // if you want to run from command-line. remove this line.
+#import('../reporter/teaolive_junit_xml_reporter.dart');
 
 // DO NOT USE print FUNCTION!!
 // We can't change the standard output stream in the current version of Dart.
@@ -15,8 +12,7 @@ void main(){
     
   addTest(testCase);
 
-  setTeaoliveReporter(new TeaoliveTapReporter());
-  // setTeaoliveReporter(new TeaoliveHtmlReporter()); // if you want to run from command-line. remove this line.
+  setTeaoliveReporter(new TeaoliveJUnitXMLReporter());
   teaoliveRun();
 }
 
