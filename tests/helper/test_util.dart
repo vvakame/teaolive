@@ -19,93 +19,63 @@ class Sniffer implements TeaoliveReporter {
   }
   
   TestResult get describe() {
-    int success = _countSuccessDescribe(_runner);
-    int failure = _countFailureDescribe(_runner);
-    int ignore = _countIgnoreDescribe(_runner);
+    int success = countSuccessDescribe(_runner.tests);
+    int failure = countFailureDescribe(_runner.tests);
+    int ignore = countIgnoreDescribe(_runner.tests);
     
     return new TestResult(success, failure, ignore);
   }
 
   TestResult get it() {
-    int success = _countSuccessIt(_runner);
-    int failure = _countFailureIt(_runner);
-    int ignore = _countIgnoreIt(_runner);
+    int success = countSuccessIt(_runner.tests);
+    int failure = countFailureIt(_runner.tests);
+    int ignore = countIgnoreIt(_runner.tests);
     
     return new TestResult(success, failure, ignore);
   }
+}
 
-  int _countSuccessDescribe(TeaoliveRunner runner){
-    return _countResult(runner.tests, (TestPiece piece){
-      if(piece.isSuite() && piece.result){
-        return true;
-      } else {
-        return false;
-      }
-    });
-  }
-  
-  int _countSuccessIt(TeaoliveRunner runner){
-    return _countResult(runner.tests, (TestPiece piece){
-      if(piece.isSpec() && piece.result){
-        return true;
-      } else {
-        return false;
-      }
-    });
-  }
-  
-  int _countIgnoreDescribe(TeaoliveRunner runner){
-    return _countResult(runner.tests, (TestPiece piece){
-      if(piece.isSuite() && piece.ignore){
-        return true;
-      } else {
-        return false;
-      }
-    });
-  }
-  
-  int _countIgnoreIt(TeaoliveRunner runner){
-    return _countResult(runner.tests, (TestPiece piece){
-      if(piece.isSpec() && piece.ignore){
-        return true;
-      } else {
-        return false;
-      }
-    });
-  }
-  
-  int _countFailureDescribe(TeaoliveRunner runner){
-    return _countResult(runner.tests, (TestPiece piece){
-      if(piece.isSuite() && !piece.ignore && !piece.result){
-        return true;
-      } else {
-        return false;
-      }
-    });
-  }
-  
-  int _countFailureIt(TeaoliveRunner runner){
-    return _countResult(runner.tests, (TestPiece piece){
-      if(piece.isSpec() && !piece.ignore && !piece.result){
-        return true;
-      } else {
-        return false;
-      }
-    });
-  }
-  
-  int _countResult(List<TestPiece> pieces, bool counter(TestPiece)){
-    int result = 0;
-    for(TestPiece piece in pieces){
-      if(counter(piece)){
-        result += 1;
-      }
-      if(piece.isSuite()){
-        result += _countResult(piece.tests, counter);
-      }
+int countSuccessDescribe(List<TestPiece> tests){
+  return _countResult(tests, (TestPiece piece) => piece.isSuite() && piece.result);
+}
+
+int countIgnoreDescribe(List<TestPiece> tests, [bool recursive = false]){
+  return _countResult(tests, (TestPiece piece) => piece.isSuite() && piece.ignore);
+}
+
+int countFailureDescribe(List<TestPiece> tests){
+  return _countResult(tests, (TestPiece piece) => piece.isSuite() && !piece.ignore && !piece.result);
+}
+
+int countDescribe(List<TestPiece> tests){
+  return _countResult(tests, (TestPiece piece) => piece.isSuite());
+}
+
+int countSuccessIt(List<TestPiece> tests, [bool recursive = false]){
+  return _countResult(tests, (TestPiece piece) => piece.isSpec() && piece.result);
+}
+
+int countIgnoreIt(List<TestPiece> tests){
+  return _countResult(tests, (TestPiece piece) => piece.isSpec() && piece.ignore);
+}
+
+int countFailureIt(List<TestPiece> tests){
+  return _countResult(tests, (TestPiece piece) => piece.isSpec() && !piece.ignore && !piece.result);
+}
+
+int countIt(List<TestPiece> tests){
+  return _countResult(tests, (TestPiece piece) => piece.isSpec());
+}
+
+int _countResult(List<TestPiece> pieces, bool counter(TestPiece)){
+  int result = 0;
+  for(TestPiece piece in pieces){
+    if(counter(piece)){
+      result += 1;
     }
-    return result;
+    result += _countResult(piece.tests, counter);
   }
+  return result;
 }
 
 class TestResult {

@@ -3,6 +3,7 @@
 #import('dart:io');
 
 #import('../teaolive.dart');
+#import('../tests/helper/test_util.dart', prefix: "testutil");
 
 class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
   
@@ -33,19 +34,94 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
   void onSpecResult(TestPiece spec){}
 
   void onRunnerResult(TeaoliveRunner runner){
-    writeLine("<?xml version='1.0' encoding='utf-8'?>");
+    writeXmlDocType();
+    writeTestSuitesStart();
     
-    writeLine("<testsuites>");
-    writeLine('<testsuite name="usage_for_ci_sh" errors="0" failures="0" tests="1" time="0.0325229167938232">');
-    writeLine('<testcase name="it toBe is valid." classname="usage_for_ci_sh" time="7.51018524169922e-05" />');
-    writeLine("</testsuite>");
-    writeLine("</testsuites>");
+    writeTopLevelTestSuites(runner.tests);
+    
+    writeTestSuitesEnd();
     
     _stream.close();
   }
   
+  void writeTopLevelTestSuites(List<TestPiece> tests){
+
+    for(TestPiece piece in tests){
+      if(piece.ignore){
+        continue;
+      }
+      if(piece.isSuite()){
+        int testCount = testutil.countIt(tests) - testutil.countIgnoreIt(tests);
+        int failures = testutil.countFailureIt(tests);
+        writeTestSuiteStart(piece.description, testCount, failures: failures);
+        writeTestSuites(piece);
+        writeTestSuiteEnd();
+        
+      } else {
+        int errors = piece.result ? 0 : 1;
+        writeTestSuiteStart(piece.description, 1, errors: errors);
+        writeSpec(piece);
+        writeTestSuiteEnd();
+      }
+    }
+  }
+  
+  void writeTestSuites(TestPiece suite){
+    for(TestPiece piece in suite.tests){
+      if(piece.isSuite()){
+        writeTestSuites(piece);
+        continue;
+      } else if(piece.ignore){
+        continue;
+      }
+      if(piece.result){
+        writeTestCaseSuccess(piece.description);
+      } else {
+        writeTestCaseFailure(piece.description, piece.errorMessage);
+      }
+    }
+  }
+  
+  void writeSpec(TestPiece piece){
+    assert(piece.isSpec());
+    writeTestCaseSuccess(piece.description);
+  }
+  
+  void writeXmlDocType(){
+    writeLine("<?xml version='1.0' encoding='utf-8'?>");
+  }
+  
+  void writeTestSuitesStart(){
+    writeLine("<testsuites>");
+  }
+  
+  void writeTestSuitesEnd(){
+    writeLine("</testsuites>");
+  }
+  
+  void writeTestSuiteStart(String name, int tests, [int errors = 0, int failures = 0, double time = 0.0]){
+    writeLine('<testsuite name="${escape(name)}" errors="${errors}" failures="${failures}" tests="${tests}" time="${time}">');
+  }
+
+  void writeTestSuiteEnd(){
+    writeLine("</testsuite>");
+  }
+  
+  void writeTestCaseSuccess(String name, [String className = "default", time = 0.0]){
+    writeLine('<testcase name="${escape(name)}" classname="${escape(className)}" time="${time}" />');
+  }
+
+  void writeTestCaseFailure(String name, String reason, [String className = "default", time = 0.0]){
+    writeLine('<testcase name="${escape(name)}" classname="${escape(className)}" time="${time}">');
+    writeLine('<failure message="${escape(reason)}" type="Teaolive"></failure>');
+    writeLine('</testcase>');
+  }
+  
+  String escape(String str){
+    return str.replaceAll('"', "\\\"");
+  }
+
   void write(String str){
-    print(str);
     _stream.writeString(str);
   }
   
