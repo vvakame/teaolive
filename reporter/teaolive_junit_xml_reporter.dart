@@ -51,8 +51,8 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
         continue;
       }
       if(piece.isSuite()){
-        int testCount = testutil.countIt(tests) - testutil.countIgnoreIt(tests);
-        int failures = testutil.countFailureIt(tests);
+        int testCount = testutil.countIt(piece.tests) - testutil.countIgnoreIt(piece.tests);
+        int failures = testutil.countFailureIt(piece.tests);
         writeTestSuiteStart(piece.description, testCount, failures: failures);
         writeTestSuites(piece);
         writeTestSuiteEnd();
