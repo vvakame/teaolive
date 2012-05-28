@@ -18,11 +18,14 @@
 
 #import('reporter/teaolive_text_reporter.dart');
 
+/** Task. Represent an action, such as testing and cleanup. */
+typedef void Task();
+
 /**
  * "describe".
  * If you want to start writing BDD test, start with this function.
  */
-void describe(String description, Function test){
+void describe(String description, Task test){
   checkEnvironment();
   _environment.runner.add(new TestPiece.describe(description, test));
 }
@@ -30,7 +33,7 @@ void describe(String description, Function test){
 /**
  * If you do not want to use to "description" temporarily, you can use this function.
  */
-void xdescribe(String description, Function test){
+void xdescribe(String description, Task test){
   checkEnvironment();
   _environment.runner.add(new TestPiece.xdescribe(description, test));
 }
@@ -40,7 +43,7 @@ void xdescribe(String description, Function test){
  * If you want to describe the behavior, start with this function.
  * usually, this method is under "describe" function.
  */
-void it(String description, Function test){
+void it(String description, Task test){
   checkEnvironment();
   _environment.runner.add(new TestPiece.it(description, test));
 }
@@ -48,9 +51,27 @@ void it(String description, Function test){
 /**
  * If you do not want to use to "it" temporarily, you can use this function.
  */
-void xit(String description, Function test){
+void xit(String description, Task test){
   checkEnvironment();
   _environment.runner.add(new TestPiece.xit(description, test));
+}
+
+/**
+ * If you want setup for testing before each "describe"s.
+ */
+void beforeEach(Task task){
+  checkEnvironment();
+  assert(_environment.runner.currentRunning != null);
+  _environment.runner.currentRunning.beforeEach.add(task);
+}
+
+/**
+ * If you want clean up for testing after each "describe"s.
+ */
+void afterEach(Task task){
+  checkEnvironment();
+  assert(_environment.runner.currentRunning != null);
+  _environment.runner.currentRunning.afterEach.add(task);
 }
 
 /**
@@ -225,8 +246,10 @@ class TeaoliveRunner {
 class TestPiece {
   TestPiece parent;
   String description;
-  Function _test;
+  Task _test;
   List<TestPiece> tests;
+  List<Task> beforeEach;
+  List<Task> afterEach;
 
   bool _describe;
   bool ignore;
@@ -238,18 +261,18 @@ class TestPiece {
   String errorMessage;
   var error;
   
-  TestPiece.describe(this.description, this._test, [this.parent = null]): _describe = true, ignore = false, tests = new List<TestPiece>();
-  TestPiece.it(this.description, this._test, [this.parent = null]): _describe = false, ignore = false, tests = new List<TestPiece>();
+  TestPiece.describe(this.description, this._test, [this.parent = null]): _describe = true, ignore = false, tests = new List<TestPiece>(), beforeEach = new List<Task>(), afterEach = new List<Task>();
+  TestPiece.it(this.description, this._test, [this.parent = null]): _describe = false, ignore = false, tests = new List<TestPiece>(), beforeEach = new List<Task>(), afterEach = new List<Task>();
 
-  TestPiece.xdescribe(this.description, this._test, [this.parent = null]): _describe = true, ignore = true, tests = new List<TestPiece>();
-  TestPiece.xit(this.description, this._test, [this.parent = null]): _describe = false, ignore = true, tests = new List<TestPiece>();
+  TestPiece.xdescribe(this.description, this._test, [this.parent = null]): _describe = true, ignore = true, tests = new List<TestPiece>(), beforeEach = new List<Task>(), afterEach = new List<Task>();
+  TestPiece.xit(this.description, this._test, [this.parent = null]): _describe = false, ignore = true, tests = new List<TestPiece>(), beforeEach = new List<Task>(), afterEach = new List<Task>();
 
   bool isSuite() => _describe;
   bool isSpec() => !_describe;
   
   void run(){
     TeaoliveRunner runner = _environment.runner;
-    TestPiece pre = runner.currentRunning; 
+    TestPiece pre = runner.currentRunning;
     runner.currentRunning = this;
     try{
       start = true;
@@ -259,7 +282,13 @@ class TestPiece {
       }
       _test();
       for(TestPiece piece in tests){
+        for(Task beforeTask in beforeEach){
+          beforeTask();
+        }
         piece.run();
+        for(Task afterTask in afterEach){
+          afterTask();
+        }
       }
       finish = true;
       result = true;
@@ -296,6 +325,27 @@ class TestPiece {
       assert(parent != null);
       parent.add(piece);
     }
+  }
+  
+  List<Task> _collectBeforeTask(TestPiece piece, [List<Task> tasks = new List<Task>()]){
+    if(piece.parent != null){
+      _collectBeforeTask(piece.parent, tasks);
+    }
+    tasks.addAll(piece.beforeEach);
+    return tasks;
+  }
+
+  List<Task> _collectAfterTask(TestPiece piece, [List<Task> tasks = new List<Task>()]){
+    if(piece.parent != null){
+      _collectAfterTask(piece.parent, tasks);
+    }
+    tasks.addAll(piece.afterEach);
+    List<Task> reverse = new List<Task>();
+    while(tasks.length != 0){
+      Task task = tasks.removeLast();
+      reverse.add(task);
+    }
+    return tasks;
   }
 }
 
