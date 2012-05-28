@@ -61,7 +61,43 @@ void testCase(){
       expect(sniffer.it.ignore).toBe(1);
     });
   });
-  
+
+  describe("matchers", (){
+    it("toBe matcher compare by ===", (){
+      expect(1).toBe(1);
+      expect(1).not.toBe(2);
+      expect(1).not.toBe(null);
+      
+      expect("hoge").toBe("hoge"); // same object
+      {
+        StringBuffer buffer = new StringBuffer();
+        buffer.add("ho");
+        buffer.add("ge");
+        expect("hoge").not.toBe(buffer.toString()); // not same object
+      }
+    });
+    
+    it("toEqual matcher compare by ==", (){
+      expect(1).toEqual(1);
+      expect(1).not.toEqual(2);
+      expect(1).not.toEqual(null);
+      
+      expect("hoge").toEqual("hoge");
+      {
+        StringBuffer buffer = new StringBuffer();
+        buffer.add("ho");
+        buffer.add("ge");
+        expect("hoge").toEqual(buffer.toString());
+      }
+    });
+    
+    it("toBeNull matcher is check null",(){
+      expect(1).not.toBeNull();
+      expect(null).toBeNull();
+      expect("hoge").not.toBeNull();
+    });
+  });
+
   describe("operator functions", (){
     it("beforeEach and afterEach", (){
       TeaoliveEnvironment env = getCurrentTeaoliveEnvironment();
