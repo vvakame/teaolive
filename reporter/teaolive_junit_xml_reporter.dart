@@ -76,8 +76,10 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
       }
       if(piece.result){
         writeTestCaseSuccess(piece.description);
+      } else if(piece.error is AssertionException) {
+        writeTestCaseFailure(piece.description, piece.errorMessage, piece.trace);
       } else {
-        writeTestCaseFailure(piece.description, piece.errorMessage);
+        writeTestCaseError(piece.description, piece.errorMessage, piece.trace);
       }
     }
   }
@@ -111,15 +113,28 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
     writeLine('<testcase name="${escape(name)}" classname="${escape(className)}" time="${time}" />');
   }
 
-  void writeTestCaseFailure(String name, String reason, [String className = "default", time = 0.0]){
+  void writeTestCaseFailure(String name, String reason, Dynamic trace, [String className = "default", time = 0.0]){
     if(reason == null){
       reason = "unknown";
     }
     writeLine('<testcase name="${escape(name)}" classname="${escape(className)}" time="${time}">');
-    writeLine('<failure message="${escape(reason)}" type="Teaolive"></failure>');
+    write('<failure message="${escape(reason)}" type="AsserionException">');
+    write(trace.toString());
+    writeLine('</failure>');
     writeLine('</testcase>');
   }
-  
+
+  void writeTestCaseError(String name, String reason, Dynamic trace, [String className = "default", time = 0.0]){
+    if(reason == null){
+      reason = "unknown";
+    }
+    writeLine('<testcase name="${escape(name)}" classname="${escape(className)}" time="${time}">');
+    write('<error message="${escape(reason)}" type="Unknown">');
+    write(trace.toString());
+    writeLine('</error>');
+    writeLine('</testcase>');
+  }
+
   String escape(String str){
     return str.replaceAll('"', "\\\"");
   }
