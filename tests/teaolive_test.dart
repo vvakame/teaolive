@@ -195,4 +195,58 @@ void testCase(){
       expect(builder.toString()).toEqual("b1 m1 m2 a2 b3-1 b3-2 m3 m4 a4-1 a4-2 b5 m5-1 a5 b5 m5-2 a5 b6-o m6-o a6-o b6-o b6-i m6-i a6-i a6-o ");
     });
   });
+
+  describe("capture exception", (){
+    it("save stack trace", (){
+      TeaoliveEnvironment env = getCurrentTeaoliveEnvironment();
+      resetTeoliveEnvironment();
+      
+      // under new environment
+      Sniffer sniffer = new Sniffer();
+      setTeaoliveReporter(sniffer);
+
+      addTest((){
+        describe("...", (){
+          it("unknown exception", (){
+            throw "unexpected error";
+          });
+          it("assertion error", (){
+            expect(1).toBe(2);
+          });
+          it("success", (){
+          });
+        });
+      });
+      
+      teaoliveRun();
+      
+      // continue root testing...
+      restoreTeaoliveEnvironment(env);
+      
+      // check result
+      expect(sniffer.runner.tests.length).toBe(1);
+      expect(sniffer.runner.tests[0].tests.length).toBe(3);
+      { // unknown exception
+        TestPiece spec = sniffer.runner.tests[0].tests[0];
+        expect(spec.result).toBe(false);
+        expect(spec.error).not.toBeNull();
+        expect(spec.errorMessage).toBeNull();
+        expect(spec.trace).not.toBeNull();
+      }
+      { // assert error
+        TestPiece spec = sniffer.runner.tests[0].tests[1];
+        expect(spec.result).toBe(false);
+        expect(spec.error).not.toBeNull();
+        expect(spec.errorMessage).not.toBeNull();
+        expect(spec.trace).not.toBeNull();
+      }
+      { // success
+        TestPiece spec = sniffer.runner.tests[0].tests[2];
+        expect(spec.result).toBe(true);
+        expect(spec.error).toBeNull();
+        expect(spec.errorMessage).toBeNull();
+        expect(spec.trace).toBeNull();
+      }
+    });
+  });
 }

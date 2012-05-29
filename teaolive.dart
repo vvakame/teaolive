@@ -258,8 +258,9 @@ class TestPiece {
   bool start = false;
   bool finish = false;
 
+  Dynamic error;
   String errorMessage;
-  var error;
+  Dynamic trace;
   
   TestPiece.describe(this.description, this._test, [this.parent = null]): _describe = true, ignore = false, tests = new List<TestPiece>(), beforeEach = new List<Task>(), afterEach = new List<Task>();
   TestPiece.it(this.description, this._test, [this.parent = null]): _describe = false, ignore = false, tests = new List<TestPiece>(), beforeEach = new List<Task>(), afterEach = new List<Task>();
@@ -304,12 +305,14 @@ class TestPiece {
         }
         result = false;
       }
-    } catch(AssertionException e) {
+    } catch(AssertionException e, Dynamic _trace) {
       errorMessage = e.msg;
       error = e;
+      trace = _trace;
       return;
-    } catch(var e) {
+    } catch(var e, Dynamic _trace) {
       error = e;
+      trace = _trace;
       return;
     } finally {
       runner.currentRunning = pre;
@@ -363,7 +366,8 @@ class _ExpectationImpl<T> implements Expectation<T> {
   
   _ExpectationImpl.actual(T this._actual): _opList = new List<_op>();
 
-  _ExpectationImpl._actualWithOp(_ExpectationImpl expectation, _op op): this.actual(expectation._actual){
+  _ExpectationImpl._actualWithOp(_ExpectationImpl expectation, _op op): _opList = new List<_op>(){
+    _actual = expectation._actual;
     _opList.addAll(expectation._opList);
     _opList.add(op);
   }

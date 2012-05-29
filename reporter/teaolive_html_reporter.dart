@@ -87,6 +87,11 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
       } else {
         el.innerHTML += " unknown error ${spec.error}";
       }
+      if(spec.error is AssertionException == false){
+        final Element pre = new Element.tag("pre");
+        pre.text = spec.trace.toString();
+        el.nodes.add(pre);
+      }
     }
     parent.nodes.add(el);
   }

@@ -18,6 +18,8 @@ class Sniffer implements TeaoliveReporter {
     _runner = runner;
   }
   
+  TeaoliveRunner get runner() => _runner;
+  
   TestResult get describe() {
     int success = countSuccessDescribe(_runner.tests);
     int failure = countFailureDescribe(_runner.tests);
