@@ -249,14 +249,4 @@ void testCase(){
       }
     });
   });
-  
-  describe("junit reporter check", (){
-    it("raise unknown error", (){
-      throw "siranaiyo";
-    });
-    it("raise assertion error", (){
-      expect(1).toBe(2);
-    });
-    it("ok", (){});
-  });
 }
