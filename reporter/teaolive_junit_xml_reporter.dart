@@ -119,7 +119,7 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
     }
     writeLine('<testcase name="${escape(name)}" classname="${escape(className)}" time="${time}">');
     write('<failure message="${escape(reason)}" type="AsserionException">');
-    write(trace.toString());
+    write(escape(trace.toString()));
     writeLine('</failure>');
     writeLine('</testcase>');
   }
@@ -130,13 +130,13 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
     }
     writeLine('<testcase name="${escape(name)}" classname="${escape(className)}" time="${time}">');
     write('<error message="${escape(reason)}" type="Unknown">');
-    write(trace.toString());
+    write(escape(trace.toString()));
     writeLine('</error>');
     writeLine('</testcase>');
   }
 
   String escape(String str){
-    return str.replaceAll('"', "\\\"");
+    return str.replaceAll('"', "\\\"").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
   }
 
   void write(String str){
