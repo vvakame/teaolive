@@ -16,6 +16,8 @@
 
 #library('teaolive');
 
+#import('dart:coreimpl');
+
 #import('reporter/teaolive_text_reporter.dart');
 
 /** Task. Represent an action, such as testing and cleanup. */
@@ -45,6 +47,8 @@ void xdescribe(String description, Task test){
  */
 void it(String description, Task test){
   checkEnvironment();
+  assert(_environment.runner.currentRunning != null);
+  assert(_environment.runner.currentRunning.isSuite());
   _environment.runner.add(new TestPiece.it(description, test));
 }
 
@@ -53,6 +57,8 @@ void it(String description, Task test){
  */
 void xit(String description, Task test){
   checkEnvironment();
+  assert(_environment.runner.currentRunning != null);
+  assert(_environment.runner.currentRunning.isSuite());
   _environment.runner.add(new TestPiece.xit(description, test));
 }
 
@@ -146,6 +152,22 @@ interface TeaoliveReporter default TeaoliveTextReporter {
   void onSpecResult(TestPiece piece);
 }
 
+Guardian makeGuardian(){
+  Guardian completer = new Guardian();
+  Future<Dynamic> future = completer.future;
+  return completer;
+}
+
+class Guardian extends CompleterImpl<Dynamic> {
+  void arrival(){
+    complete(null);
+  }
+}
+
+void asyncResult(Task task){
+  
+}
+
 /**
  * get TeaoliveEnvironment.
  * this function is use for self testing about Teaolive.
@@ -208,12 +230,30 @@ class TeaoliveRunner {
   
   void run(){
     _environment.reporter.onRunnerStart();
-    
+    _run();
+  }
+  
+  void _run(){
     for(TestPiece piece in tests){
-      piece.run();
+      if(piece.start || piece.finish){
+        continue;
+      }
+      
+      Completer<Dynamic> completer = new Completer();
+      completer.future.handleException(_run_exception);
+      completer.future.then((var v){
+        _run();
+      });
+      piece.run((){
+        completer.complete(null);
+      });
+      return;
     }
-    
     _environment.reporter.onRunnerResult(this);
+  }
+  
+  bool _run_exception(Dynamic e, [Dynamic _trace]){
+    return true;
   }
 
   void add(TestPiece piece){
@@ -258,66 +298,116 @@ class TestPiece {
   bool start = false;
   bool finish = false;
 
+  List<Future> guardians;
+  
   Dynamic error;
   String errorMessage;
   Dynamic trace;
   
-  TestPiece.describe(this.description, this._test, [this.parent = null]): _describe = true, ignore = false, tests = new List<TestPiece>(), beforeEach = new List<Task>(), afterEach = new List<Task>();
-  TestPiece.it(this.description, this._test, [this.parent = null]): _describe = false, ignore = false, tests = new List<TestPiece>(), beforeEach = new List<Task>(), afterEach = new List<Task>();
+  TestPiece.describe(this.description, this._test, [this.parent = null]): _describe = true, ignore = false, tests = new List<TestPiece>(), beforeEach = new List<Task>(), afterEach = new List<Task>(), guardians = new List<Future>();
+  TestPiece.it(this.description, this._test, [this.parent = null]): _describe = false, ignore = false, tests = new List<TestPiece>(), beforeEach = new List<Task>(), afterEach = new List<Task>(), guardians = new List<Future>();
 
-  TestPiece.xdescribe(this.description, this._test, [this.parent = null]): _describe = true, ignore = true, tests = new List<TestPiece>(), beforeEach = new List<Task>(), afterEach = new List<Task>();
-  TestPiece.xit(this.description, this._test, [this.parent = null]): _describe = false, ignore = true, tests = new List<TestPiece>(), beforeEach = new List<Task>(), afterEach = new List<Task>();
+  TestPiece.xdescribe(this.description, this._test, [this.parent = null]): _describe = true, ignore = true, tests = new List<TestPiece>(), beforeEach = new List<Task>(), afterEach = new List<Task>(), guardians = new List<Future>();
+  TestPiece.xit(this.description, this._test, [this.parent = null]): _describe = false, ignore = true, tests = new List<TestPiece>(), beforeEach = new List<Task>(), afterEach = new List<Task>(), guardians = new List<Future>();
 
   bool isSuite() => _describe;
   bool isSpec() => !_describe;
   
-  void run(){
-    TeaoliveRunner runner = _environment.runner;
-    TestPiece pre = runner.currentRunning;
-    runner.currentRunning = this;
-    try{
+  void run(final Task nextTask){
+    if(ignore){
       start = true;
-      if(ignore){
-        finish = true;
-        return;
-      }
-      _test();
-      for(TestPiece piece in tests){
-        for(Task beforeTask in beforeEach){
+      finish = true;
+      nextTask();
+      return;
+    }
+
+    TeaoliveRunner runner = _environment.runner;
+    TestPiece restore = runner.currentRunning;
+    runner.currentRunning = this;
+
+    start = true;
+    
+    try{
+      if(isSpec()){
+        List<Task> _beforeEach = _collectBeforeTask();
+        for(Task beforeTask in _beforeEach){
           beforeTask();
         }
-        piece.run();
-        for(Task afterTask in afterEach){
+      }
+      _test();
+      if(isSpec()){
+        List<Task> _afterEach = _collectAfterTask();
+        for(Task afterTask in _afterEach){
           afterTask();
         }
       }
-      finish = true;
-      result = true;
-
-      List<TestPiece> fullset = new List<TestPiece>();
-      fullset.add(this);
-      fullset.addAll(tests);
-      for(TestPiece piece in fullset){
-        if(piece.start && piece.finish && piece.result){
-          continue;
-        } else if(piece.ignore){
-          continue;
-        }
-        result = false;
-      }
     } catch(AssertionException e, Dynamic _trace) {
-      errorMessage = e.msg;
-      error = e;
-      trace = _trace;
+      _run_exception(e, _trace);
+      nextTask();
       return;
     } catch(var e, Dynamic _trace) {
-      error = e;
-      trace = _trace;
+      _run_exception(e, _trace);
+      nextTask();
       return;
-    } finally {
-      runner.currentRunning = pre;
-      finish = true;
     }
+
+    Futures.wait(guardians).then((var v){
+      _run(restore, nextTask);
+    });
+  }
+  
+  void _run(final TestPiece restore, final Task nextTask){
+    for(TestPiece piece in tests){
+      if(piece.start || piece.finish){
+        continue;
+      }
+      
+      Completer<Dynamic> completer = new Completer();
+      completer.future.handleException(_run_exception);
+      completer.future
+      .chain((var v){
+        return Futures.wait(guardians);
+      })
+      .then((var v){
+        _run(restore, nextTask);
+      });
+      piece.run((){
+        completer.complete(null);
+      });
+      return;
+    }
+    _run_finish(restore, nextTask);
+  }
+  
+  bool _run_exception(Dynamic e, [Dynamic _trace]){
+    if(e is AssertionException){
+      errorMessage = e.msg;
+    }
+    error = e;
+    trace = _trace;
+    result = false;
+    finish = true;
+    return true;
+  }
+  
+  void _run_finish(TestPiece restore, Task nextTask){
+    finish = true;
+    result = true;
+
+    List<TestPiece> fullset = new List<TestPiece>();
+    fullset.add(this);
+    fullset.addAll(tests);
+    for(TestPiece piece in fullset){
+      if(piece.start && piece.finish && piece.result){
+        continue;
+      } else if(piece.ignore){
+        continue;
+      }
+      result = false;
+    }
+
+    _environment.runner.currentRunning = restore;
+    nextTask();
   }
   
   void add(TestPiece piece){
@@ -330,7 +420,16 @@ class TestPiece {
     }
   }
   
-  List<Task> _collectBeforeTask(TestPiece piece, [List<Task> tasks = new List<Task>()]){
+  List<Task> _collectBeforeTask([TestPiece piece, List<Task> tasks]){
+    if(parent == null){
+      return new List<Task>();
+    }
+    if(piece == null){
+      piece = parent;
+    }
+    if(tasks == null){
+      tasks = new List<Task>();
+    }
     if(piece.parent != null){
       _collectBeforeTask(piece.parent, tasks);
     }
@@ -338,17 +437,32 @@ class TestPiece {
     return tasks;
   }
 
-  List<Task> _collectAfterTask(TestPiece piece, [List<Task> tasks = new List<Task>()]){
-    if(piece.parent != null){
-      _collectAfterTask(piece.parent, tasks);
+  List<Task> _collectAfterTask([TestPiece piece, List<Task> tasks]){
+    if(parent == null){
+      return new List<Task>();
     }
-    tasks.addAll(piece.afterEach);
+    if(piece == null){
+      piece = parent;
+    }
+    if(tasks == null){
+      tasks = new List<Task>();
+    }
+    _collectAfterTask_collect(piece, tasks);
+
     List<Task> reverse = new List<Task>();
     while(tasks.length != 0){
       Task task = tasks.removeLast();
       reverse.add(task);
     }
-    return tasks;
+
+    return reverse;
+  }
+  
+  void _collectAfterTask_collect(TestPiece piece, [List<Task> tasks]){
+    if(piece.parent != null){
+      _collectAfterTask_collect(piece.parent, tasks);
+    }
+    tasks.addAll(piece.afterEach);
   }
 }
 
