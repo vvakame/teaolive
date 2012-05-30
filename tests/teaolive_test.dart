@@ -19,6 +19,8 @@ void main(){
 }
 
 void testCase(){
+  describe("empty describe", (){});
+  
   describe("save environment", (){
     it("save and restore", (){
       TeaoliveEnvironment env = getCurrentTeaoliveEnvironment();
@@ -114,7 +116,7 @@ void testCase(){
           beforeEach((){
             builder.add("b1 ");
           });
-          it("...", (){
+          it("b1 m1 ", (){
             builder.add("m1 ");
           });
         });
@@ -122,7 +124,7 @@ void testCase(){
           afterEach((){
             builder.add("a2 ");
           });
-          it("...", (){
+          it("m2 a2 ", (){
             builder.add("m2 ");
           });
         });
@@ -133,18 +135,18 @@ void testCase(){
           beforeEach((){
             builder.add("b3-2 ");
           });
-          it("...", (){
+          it("b3-1 b3-2 m3 ", (){
             builder.add("m3 ");
           });
         });
-        describe("beforeEach twice", (){
+        describe("afterEach twice", (){
           afterEach((){
             builder.add("a4-1 ");
           });
           afterEach((){
             builder.add("a4-2 ");
           });
-          it("...", (){
+          it("m4 a4-2 a4-1 ", (){
             builder.add("m4 ");
           });
         });
@@ -155,10 +157,10 @@ void testCase(){
           afterEach((){
             builder.add("a5 ");
           });
-          it("...", (){
+          it("b5 m5-1 a5 ", (){
             builder.add("m5-1 ");
           });
-          it("...", (){
+          it("b5 m5-2 a5 ", (){
             builder.add("m5-2 ");
           });
         });
@@ -169,7 +171,7 @@ void testCase(){
           afterEach((){
             builder.add("a6-o ");
           });
-          it("...", (){
+          it("b6-o m6-o a6-o ", (){
             builder.add("m6-o ");
           });
           describe("nested(inner)", (){
@@ -179,7 +181,7 @@ void testCase(){
             afterEach((){
               builder.add("a6-i ");
             });
-            it("...", (){
+            it("b6-o b6-i m6-i a6-i a6-o ", (){
               builder.add("m6-i ");
             });
           });          
@@ -192,7 +194,7 @@ void testCase(){
       restoreTeaoliveEnvironment(env);
       
       // check result
-      expect(builder.toString()).toEqual("b1 m1 m2 a2 b3-1 b3-2 m3 m4 a4-1 a4-2 b5 m5-1 a5 b5 m5-2 a5 b6-o m6-o a6-o b6-o b6-i m6-i a6-i a6-o ");
+      expect(builder.toString()).toEqual("b1 m1 m2 a2 b3-1 b3-2 m3 m4 a4-2 a4-1 b5 m5-1 a5 b5 m5-2 a5 b6-o m6-o a6-o b6-o b6-i m6-i a6-i a6-o ");
     });
   });
 
@@ -247,6 +249,16 @@ void testCase(){
         expect(spec.errorMessage).toBeNull();
         expect(spec.trace).toBeNull();
       }
+    });
+  });
+  
+  describe("make guardians", (){
+    it("makeGuardian", (){
+      Guardian completer = makeGuardian();
+      asyncResult((){
+        expect(1).toBe(1);
+      });
+      completer.arrival();
     });
   });
 }

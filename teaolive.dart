@@ -153,8 +153,9 @@ interface TeaoliveReporter default TeaoliveTextReporter {
 }
 
 Guardian makeGuardian(){
+  assert(_environment.runner.currentRunning != null);
   Guardian completer = new Guardian();
-  Future<Dynamic> future = completer.future;
+  _environment.runner.currentRunning.guardians.add(completer.future);
   return completer;
 }
 
@@ -165,7 +166,7 @@ class Guardian extends CompleterImpl<Dynamic> {
 }
 
 void asyncResult(Task task){
-  
+  _environment.runner.currentRunning.asyncResults.add(task);
 }
 
 /**
@@ -299,17 +300,34 @@ class TestPiece {
   bool finish = false;
 
   List<Future> guardians;
+  List<Task> asyncResults;
   
   Dynamic error;
   String errorMessage;
   Dynamic trace;
   
-  TestPiece.describe(this.description, this._test, [this.parent = null]): _describe = true, ignore = false, tests = new List<TestPiece>(), beforeEach = new List<Task>(), afterEach = new List<Task>(), guardians = new List<Future>();
-  TestPiece.it(this.description, this._test, [this.parent = null]): _describe = false, ignore = false, tests = new List<TestPiece>(), beforeEach = new List<Task>(), afterEach = new List<Task>(), guardians = new List<Future>();
+  TestPiece.describe(this.description, this._test, [this.parent = null]): _describe = true, ignore = false {
+   _init();
+  }
+  TestPiece.it(this.description, this._test, [this.parent = null]): _describe = false, ignore = false {
+    _init();
+  }
 
-  TestPiece.xdescribe(this.description, this._test, [this.parent = null]): _describe = true, ignore = true, tests = new List<TestPiece>(), beforeEach = new List<Task>(), afterEach = new List<Task>(), guardians = new List<Future>();
-  TestPiece.xit(this.description, this._test, [this.parent = null]): _describe = false, ignore = true, tests = new List<TestPiece>(), beforeEach = new List<Task>(), afterEach = new List<Task>(), guardians = new List<Future>();
+  TestPiece.xdescribe(this.description, this._test, [this.parent = null]): _describe = true, ignore = true {
+    _init();
+  }
+  TestPiece.xit(this.description, this._test, [this.parent = null]): _describe = false, ignore = true {
+    _init();
+  }
 
+  void _init(){
+    tests = new List<TestPiece>();
+    beforeEach = new List<Task>();
+    afterEach = new List<Task>();
+    guardians = new List<Future>();
+    asyncResults = new List<Task>();
+  }
+  
   bool isSuite() => _describe;
   bool isSpec() => !_describe;
   
@@ -327,6 +345,13 @@ class TestPiece {
 
     start = true;
     
+    Completer<Dynamic> completer = new Completer();
+    completer.future.chain((var v1){
+      Completer<Dynamic> c = new Completer();
+      return c.future;
+    });
+    
+    
     try{
       if(isSpec()){
         List<Task> _beforeEach = _collectBeforeTask();
@@ -335,12 +360,6 @@ class TestPiece {
         }
       }
       _test();
-      if(isSpec()){
-        List<Task> _afterEach = _collectAfterTask();
-        for(Task afterTask in _afterEach){
-          afterTask();
-        }
-      }
     } catch(AssertionException e, Dynamic _trace) {
       _run_exception(e, _trace);
       nextTask();
@@ -351,7 +370,19 @@ class TestPiece {
       return;
     }
 
+    // TODO error handling
     Futures.wait(guardians).then((var v){
+      for(Task asyncTask in asyncResults){
+        asyncTask();
+      }
+      
+      if(isSpec()){
+        List<Task> _afterEach = _collectAfterTask();
+        for(Task afterTask in _afterEach){
+          afterTask();
+        }
+      }
+
       _run(restore, nextTask);
     });
   }
