@@ -102,6 +102,33 @@ Expectation expect(var actual){
   return new _ExpectationImpl.actual(actual);
 }
 
+/**
+ * create guardian for async test.
+ * this method is used with Guardian#arrival and asyncResult method.
+ */
+Guardian createGuardian(){
+  assert(_environment.runner.currentRunning != null);
+  Guardian completer = new Guardian();
+  _environment.runner.currentRunning.guardians.add(completer.future);
+  return completer;
+}
+
+/**
+ * add a Future for async test.
+ * this method is used with asyncResult method.
+ */
+asyncWait(Future future){
+  assert(_environment.runner.currentRunning != null);
+  _environment.runner.currentRunning.guardians.add(future);
+}
+
+/**
+ * task exec after all Future is completed.
+ */
+void asyncResult(Task task){
+  _environment.runner.currentRunning.asyncResults.add(task);
+}
+
 interface Expectation<T> {
   Expectation<T> get not();
   
@@ -110,6 +137,18 @@ interface Expectation<T> {
   void toEqual(T obj);
 
   void toBeNull();
+}
+
+/**
+ * guardian for async test.
+ * this is wrapper of Completer.
+ */
+class Guardian extends CompleterImpl<Dynamic> {
+  void arrival(){
+    if(future.isComplete == false){
+      complete(null);
+    }
+  }
 }
 
 /**
@@ -150,23 +189,6 @@ interface TeaoliveReporter default TeaoliveTextReporter {
 
   /** this method called when finish one of "it". */
   void onSpecResult(TestPiece piece);
-}
-
-Guardian makeGuardian(){
-  assert(_environment.runner.currentRunning != null);
-  Guardian completer = new Guardian();
-  _environment.runner.currentRunning.guardians.add(completer.future);
-  return completer;
-}
-
-class Guardian extends CompleterImpl<Dynamic> {
-  void arrival(){
-    complete(null);
-  }
-}
-
-void asyncResult(Task task){
-  _environment.runner.currentRunning.asyncResults.add(task);
 }
 
 /**
@@ -221,54 +243,34 @@ class TeaoliveEnvironment {
   TeaoliveRunner get runner() => _runner;
 }
 
-class TeaoliveRunner {
+class TeaoliveRunner extends TestPiece {
   
-  List<TestPiece> tests;
+  TestPiece currentRunning;
 
-  TestPiece _currentRunning;
-
-  TeaoliveRunner(): tests = new List<TestPiece>();
-  
-  void run(){
-    _environment.reporter.onRunnerStart();
-    _run();
+  TeaoliveRunner(): super._runner(){
+    currentRunning = this;
   }
   
-  void _run(){
-    for(TestPiece piece in tests){
-      if(piece.start || piece.finish){
-        continue;
-      }
-      
-      Completer<Dynamic> completer = new Completer();
-      completer.future.handleException(_run_exception);
-      completer.future.then((var v){
-        _run();
-      });
-      piece.run((){
-        completer.complete(null);
-      });
-      return;
+  void run([Task nextTask]){
+    if(nextTask == null){
+      nextTask = (){
+        _environment.reporter.onRunnerResult(this);
+      };
     }
-    _environment.reporter.onRunnerResult(this);
-  }
-  
-  bool _run_exception(Dynamic e, [Dynamic _trace]){
-    return true;
+    _environment.reporter.onRunnerStart();
+    super.run(nextTask);
   }
 
   void add(TestPiece piece){
     assert(piece != null);
-    piece.parent = _findAncestorSuite(_currentRunning);
-    if(piece.parent != null){
-      piece.parent.add(piece);
-    } else {
-      tests.add(piece);
-    }
+    piece.parent = _findAncestorSuite(currentRunning);
+    piece.parent.tests.add(piece);
   }
   
   TestPiece _findAncestorSuite(TestPiece current){
-    if(current == null){
+    if(current == this){
+      return this;
+    } else if(current == null){
       return null;
     } else if(current.isSuite()){
       return current;
@@ -276,12 +278,6 @@ class TeaoliveRunner {
       return _findAncestorSuite(current.parent);
     }
   }
-  
-  void set currentRunning(TestPiece currentRunning){
-    _currentRunning = currentRunning;
-  }
-  
-  TestPiece get currentRunning() => _currentRunning;
 }
 
 class TestPiece {
@@ -306,6 +302,12 @@ class TestPiece {
   String errorMessage;
   Dynamic trace;
   
+  TestPiece._runner(): _describe = true, ignore = false {
+    this.description = "testing root";
+    this._test = (){};
+    _init();
+  }
+
   TestPiece.describe(this.description, this._test, [this.parent = null]): _describe = true, ignore = false {
    _init();
   }
@@ -331,7 +333,7 @@ class TestPiece {
   bool isSuite() => _describe;
   bool isSpec() => !_describe;
   
-  void run(final Task nextTask){
+  void run([final Task nextTask]){
     if(ignore){
       start = true;
       finish = true;
@@ -345,46 +347,40 @@ class TestPiece {
 
     start = true;
     
-    Completer<Dynamic> completer = new Completer();
-    completer.future.chain((var v1){
-      Completer<Dynamic> c = new Completer();
-      return c.future;
-    });
-    
-    
-    try{
-      if(isSpec()){
-        List<Task> _beforeEach = _collectBeforeTask();
-        for(Task beforeTask in _beforeEach){
-          beforeTask();
-        }
+    new Chain().trapException((var e, var _trace){
+      if(e is AssertionException){
+        errorMessage = e.msg;
       }
+      error = e;
+      trace = _trace;
+      result = false;
+      finish = true;
+    })
+    .chain((Task next){
+      if(isSpec()){
+        _collectBeforeTask().forEach((Task task) => task());
+      }
+      next();
+    })
+    .chain((Task next){
       _test();
-    } catch(AssertionException e, Dynamic _trace) {
-      _run_exception(e, _trace);
-      nextTask();
-      return;
-    } catch(var e, Dynamic _trace) {
-      _run_exception(e, _trace);
-      nextTask();
-      return;
-    }
-
-    // TODO error handling
-    Futures.wait(guardians).then((var v){
-      for(Task asyncTask in asyncResults){
-        asyncTask();
-      }
-      
+      next();
+    })
+    .chain((Task next){
+      Futures.wait(guardians).then((var v){
+        asyncResults.forEach((Task task) => task());
+        next();
+      });
+    })
+    .finish((){
       if(isSpec()){
-        List<Task> _afterEach = _collectAfterTask();
-        for(Task afterTask in _afterEach){
-          afterTask();
-        }
+        _collectAfterTask().forEach((Task task) => task());
       }
-
+    })
+    .finish((){
       _run(restore, nextTask);
-    });
+    })
+    .run();
   }
   
   void _run(final TestPiece restore, final Task nextTask){
@@ -392,33 +388,12 @@ class TestPiece {
       if(piece.start || piece.finish){
         continue;
       }
-      
-      Completer<Dynamic> completer = new Completer();
-      completer.future.handleException(_run_exception);
-      completer.future
-      .chain((var v){
-        return Futures.wait(guardians);
-      })
-      .then((var v){
-        _run(restore, nextTask);
-      });
       piece.run((){
-        completer.complete(null);
+        _run(restore, nextTask);
       });
       return;
     }
     _run_finish(restore, nextTask);
-  }
-  
-  bool _run_exception(Dynamic e, [Dynamic _trace]){
-    if(e is AssertionException){
-      errorMessage = e.msg;
-    }
-    error = e;
-    trace = _trace;
-    result = false;
-    finish = true;
-    return true;
   }
   
   void _run_finish(TestPiece restore, Task nextTask){
@@ -494,6 +469,62 @@ class TestPiece {
       _collectAfterTask_collect(piece.parent, tasks);
     }
     tasks.addAll(piece.afterEach);
+  }
+}
+
+class Chain {
+  Function _handler;
+  List<Function> _tasks;
+  List<Function> _finalizer;
+  
+  Chain(): _tasks = new List<Function>(), _finalizer = new List<Function>();
+  
+  Chain chain(void task(Task next)){
+    _tasks.add(task);
+    return this;
+  }
+  
+  Chain finish(void task()){
+    _finalizer.add(task);
+    return this;
+  }
+  
+  Chain trapException(void handler(var e, var trace)){
+    _handler = handler;
+    return this;
+  }
+  
+  void run(){
+    if(_tasks.length != 0){
+      try {
+        Function task = _tasks[0];
+        _tasks.removeRange(0, 1);
+        task((){
+          run();
+        });
+      } catch(var e, var trace){
+        if(_handler != null){
+          _handler(e, trace);
+        }
+        _finish();
+      }
+    } else {
+      _finish();
+    }
+  }
+  
+  void _finish(){
+    if(_finalizer.length != 0){
+      try {
+        Function task = _finalizer[0];
+        _finalizer.removeRange(0, 1);
+        task();
+      } catch(var e, var trace){
+        // is it ok...?
+      } finally {
+        _finish();
+      }
+    }
   }
 }
 

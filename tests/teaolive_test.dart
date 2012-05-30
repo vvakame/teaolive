@@ -252,13 +252,22 @@ void testCase(){
     });
   });
   
-  describe("make guardians", (){
-    it("makeGuardian", (){
-      Guardian completer = makeGuardian();
+  describe("asynchronous specs", (){
+    it("createGuardian", (){
+      Guardian completer = createGuardian();
       asyncResult((){
         expect(1).toBe(1);
       });
       completer.arrival();
+    });
+    
+    it("use Future", (){
+      Completer<Dynamic> completer = new Completer();
+      asyncWait(completer.future);
+      asyncResult((){
+        expect(1).toBe(1);
+      });
+      completer.complete(null);
     });
   });
 }

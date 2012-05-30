@@ -13,7 +13,7 @@ void testCase(){
     });
     
     it("", (){
-      Guardian guardian = makeGuardian();
+      Guardian guardian = createGuardian();
       String payload;
       
       HttpClient client = new HttpClient();
