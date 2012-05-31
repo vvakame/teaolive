@@ -157,6 +157,8 @@ interface Expectation<T> {
   void toBeFalse();
 
   void toBeNull();
+  
+  void toThrow([bool judge(var e)]);
 }
 
 /**
@@ -640,6 +642,21 @@ class _ExpectationImpl<T> implements Expectation<T> {
       throw new AssertionException.msg("expected is ${_opPrefix()} null, but got <${_actual}>.");
     }
   }
+  
+  void toThrow([bool judge(var e)]){
+    _checkFunction(_actual);
+    try{
+      Function func = _actual.dynamic;
+      func();
+      fail("function not raise a exception");
+    } catch(ClosureArgumentMismatchException e){
+      throw new AssertionException.msg("actual function is argument mismatch. please use the 'void actual()'");
+    } catch(var e, var trace){
+      if(judge != null && _opBool(judge(e)) == false){
+        throw new AssertionException.msg("don't expect the result, ${_opPrefix()}throw <${e}>");
+      }
+    }
+  }
 
   String _opPrefix(){
     StringBuffer buffer = new StringBuffer();
@@ -668,6 +685,12 @@ class _ExpectationImpl<T> implements Expectation<T> {
   void _checkBool(T actual){
     if(actual is bool == false){
       throw new AssertionException.msg("actual<${actual}> is not bool");
+    }
+  }
+
+  void _checkFunction(T actual){
+    if(actual is Function == false){
+      throw new AssertionException.msg("actual<${actual}> is not Function");
     }
   }
 }

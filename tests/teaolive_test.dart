@@ -180,6 +180,25 @@ void testCase(){
       expect(null).toBeNull();
       expect("hoge").not.toBeNull();
     });
+
+    it("toThrow matcher is catch exceptions",(){
+      Function raiseException = (){
+        throw new UnsupportedOperationException("for test");
+      };
+      expect(raiseException).toThrow();
+      expect(raiseException).toThrow((var e) => e is UnsupportedOperationException);
+      expect(raiseException).not.toThrow((var e) => e is IllegalArgumentException);
+      try{
+        expect(1).toThrow();
+        fail("actual is not function");
+      } catch (AssertionException e){
+      }
+      try{
+        expect((var v){}).toThrow((var e) => e is IllegalArgumentException);
+        fail("ClosureArgumentMismatchException");
+      } catch (AssertionException e){
+      }
+    });
   });
 
   describe("operator functions", (){
