@@ -88,6 +88,17 @@ void addTest(void testCase()){
 }
 
 /**
+ * add custom match.
+ * e.g.
+ * addMatcherFunction("Three", ([var a])=> (var e)=> a == 3);
+ * expect(3).to.Three();
+ */
+void addMatcher(CustomMatcher matcher){
+  checkEnvironment();
+  _environment.addMatcher(matcher);
+}
+
+/**
  * Be the first to call for inspection of the expected value.
  * The rest is just going to write that may the intellisense be with you.
  */
@@ -102,6 +113,9 @@ Expectation expect(var actual){
   return new _ExpectationImpl.actual(actual);
 }
 
+/**
+ * fails the test.
+ */
 void fail([String description]){
   if(description !=null){
     throw new AssertionException.msg(description);
@@ -159,6 +173,8 @@ interface Expectation<T> {
   void toBeNull();
   
   void toThrow([bool judge(var e)]);
+  
+  Dynamic get to();
 }
 
 /**
@@ -249,10 +265,16 @@ class TeaoliveEnvironment {
   TeaoliveReporter _reporter;
   TeaoliveRunner _runner;
   
-  TeaoliveEnvironment(): _runner = new TeaoliveRunner(), _reporter = new TeaoliveReporter();
+  Map<String, CustomMatcher> matchers;
+  
+  TeaoliveEnvironment(): _runner = new TeaoliveRunner(), _reporter = new TeaoliveReporter(), matchers = new Map<String, CustomMatcher>();
   
   void run() {
     _runner.run();
+  }
+  
+  void addMatcher(CustomMatcher matcher){
+    matchers[matcher.name] = matcher;
   }
   
   void set reporter(TeaoliveReporter reporter) {
@@ -560,6 +582,37 @@ class AssertionException implements Exception {
   AssertionException.msg(this.msg) : super();
 }
 
+class CustomMatcher {
+  
+  String _name;
+  Function _tester;
+  Function _consMessage;
+  
+  var _expect;
+  var _actual;
+  
+  CustomMatcher() {
+    _name = "Be";
+    _tester = (var expected, var actual) => expected == actual;
+    _consMessage = (String pre, var actual, var expected) => "expected is ${pre}<${expected}>, but got <${actual}>.";
+  }
+
+  CustomMatcher.create(String matcherName, bool tester(var actual, var expected), String consMessage(String pre, var actual, var expected)) {
+    _name = matcherName;
+    _tester = tester;
+    _consMessage = consMessage;
+  }
+
+  bool test(var actual, var expected){
+    _expect = expected;
+    _actual = actual;
+    return _tester(actual, expected);
+  }
+  
+  String get name() => _name;
+  String message(String pre, var actual, var expected) => _consMessage(pre, actual, expected);
+}
+
 typedef bool _op(StringBuffer buffer, bool result);
 class _ExpectationImpl<T> implements Expectation<T> {
   
@@ -658,6 +711,21 @@ class _ExpectationImpl<T> implements Expectation<T> {
     }
   }
 
+  Dynamic get to() => dynamic;
+  
+  Dynamic noSuchMethod(String name, List args) {
+    final CustomMatcher matcher = _environment.matchers[name];
+    if(matcher == null){
+      throw new NoSuchMethodException(this, name, args);
+    }
+ 
+    var expected = args.length != 0 ? args[0] : null;
+    bool result = matcher.test(_actual, expected);
+    if(_opBool(result) == false){
+      throw new AssertionException.msg(matcher.message(_opPrefix(), _actual, expected));
+    }
+  }
+  
   String _opPrefix(){
     StringBuffer buffer = new StringBuffer();
     for(_op op in _opList){

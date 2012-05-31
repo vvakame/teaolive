@@ -199,6 +199,31 @@ void testCase(){
       } catch (AssertionException e){
       }
     });
+
+    it("custom matcher",(){
+      // default, same toBe
+      addMatcher(new CustomMatcher()); 
+
+      expect(2).to.Be(2);
+      expect(2).not.to.Be(1);
+      
+      // testing to be 3
+      Function tester = (var actual, var expected) => actual == 3;
+      Function message = (String pre, var actual, var expected){
+        print("hoge");
+        return "${pre}<${actual}> is not 3!!!";
+      };
+      addMatcher(new CustomMatcher.create("Three", tester, message));
+
+      expect(3).to.Three();
+      expect(10).not.to.Three();
+      
+      // ok!
+      addMatcher(new OkMatcher()); 
+
+      expect("ok!").to.Ok();
+      expect("ng...").not.to.Ok();
+    });
   });
 
   describe("operator functions", (){
@@ -371,4 +396,12 @@ void testCase(){
       completer.complete(null);
     });
   });
+}
+
+class OkMatcher extends CustomMatcher {
+  OkMatcher();
+  
+  String get name() => "Ok";
+  bool test(var actual, var expected) => actual == "ok!";
+  String message(String pre, var actual, var expected) => "${pre}<${actual}> is not ok!";
 }
