@@ -78,7 +78,69 @@ void testCase(){
         expect("hoge").not.toBe(buffer.toString()); // not same object
       }
     });
-    
+
+    it("toBeLessThan matcher compare by >", (){
+      expect(1).toBeLessThan(2);
+      expect(1).not.toBeLessThan(1);
+      try{
+        expect(null).toBeLessThan(1);
+        fail("null can't define operator");
+      } catch (AssertionException e){
+      }
+      try{
+        expect(1).toBeLessThan(null);
+        fail("null can't define operator");
+      } catch (AssertionException e){
+      }
+    });
+
+    it("toBeLessThanOrEqual matcher compare by >=", (){
+      expect(1).toBeLessThanOrEqual(2);
+      expect(1).toBeLessThanOrEqual(1);
+      expect(1).not.toBeLessThanOrEqual(0);
+      try{
+        expect(null).toBeLessThanOrEqual(1);
+        fail("null can't define operator");
+      } catch (AssertionException e){
+      }
+      try{
+        expect(1).toBeLessThanOrEqual(null);
+        fail("null can't define operator");
+      } catch (AssertionException e){
+      }
+    });
+
+    it("toBeGreaterThan matcher compare by <", (){
+      expect(2).toBeGreaterThan(1);
+      expect(2).not.toBeGreaterThan(2);
+      try{
+        expect(null).toBeGreaterThan(1);
+        fail("null can't define operator");
+      } catch (AssertionException e){
+      }
+      try{
+        expect(1).toBeGreaterThan(null);
+        fail("null can't define operator");
+      } catch (AssertionException e){
+      }
+    });
+
+    it("toBeGreaterThanOrEqual matcher compare by <=", (){
+      expect(2).toBeGreaterThanOrEqual(1);
+      expect(2).toBeGreaterThanOrEqual(2);
+      expect(0).not.toBeGreaterThanOrEqual(1);
+      try{
+        expect(null).toBeGreaterThanOrEqual(1);
+        fail("null can't define operator");
+      } catch (AssertionException e){
+      }
+      try{
+        expect(1).toBeGreaterThanOrEqual(null);
+        fail("null can't define operator");
+      } catch (AssertionException e){
+      }
+    });
+
     it("toEqual matcher compare by ==", (){
       expect(1).toEqual(1);
       expect(1).not.toEqual(2);
@@ -93,6 +155,26 @@ void testCase(){
       }
     });
     
+    it("toBeTrue matcher compare to true", (){
+      expect(true).toBeTrue();
+      expect(false).not.toBeTrue();
+      try{
+        expect(null).toBeTrue();
+        fail("null is not bool");
+      } catch (AssertionException e){
+      }
+    });
+    
+    it("toBeFalse matcher compare to false", (){
+      expect(false).toBeFalse();
+      expect(true).not.toBeFalse();
+      try{
+        expect(null).toBeFalse();
+        fail("null is not bool");
+      } catch (AssertionException e){
+      }
+    });
+
     it("toBeNull matcher is check null",(){
       expect(1).not.toBeNull();
       expect(null).toBeNull();

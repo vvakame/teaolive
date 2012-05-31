@@ -102,6 +102,14 @@ Expectation expect(var actual){
   return new _ExpectationImpl.actual(actual);
 }
 
+void fail([String description]){
+  if(description !=null){
+    throw new AssertionException.msg(description);
+  } else {
+    throw new AssertionException();
+  }
+}
+
 /**
  * create guardian for async test.
  * this method is used with Guardian#arrival and asyncResult method.
@@ -133,8 +141,20 @@ interface Expectation<T> {
   Expectation<T> get not();
   
   void toBe(T obj);
-
+  
   void toEqual(T obj);
+  
+  void toBeLessThan(T obj);
+  
+  void toBeLessThanOrEqual(T obj);
+
+  void toBeGreaterThan(T obj);
+
+  void toBeGreaterThanOrEqual(T obj);
+
+  void toBeTrue();
+  
+  void toBeFalse();
 
   void toBeNull();
 }
@@ -351,22 +371,18 @@ class TestPiece {
       if(e is AssertionException){
         errorMessage = e.msg;
       }
-      error = e;
-      trace = _trace;
-      result = false;
-      finish = true;
+      this.error = e;
+      this.trace = _trace;
+      this.result = false;
+      this.finish = true;
     })
     .chain((Task next){
       if(isSpec()){
         _collectBeforeTask().forEach((Task task) => task());
       }
-      next();
-    })
-    .chain((Task next){
+
       _test();
-      next();
-    })
-    .chain((Task next){
+
       Futures.wait(guardians).then((var v){
         asyncResults.forEach((Task task) => task());
         next();
@@ -378,27 +394,32 @@ class TestPiece {
       }
     })
     .finish((){
-      _run(restore, nextTask);
+      _run((){
+        runner.currentRunning = restore;
+        nextTask(); 
+      });
     })
     .run();
   }
   
-  void _run(final TestPiece restore, final Task nextTask){
+  void _run(final Task nextTask){
     for(TestPiece piece in tests){
       if(piece.start || piece.finish){
         continue;
       }
       piece.run((){
-        _run(restore, nextTask);
+        _run(nextTask);
       });
       return;
     }
-    _run_finish(restore, nextTask);
+    _run_finish(nextTask);
   }
   
-  void _run_finish(TestPiece restore, Task nextTask){
+  void _run_finish(Task nextTask){
     finish = true;
-    result = true;
+    if(error == null){
+      result = true;
+    }
 
     List<TestPiece> fullset = new List<TestPiece>();
     fullset.add(this);
@@ -412,7 +433,6 @@ class TestPiece {
       result = false;
     }
 
-    _environment.runner.currentRunning = restore;
     nextTask();
   }
   
@@ -531,6 +551,10 @@ class Chain {
 class AssertionException implements Exception {
   String msg;
   
+  AssertionException(): super() {
+    msg = "";
+  }
+  
   AssertionException.msg(this.msg) : super();
 }
 
@@ -538,6 +562,7 @@ typedef bool _op(StringBuffer buffer, bool result);
 class _ExpectationImpl<T> implements Expectation<T> {
   
   T _actual;
+  
   List<_op> _opList;
   
   _ExpectationImpl.actual(T this._actual): _opList = new List<_op>();
@@ -561,25 +586,88 @@ class _ExpectationImpl<T> implements Expectation<T> {
   }
   
   void toBe(T _expect){
-    _check(_expect === _actual, _expect);
+    if(_opBool(_expect === _actual) == false){
+      throw new AssertionException.msg("expected is ${_opPrefix()}<${_expect}>, but got <${_actual}>.");
+    }
+  }
+  
+  void toBeLessThan(T _expect){
+    _checkNull(_expect, _actual);
+    if(_opBool(_expect.dynamic > _actual.dynamic) == false){
+      throw new AssertionException.msg("don't expect the result, ${_opPrefix()}<${_expect}> > <${_actual}>");
+    }
   }
 
-  void toBeNull(){
-    _check(_actual == null);
+  void toBeLessThanOrEqual(T _expect){
+    _checkNull(_expect, _actual);
+    if(_opBool(_expect.dynamic >= _actual.dynamic) == false){
+      throw new AssertionException.msg("don't expect the result, ${_opPrefix()}<${_expect}> >= <${_actual}>");
+    }
+  }
+
+  void toBeGreaterThan(T _expect){
+    _checkNull(_expect, _actual);
+    if(_opBool(_expect.dynamic < _actual.dynamic) == false){
+      throw new AssertionException.msg("don't expect the result, ${_opPrefix()}<${_expect}> < <${_actual}>");
+    }
+  }
+
+  void toBeGreaterThanOrEqual(T _expect){
+    _checkNull(_expect, _actual);
+    if(_opBool(_expect.dynamic <= _actual.dynamic) == false){
+      throw new AssertionException.msg("don't expect the result, ${_opPrefix()}<${_expect}> <= <${_actual}>");
+    }
   }
 
   void toEqual(T _expect){
-    _check(_expect == _actual, _expect);
+    if(_opBool(_expect.dynamic == _actual.dynamic) == false){
+      throw new AssertionException.msg("expected is ${_opPrefix()}<${_expect}>, but got <${_actual}>.");
+    }
   }
 
-  void _check(bool result, [T _expect = null]){
+  void toBeTrue(){
+    _checkBool(_actual);
+    toBe(true.dynamic);
+  }
+  
+  void toBeFalse(){
+    _checkBool(_actual);
+    toBe(false.dynamic);
+  }
+
+  void toBeNull(){
+    if(_opBool(null == _actual.dynamic) == false){
+      throw new AssertionException.msg("expected is ${_opPrefix()} null, but got <${_actual}>.");
+    }
+  }
+
+  String _opPrefix(){
+    StringBuffer buffer = new StringBuffer();
+    for(_op op in _opList){
+      op(buffer, true);
+    }
+    return buffer.toString();
+  }
+  
+  bool _opBool(bool result){
     StringBuffer buffer = new StringBuffer();
     for(_op op in _opList){
       result = op(buffer, result);
     }
-
-    if(result == false){
-      throw new AssertionException.msg("expected is ${buffer.toString()}<${_expect}>, but got <${_actual}>.");
+    return result;
+  }
+  
+  void _checkNull(T _expect, T __actual){
+    if(_expect == null){
+      throw new AssertionException.msg("expect value is null");
+    } else if(__actual == null) {
+      throw new AssertionException.msg("actual value is null");
+    }
+  }
+  
+  void _checkBool(T actual){
+    if(actual is bool == false){
+      throw new AssertionException.msg("actual<${actual}> is not bool");
     }
   }
 }
