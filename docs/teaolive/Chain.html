@@ -1,0 +1,122 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>Chain Class / teaolive Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="teaolive" data-type="Chain">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../teaolive.html">teaolive</a> &rsaquo; <a href="../teaolive/Chain.html">Chain</a></div>
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>Chain</strong>
+          Class
+        </h2>
+        
+<div class="doc">
+
+</div>
+<h3>Constructors</h3>
+<div class="method"><h4 id="Chain">
+<span class="show-code">Code</span>
+new <strong>Chain</strong>() <a class="anchor-link" href="#Chain"
+              title="Permalink to Chain.Chain">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+Chain(): _tasks = new List&lt;Function&gt;(), _finalizer = new List&lt;Function&gt;();
+</pre>
+</div>
+</div>
+<h3>Methods</h3>
+<div class="method"><h4 id="chain">
+<span class="show-code">Code</span>
+<a href="../teaolive/Chain.html">Chain</a> <strong>chain</strong>(<a href="../dart_core/void.html">void</a> task(<a href="../dart_core/void.html">void</a> next())) <a class="anchor-link" href="#chain"
+              title="Permalink to Chain.chain">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+Chain chain(void task(Task next)){
+  _tasks.add(task);
+  return this;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="finish">
+<span class="show-code">Code</span>
+<a href="../teaolive/Chain.html">Chain</a> <strong>finish</strong>(<a href="../dart_core/void.html">void</a> task()) <a class="anchor-link" href="#finish"
+              title="Permalink to Chain.finish">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+Chain finish(void task()){
+  _finalizer.add(task);
+  return this;
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="run">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>run</strong>() <a class="anchor-link" href="#run"
+              title="Permalink to Chain.run">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+void run(){
+  if(_tasks.length != 0){
+    try {
+      Function task = _tasks[0];
+      _tasks.removeRange(0, 1);
+      task((){
+        run();
+      });
+    } catch(var e, var trace){
+      if(_handler != null){
+        _handler(e, trace);
+      }
+      _finish();
+    }
+  } else {
+    _finish();
+  }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="trapException">
+<span class="show-code">Code</span>
+<a href="../teaolive/Chain.html">Chain</a> <strong>trapException</strong>(<a href="../dart_core/void.html">void</a> handler(e, trace)) <a class="anchor-link" href="#trapException"
+              title="Permalink to Chain.trapException">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+Chain trapException(void handler(var e, var trace)){
+  _handler = handler;
+  return this;
+}
+</pre>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        
+        <div class="footer">
+          <p>This page generated at 2012-06-01 07:04:51.427Z</p>
+          <div></div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        

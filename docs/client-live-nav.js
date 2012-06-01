@@ -1991,6 +1991,12 @@ $dynamic("get$text").Node = function() {
 $dynamic("set$text").Node = function(value) {
   this.textContent = value;
 }
+$dynamic("$dom_addEventListener$3").Node = function($0, $1, $2) {
+  return this.addEventListener($assert_String($0), $wrap_call$1(to$call$1($1)), $notnull_bool($2));
+};
+$dynamic("$dom_removeEventListener$3").Node = function($0, $1, $2) {
+  return this.removeEventListener($assert_String($0), $wrap_call$1(to$call$1($1)), $notnull_bool($2));
+};
 $dynamic("contains$1").Node = function($0) {
   return this.contains(($0 == null ? null : $0.assert$_NodeImpl()));
 };
@@ -4125,6 +4131,12 @@ $dynamic("query$1").NodeSelector = function($0) {
 $dynamic("get$on").Notification = function() {
   return new _NotificationEventsImpl(this);
 }
+$dynamic("$dom_addEventListener$3").Notification = function($0, $1, $2) {
+  return this.addEventListener($assert_String($0), $wrap_call$1(to$call$1($1)), $notnull_bool($2));
+};
+$dynamic("$dom_removeEventListener$3").Notification = function($0, $1, $2) {
+  return this.removeEventListener($assert_String($0), $wrap_call$1(to$call$1($1)), $notnull_bool($2));
+};
 $inherits(_NotificationEventsImpl, _EventsImpl);
 function _NotificationEventsImpl(_ptr) {
   _EventsImpl.call(this, _ptr);
@@ -4827,6 +4839,7 @@ _XMLHttpRequestFactoryProvider.XMLHttpRequest$get$factory = function(url, onSucc
 function _XMLSerializerFactoryProvider() {}
 function _XPathEvaluatorFactoryProvider() {}
 function _XSLTProcessorFactoryProvider() {}
+function _Elements() {}
 function _Collections() {}
 _Collections.forEach = function(iterable, f) {
   for (var $$i = iterable.iterator(); $$i.hasNext(); ) {

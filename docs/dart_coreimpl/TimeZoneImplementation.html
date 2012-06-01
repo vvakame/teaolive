@@ -61,7 +61,7 @@ const TimeZoneImplementation.utc() : this.isUtc = true;
 
 <pre class="source">
 bool operator ==(other) {
-  if (!(other is TimeZoneImplementation)) return false;
+  if (other is !TimeZoneImplementation) return false;
   return isUtc == other.isUtc;
 }
 </pre>
@@ -100,7 +100,7 @@ final bool isUtc;
         </div>
         
         <div class="footer">
-          <p>This page generated at 2012-05-26 23:32:59.353</p>
+          <p>This page generated at 2012-06-01 07:04:51.164Z</p>
           <div></div>
         </div>
         <script async src="../client-live-nav.js"></script>

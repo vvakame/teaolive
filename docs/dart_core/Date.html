@@ -38,11 +38,12 @@
 <h3>Constructors</h3>
 <div class="method"><h4 id="Date">
 <span class="show-code">Code</span>
-new <strong>Date</strong>(<a href="../dart_core/int.html">int</a> year, [<a href="../dart_core/int.html">int</a> month, <a href="../dart_core/int.html">int</a> day, <a href="../dart_core/int.html">int</a> hours, <a href="../dart_core/int.html">int</a> minutes, <a href="../dart_core/int.html">int</a> seconds, <a href="../dart_core/int.html">int</a> milliseconds]) <a class="anchor-link" href="#Date"
+new <strong>Date</strong>(<a href="../dart_core/int.html">int</a> year, [<a href="../dart_core/int.html">int</a> month, <a href="../dart_core/int.html">int</a> day, <a href="../dart_core/int.html">int</a> hours, <a href="../dart_core/int.html">int</a> minutes, <a href="../dart_core/int.html">int</a> seconds, <a href="../dart_core/int.html">int</a> milliseconds, <a href="../dart_core/bool.html">bool</a> isUtc]) <a class="anchor-link" href="#Date"
               title="Permalink to Date.Date">#</a></h4>
 <div class="doc">
-<p>Constructs a <a class="crossref" href="../dart_core/Date.html">Date</a> instance based on the individual parts, in the
-local time-zone.</p>
+<p>Constructs a <a class="crossref" href="../dart_core/Date.html">Date</a> instance based on the individual parts. The date is
+in the local time-zone if 
+<span class="param">isUtc</span> is false.</p>
 <pre class="source">
 Date(int year,
      [int month,
@@ -50,26 +51,25 @@ Date(int year,
       int hours,
       int minutes,
       int seconds,
-      int milliseconds]);
+      int milliseconds,
+      bool isUtc]);
 </pre>
 </div>
 </div>
 <div class="method"><h4 id="Date">
 <span class="show-code">Code</span>
-const <strong>Date</strong>.fromEpoch(<a href="../dart_core/int.html">int</a> value, <a href="../dart_core/TimeZone.html">TimeZone</a> timeZone) <a class="anchor-link" href="#Date"
+new <strong>Date</strong>.fromEpoch(<a href="../dart_core/int.html">int</a> value, [<a href="../dart_core/bool.html">bool</a> isUtc]) <a class="anchor-link" href="#Date"
               title="Permalink to Date.Date">#</a></h4>
 <div class="doc">
-<p>Constructs a new <a class="crossref" href="../dart_core/Date.html">Date</a> instance with the given time zone. The given
-
-<span class="param">timeZone</span> must not be <code>null</code>.</p>
-<p>This constructor is the only one that doesn't need to be computations and
-which can therefore be <code>const</code>.</p>
+<p>Constructs a new <a class="crossref" href="../dart_core/Date.html">Date</a> instance with the given 
+<span class="param">value</span>. If 
+<span class="param">isUtc</span> is
+false then the date is in the local time-zone.</p>
 <p>The constructed <a class="crossref" href="../dart_core/Date.html">Date</a> represents 1970-01-01T00:00:00Z + 
 <span class="param">value</span>ms in
-the given 
-<span class="param">timeZone</span>.</p>
+the given time-zone (local or UTC).</p>
 <pre class="source">
-const Date.fromEpoch(int value, TimeZone timeZone);
+Date.fromEpoch(int value, [bool isUtc]);
 </pre>
 </div>
 </div>
@@ -90,8 +90,8 @@ Date.fromString(String formattedString);
 new <strong>Date</strong>.now() <a class="anchor-link" href="#Date"
               title="Permalink to Date.Date">#</a></h4>
 <div class="doc">
-<p>Constructs a new <a class="crossref" href="../dart_core/Date.html">Date</a> instance with current date time value.
-The <a class="crossref" href="../dart_core/Date.html#timeZone">timeZone</a> of this instance is set to the local time-zone.</p>
+<p>Constructs a new <a class="crossref" href="../dart_core/Date.html">Date</a> instance with current date time value in the
+local time zone.</p>
 <pre class="source">
 Date.now();
 </pre>
@@ -105,6 +105,7 @@ new <strong>Date</strong>.withTimeZone(<a href="../dart_core/int.html">int</a> y
 <p>Constructs a <a class="crossref" href="../dart_core/Date.html">Date</a> instance based on the individual parts.
 
 <span class="param">timeZone</span> may not be <code>null</code>.</p>
+<p><em>DEPRECATED</em></p>
 <pre class="source">
 Date.withTimeZone(int year,
                   int month,
@@ -379,6 +380,20 @@ static final int WED = 2;
 </div>
 </div>
 <h3>Methods</h3>
+<div class="method"><h4 id=":eq">
+<span class="show-code">Code</span>
+<a href="../dart_core/bool.html">bool</a> <strong>operator ==</strong>(<a href="../dart_core/Date.html">Date</a> other) <a class="anchor-link" href="#:eq"
+              title="Permalink to Date.operator ==">#</a></h4>
+<div class="doc">
+<p>Returns true if <code>this</code> occurs at the same time as 
+<span class="param">other</span>. The
+comparison is independent of whether the time is utc or in the local
+time zone.</p>
+<pre class="source">
+bool operator ==(Date other);
+</pre>
+</div>
+</div>
 <div class="method"><h4 id=":gt">
 <span class="show-code">Code</span>
 <a href="../dart_core/bool.html">bool</a> <strong>operator ></strong>(<a href="../dart_core/Date.html">Date</a> other) <a class="anchor-link" href="#:gt"
@@ -386,7 +401,7 @@ static final int WED = 2;
 <div class="doc">
 <p>Returns true if <code>this</code> occurs after 
 <span class="param">other</span>. The comparison is independent
-of the timezone the <a class="crossref" href="../dart_core/Date.html">Date</a> is in.</p>
+of whether the time is utc or in the local time zone.</p>
 <pre class="source">
 bool operator &gt;(Date other);
 </pre>
@@ -399,7 +414,8 @@ bool operator &gt;(Date other);
 <div class="doc">
 <p>Returns true if <code>this</code> occurs at the same time or after 
 <span class="param">other</span>. The
-comparison is independent of the timezone the <a class="crossref" href="../dart_core/Date.html">Date</a> is in.</p>
+comparison is independent of whether the time is utc or in the local
+time zone.</p>
 <pre class="source">
 bool operator &gt;=(Date other);
 </pre>
@@ -412,7 +428,7 @@ bool operator &gt;=(Date other);
 <div class="doc">
 <p>Returns true if <code>this</code> occurs before 
 <span class="param">other</span>. The comparison is independent
-of the timezone the <a class="crossref" href="../dart_core/Date.html">Date</a> is in.</p>
+of whether the time is utc or in the local time zone.</p>
 <pre class="source">
 bool operator &lt;(Date other);
 </pre>
@@ -425,7 +441,8 @@ bool operator &lt;(Date other);
 <div class="doc">
 <p>Returns true if <code>this</code> occurs at the same time or before 
 <span class="param">other</span>. The
-comparison is independent of the timezone the <a class="crossref" href="../dart_core/Date.html">Date</a> is in.</p>
+comparison is independent of whether the time is utc or in the local
+time zone.</p>
 <pre class="source">
 bool operator &lt;=(Date other);
 </pre>
@@ -453,6 +470,7 @@ Date add(Duration duration);
 <a class="crossref" href="../dart_core/Date.html#value">value</a> of the new instance is equal to <code>this.value</code>.</p>
 <p>This call is equivalent to
  <code>new Date.fromEpoch(this.value, targetTimeZone)</code>.</p>
+<p><em>DEPRECATED</em></p>
 <pre class="source">
 Date changeTimeZone(TimeZone targetTimeZone);
 </pre>
@@ -492,24 +510,12 @@ int get hours();
 </pre>
 </div>
 </div>
-<div class="method"><h4 id="isLocalTime">
-<span class="show-code">Code</span>
-<a href="../dart_core/bool.html">bool</a> <strong>isLocalTime</strong>() <a class="anchor-link" href="#isLocalTime"
-              title="Permalink to Date.isLocalTime">#</a></h4>
-<div class="doc">
-<p>Returns true if this <a class="crossref" href="../dart_core/Date.html">Date</a> is set to local time.</p>
-<pre class="source">
-bool isLocalTime();
-</pre>
-</div>
-</div>
 <div class="method"><h4 id="isUtc">
 <span class="show-code">Code</span>
 <a href="../dart_core/bool.html">bool</a> <strong>isUtc</strong>() <a class="anchor-link" href="#isUtc"
               title="Permalink to Date.isUtc">#</a></h4>
 <div class="doc">
-<p>Returns true if this <a class="crossref" href="../dart_core/Date.html">Date</a> is set to UTC time.
-This is equivalent to <code>this.timeZone.isUtc()</code>.</p>
+<p>Returns true if this <a class="crossref" href="../dart_core/Date.html">Date</a> is set to UTC time.</p>
 <pre class="source">
 bool isUtc();
 </pre>
@@ -598,15 +604,41 @@ Duration get timeZoneOffset();
 </pre>
 </div>
 </div>
+<div class="method"><h4 id="toLocal">
+<span class="show-code">Code</span>
+<a href="../dart_core/Date.html">Date</a> <strong>toLocal</strong>() <a class="anchor-link" href="#toLocal"
+              title="Permalink to Date.toLocal">#</a></h4>
+<div class="doc">
+<p>Returns <code>this</code> in the local time-zone. Returns itself if it is already in
+the local time zone. Otherwise, this method is equivalent to
+<code>new Date.fromEpoch(this.value, isUtc: false)</code>.</p>
+<pre class="source">
+Date toLocal();
+</pre>
+</div>
+</div>
 <div class="method"><h4 id="toString">
 <span class="show-code">Code</span>
 <a href="../dart_core/String.html">String</a> <strong>toString</strong>() <a class="anchor-link" href="#toString"
               title="Permalink to Date.toString">#</a></h4>
 <div class="doc">
 <p>Returns a human readable string for this instance.
-The returned string is constructed for the <a class="crossref" href="../dart_core/Date.html#timeZone">timeZone</a> of this instance.</p>
+The returned string is constructed for the time zone of this instance.</p>
 <pre class="source">
 String toString();
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="toUtc">
+<span class="show-code">Code</span>
+<a href="../dart_core/Date.html">Date</a> <strong>toUtc</strong>() <a class="anchor-link" href="#toUtc"
+              title="Permalink to Date.toUtc">#</a></h4>
+<div class="doc">
+<p>Returns <code>this</code> in UTC. Returns itself if it is already in UTC. Otherwise,
+this method is equivalent to
+<code>new Date.fromEpoch(this.value, isUtc: true)</code>.</p>
+<pre class="source">
+Date toUtc();
 </pre>
 </div>
 </div>
@@ -633,19 +665,6 @@ int get year();
 </div>
 </div>
 <h3>Fields</h3>
-<div class="field"><h4 id="timeZone">
-<span class="show-code">Code</span>
-final <a href="../dart_core/TimeZone.html">TimeZone</a>         <strong>timeZone</strong> <a class="anchor-link"
-            href="#timeZone"
-            title="Permalink to Date.timeZone">#</a>
-        </h4>
-        <div class="doc">
-<p>Returns the timeZone of this instance.</p>
-<pre class="source">
-final TimeZone timeZone;
-</pre>
-</div>
-</div>
 <div class="field"><h4 id="value">
 <span class="show-code">Code</span>
 final <a href="../dart_core/int.html">int</a>         <strong>value</strong> <a class="anchor-link"
@@ -654,7 +673,7 @@ final <a href="../dart_core/int.html">int</a>         <strong>value</strong> <a 
         </h4>
         <div class="doc">
 <p>Returns milliseconds from 1970-01-01T00:00:00Z (UTC).</p>
-<p>Note that this value is independent of <a class="crossref" href="../dart_core/Date.html#timeZone">timeZone</a>.</p>
+<p>Note that this value is independent of the time zone.</p>
 <pre class="source">
 final int value;
 </pre>
@@ -665,7 +684,7 @@ final int value;
         </div>
         
         <div class="footer">
-          <p>This page generated at 2012-05-26 23:32:57.943</p>
+          <p>This page generated at 2012-06-01 07:04:47.095Z</p>
           <div></div>
         </div>
         <script async src="../client-live-nav.js"></script>

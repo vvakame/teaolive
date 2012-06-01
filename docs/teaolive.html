@@ -22,6 +22,23 @@
 <h2><strong>teaolive</strong> library</h2>
 <div class="doc"></div>
 <h3>Functions</h3>
+<div class="method"><h4 id="addMatcher">
+<span class="show-code">Code</span>
+<a href="dart_core/void.html">void</a> <strong>addMatcher</strong>(<a href="teaolive/Matcher.html">Matcher</a> matcher) <a class="anchor-link" href="#addMatcher"
+              title="Permalink to null.addMatcher">#</a></h4>
+<div class="doc">
+<p>add custom match.
+e.g.
+addMatcherFunction("Three", (<code>var a</code>)=> (var e)=> a == 3);
+expect(3).to.Three();</p>
+<pre class="source">
+void addMatcher(Matcher matcher){
+  _checkEnvironment();
+  _environment.addMatcher(matcher);
+}
+</pre>
+</div>
+</div>
 <div class="method"><h4 id="addTest">
 <span class="show-code">Code</span>
 <a href="dart_core/void.html">void</a> <strong>addTest</strong>(<a href="dart_core/void.html">void</a> testCase()) <a class="anchor-link" href="#addTest"
@@ -35,31 +52,91 @@ void addTest(void testCase()){
 </pre>
 </div>
 </div>
-<div class="method"><h4 id="checkEnvironment">
+<div class="method"><h4 id="afterEach">
 <span class="show-code">Code</span>
-<a href="dart_core/void.html">void</a> <strong>checkEnvironment</strong>() <a class="anchor-link" href="#checkEnvironment"
-              title="Permalink to null.checkEnvironment">#</a></h4>
+<a href="dart_core/void.html">void</a> <strong>afterEach</strong>(<a href="dart_core/void.html">void</a> task()) <a class="anchor-link" href="#afterEach"
+              title="Permalink to null.afterEach">#</a></h4>
 <div class="doc">
-
+<p>If you want clean up for testing after each <a class="crossref" href="teaolive.html#describe">describe</a>s.</p>
 <pre class="source">
-void checkEnvironment() {
-  if(_environment == null){
-    _environment = new TeaoliveEnvironment();
-  }
+void afterEach(Task task){
+  _checkEnvironment();
+  assert(_environment.runner.currentRunning != null);
+  _environment.runner.currentRunning.afterEach.add(task);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asyncResult">
+<span class="show-code">Code</span>
+<a href="dart_core/void.html">void</a> <strong>asyncResult</strong>(<a href="dart_core/void.html">void</a> task()) <a class="anchor-link" href="#asyncResult"
+              title="Permalink to null.asyncResult">#</a></h4>
+<div class="doc">
+<p><a class="crossref" href="teaolive/Task.html">Task</a> exec after all Future is completed.</p>
+<pre class="source">
+void asyncResult(Task task){
+  _environment.runner.currentRunning.asyncResults.add(task);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="asyncWait">
+<span class="show-code">Code</span>
+<strong>asyncWait</strong>(<a href="dart_core/Future.html">Future</a> future) <a class="anchor-link" href="#asyncWait"
+              title="Permalink to null.asyncWait">#</a></h4>
+<div class="doc">
+<p>add a <code>Future</code> for async test.
+this method is used with <a class="crossref" href="teaolive.html#asyncResult">asyncResult</a>.</p>
+<pre class="source">
+asyncWait(Future future){
+  assert(_environment.runner.currentRunning != null);
+  _environment.runner.currentRunning.guardians.add(future);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="beforeEach">
+<span class="show-code">Code</span>
+<a href="dart_core/void.html">void</a> <strong>beforeEach</strong>(<a href="dart_core/void.html">void</a> task()) <a class="anchor-link" href="#beforeEach"
+              title="Permalink to null.beforeEach">#</a></h4>
+<div class="doc">
+<p>If you want setup for testing before each <a class="crossref" href="teaolive.html#describe">describe</a>s.</p>
+<pre class="source">
+void beforeEach(Task task){
+  _checkEnvironment();
+  assert(_environment.runner.currentRunning != null);
+  _environment.runner.currentRunning.beforeEach.add(task);
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="createGuardian">
+<span class="show-code">Code</span>
+<a href="teaolive/Guardian.html">Guardian</a> <strong>createGuardian</strong>() <a class="anchor-link" href="#createGuardian"
+              title="Permalink to null.createGuardian">#</a></h4>
+<div class="doc">
+<p>create guardian for async test.
+this method is used with <a class="crossref" href="teaolive/Guardian.html">Guardian</a> and <a class="crossref" href="teaolive.html#asyncResult">asyncResult</a>.</p>
+<pre class="source">
+Guardian createGuardian(){
+  assert(_environment.runner.currentRunning != null);
+  Guardian completer = new Guardian();
+  _environment.runner.currentRunning.guardians.add(completer.future);
+  return completer;
 }
 </pre>
 </div>
 </div>
 <div class="method"><h4 id="describe">
 <span class="show-code">Code</span>
-<a href="dart_core/void.html">void</a> <strong>describe</strong>(<a href="dart_core/String.html">String</a> description, <a href="dart_core/Function.html">Function</a> test) <a class="anchor-link" href="#describe"
+<a href="dart_core/void.html">void</a> <strong>describe</strong>(<a href="dart_core/String.html">String</a> description, <a href="dart_core/void.html">void</a> test()) <a class="anchor-link" href="#describe"
               title="Permalink to null.describe">#</a></h4>
 <div class="doc">
 <p>"describe".
 If you want to start writing BDD test, start with this function.</p>
 <pre class="source">
-void describe(String description, Function test){
-  checkEnvironment();
+void describe(String description, Task test){
+  _checkEnvironment();
   _environment.runner.add(new TestPiece.describe(description, test));
 }
 </pre>
@@ -79,12 +156,29 @@ Expectation expect(var actual){
 </pre>
 </div>
 </div>
+<div class="method"><h4 id="fail">
+<span class="show-code">Code</span>
+<a href="dart_core/void.html">void</a> <strong>fail</strong>([<a href="dart_core/String.html">String</a> description]) <a class="anchor-link" href="#fail"
+              title="Permalink to null.fail">#</a></h4>
+<div class="doc">
+<p>fails the test.</p>
+<pre class="source">
+void fail([String description]){
+  if(description !=null){
+    throw new AssertionException.msg(description);
+  } else {
+    throw new AssertionException();
+  }
+}
+</pre>
+</div>
+</div>
 <div class="method"><h4 id="getCurrentTeaoliveEnvironment">
 <span class="show-code">Code</span>
 <a href="teaolive/TeaoliveEnvironment.html">TeaoliveEnvironment</a> <strong>getCurrentTeaoliveEnvironment</strong>() <a class="anchor-link" href="#getCurrentTeaoliveEnvironment"
               title="Permalink to null.getCurrentTeaoliveEnvironment">#</a></h4>
 <div class="doc">
-<p>get TeaoliveEnvironment.
+<p>get <a class="crossref" href="teaolive/TeaoliveEnvironment.html">TeaoliveEnvironment</a>.
 this function is use for self testing about Teaolive.</p>
 <pre class="source">
 TeaoliveEnvironment getCurrentTeaoliveEnvironment() =&gt; _environment;
@@ -93,15 +187,17 @@ TeaoliveEnvironment getCurrentTeaoliveEnvironment() =&gt; _environment;
 </div>
 <div class="method"><h4 id="it">
 <span class="show-code">Code</span>
-<a href="dart_core/void.html">void</a> <strong>it</strong>(<a href="dart_core/String.html">String</a> description, <a href="dart_core/Function.html">Function</a> test) <a class="anchor-link" href="#it"
+<a href="dart_core/void.html">void</a> <strong>it</strong>(<a href="dart_core/String.html">String</a> description, <a href="dart_core/void.html">void</a> test()) <a class="anchor-link" href="#it"
               title="Permalink to null.it">#</a></h4>
 <div class="doc">
 <p>"it".
 If you want to describe the behavior, start with this function.
-usually, this method is under "describe" function.</p>
+usually, this method is under <a class="crossref" href="teaolive.html#describe">describe</a> function.</p>
 <pre class="source">
-void it(String description, Function test){
-  checkEnvironment();
+void it(String description, Task test){
+  _checkEnvironment();
+  assert(_environment.runner.currentRunning != null);
+  assert(_environment.runner.currentRunning.isSuite());
   _environment.runner.add(new TestPiece.it(description, test));
 }
 </pre>
@@ -112,7 +208,7 @@ void it(String description, Function test){
 <a href="dart_core/void.html">void</a> <strong>resetTeoliveEnvironment</strong>() <a class="anchor-link" href="#resetTeoliveEnvironment"
               title="Permalink to null.resetTeoliveEnvironment">#</a></h4>
 <div class="doc">
-<p>re-initialize TeaoliveEnvironment.
+<p>re-initialize <a class="crossref" href="teaolive/TeaoliveEnvironment.html">TeaoliveEnvironment</a>.
 this function is use for self testing about Teaolive.</p>
 <pre class="source">
 void resetTeoliveEnvironment(){
@@ -126,7 +222,7 @@ void resetTeoliveEnvironment(){
 <a href="dart_core/void.html">void</a> <strong>restoreTeaoliveEnvironment</strong>(<a href="teaolive/TeaoliveEnvironment.html">TeaoliveEnvironment</a> environment) <a class="anchor-link" href="#restoreTeaoliveEnvironment"
               title="Permalink to null.restoreTeaoliveEnvironment">#</a></h4>
 <div class="doc">
-<p>restore TeaoliveEnvironment.
+<p>restore <a class="crossref" href="teaolive/TeaoliveEnvironment.html">TeaoliveEnvironment</a>.
 this function is use for self testing about Teaolive.</p>
 <pre class="source">
 void restoreTeaoliveEnvironment(TeaoliveEnvironment environment){
@@ -140,12 +236,12 @@ void restoreTeaoliveEnvironment(TeaoliveEnvironment environment){
 <a href="dart_core/void.html">void</a> <strong>setTeaoliveReporter</strong>(<a href="teaolive/TeaoliveReporter.html">TeaoliveReporter</a> reporter) <a class="anchor-link" href="#setTeaoliveReporter"
               title="Permalink to null.setTeaoliveReporter">#</a></h4>
 <div class="doc">
-<p>set TeaoliveReporter.
-the default is to use the TeaoliveTextReporter class.
-It's use a "print" function.</p>
+<p>set <a class="crossref" href="teaolive/TeaoliveReporter.html">TeaoliveReporter</a>.
+the default is to use the <code>TeaoliveTapReporter</code> class.
+It's use a <code>print</code> function.</p>
 <pre class="source">
 void setTeaoliveReporter(TeaoliveReporter reporter) {
-  checkEnvironment();
+  _checkEnvironment();
   _environment.reporter = reporter;
 }
 </pre>
@@ -157,10 +253,10 @@ void setTeaoliveReporter(TeaoliveReporter reporter) {
               title="Permalink to null.teaoliveRun">#</a></h4>
 <div class="doc">
 <p>start testing.
-"describe" and "it" functions were already call?</p>
+<a class="crossref" href="teaolive.html#describe">describe</a> and <a class="crossref" href="teaolive.html#it">it</a> functions were already call?</p>
 <pre class="source">
 void teaoliveRun() {
-  checkEnvironment();
+  _checkEnvironment();
   _environment.run();
 }
 </pre>
@@ -168,13 +264,14 @@ void teaoliveRun() {
 </div>
 <div class="method"><h4 id="xdescribe">
 <span class="show-code">Code</span>
-<a href="dart_core/void.html">void</a> <strong>xdescribe</strong>(<a href="dart_core/String.html">String</a> description, <a href="dart_core/Function.html">Function</a> test) <a class="anchor-link" href="#xdescribe"
+<a href="dart_core/void.html">void</a> <strong>xdescribe</strong>(<a href="dart_core/String.html">String</a> description, <a href="dart_core/void.html">void</a> test()) <a class="anchor-link" href="#xdescribe"
               title="Permalink to null.xdescribe">#</a></h4>
 <div class="doc">
-<p>If you do not want to use to "description" temporarily, you can use this function.</p>
+<p>If you do not want to use to 
+<span class="param">description</span> temporarily, you can use this function.</p>
 <pre class="source">
-void xdescribe(String description, Function test){
-  checkEnvironment();
+void xdescribe(String description, Task test){
+  _checkEnvironment();
   _environment.runner.add(new TestPiece.xdescribe(description, test));
 }
 </pre>
@@ -182,19 +279,39 @@ void xdescribe(String description, Function test){
 </div>
 <div class="method"><h4 id="xit">
 <span class="show-code">Code</span>
-<a href="dart_core/void.html">void</a> <strong>xit</strong>(<a href="dart_core/String.html">String</a> description, <a href="dart_core/Function.html">Function</a> test) <a class="anchor-link" href="#xit"
+<a href="dart_core/void.html">void</a> <strong>xit</strong>(<a href="dart_core/String.html">String</a> description, <a href="dart_core/void.html">void</a> test()) <a class="anchor-link" href="#xit"
               title="Permalink to null.xit">#</a></h4>
 <div class="doc">
-<p>If you do not want to use to "it" temporarily, you can use this function.</p>
+<p>If you do not want to use to <a class="crossref" href="teaolive.html#it">it</a> temporarily, you can use this function.</p>
 <pre class="source">
-void xit(String description, Function test){
-  checkEnvironment();
+void xit(String description, Task test){
+  _checkEnvironment();
+  assert(_environment.runner.currentRunning != null);
+  assert(_environment.runner.currentRunning.isSuite());
   _environment.runner.add(new TestPiece.xit(description, test));
 }
 </pre>
 </div>
 </div>
 <h3>Classes</h3>
+          <div class="type">
+          <h4>
+            <a href="teaolive/Chain.html"><strong>Chain</strong></a>
+          </h4>
+          </div>
+          
+          <div class="type">
+          <h4>
+            <a href="teaolive/Guardian.html"><strong>Guardian</strong></a>
+          </h4>
+          </div>
+          
+          <div class="type">
+          <h4>
+            <a href="teaolive/Matcher.html"><strong>Matcher</strong></a>
+          </h4>
+          </div>
+          
           <div class="type">
           <h4>
             <a href="teaolive/TeaoliveEnvironment.html"><strong>TeaoliveEnvironment</strong></a>
@@ -222,6 +339,12 @@ void xit(String description, Function test){
           
           <div class="type">
           <h4>
+            <a href="teaolive/Task.html"><strong>Task</strong></a>
+          </h4>
+          </div>
+          
+          <div class="type">
+          <h4>
             <a href="teaolive/TeaoliveReporter.html"><strong>TeaoliveReporter</strong></a>
           </h4>
           </div>
@@ -238,7 +361,7 @@ void xit(String description, Function test){
         </div>
         
         <div class="footer">
-          <p>This page generated at 2012-05-26 23:32:59.391</p>
+          <p>This page generated at 2012-06-01 07:04:51.308Z</p>
           <div></div>
         </div>
         <script async src="client-live-nav.js"></script>

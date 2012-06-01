@@ -32,12 +32,14 @@
 <h3>Constructors</h3>
 <div class="method"><h4 id="DateImplementation">
 <span class="show-code">Code</span>
-const <strong>DateImplementation</strong>.fromEpoch(value, timeZone) <a class="anchor-link" href="#DateImplementation"
+new <strong>DateImplementation</strong>.fromEpoch(value, [<a href="../dart_core/bool.html">bool</a> isUtc = false]) <a class="anchor-link" href="#DateImplementation"
               title="Permalink to DateImplementation.DateImplementation">#</a></h4>
 <div class="doc">
 
 <pre class="source">
-const DateImplementation.fromEpoch(this.value, this.timeZone);
+DateImplementation.fromEpoch(this.value, [bool isUtc = false])
+    : this.timeZone = isUtc ? const TimeZoneImplementation.utc()
+                            : new TimeZoneImplementation.local();
 </pre>
 </div>
 </div>
@@ -90,8 +92,8 @@ DateImplementation.withTimeZone(int years,
 
 <pre class="source">
 bool operator ==(other) {
-  if (!(other is DateImplementation)) return false;
-  return (value == other.value) &amp;&amp; (timeZone == other.timeZone);
+  if (other is !DateImplementation) return false;
+  return (value == other.value);
 }
 </pre>
 </div>
@@ -149,7 +151,7 @@ bool operator &lt;=(Date other) =&gt; value &lt;= other.value;
 <pre class="source">
 Date add(Duration duration) {
   return new DateImplementation.fromEpoch(value + duration.inMilliseconds,
-                                          timeZone);
+                                          timeZone.isUtc);
 }
 </pre>
 </div>
@@ -165,7 +167,7 @@ Date changeTimeZone(TimeZone targetTimeZone) {
   if (targetTimeZone == null) {
     targetTimeZone = new TimeZoneImplementation.local();
   }
-  return new Date.fromEpoch(value, targetTimeZone);
+  return new Date.fromEpoch(value, targetTimeZone.isUtc);
 }
 </pre>
 </div>
@@ -237,19 +239,6 @@ int get hours() native
     this._asJs().getHours();''' {
   isUtc();
   _asJs();
-}
-</pre>
-</div>
-</div>
-<div class="method"><h4 id="isLocalTime">
-<span class="show-code">Code</span>
-<a href="../dart_core/bool.html">bool</a> <strong>isLocalTime</strong>() <a class="anchor-link" href="#isLocalTime"
-              title="Permalink to DateImplementation.isLocalTime">#</a></h4>
-<div class="doc">
-
-<pre class="source">
-bool isLocalTime() {
-  return !timeZone.isUtc;
 }
 </pre>
 </div>
@@ -340,7 +329,7 @@ int get seconds() native
 <pre class="source">
 Date subtract(Duration duration) {
   return new DateImplementation.fromEpoch(value - duration.inMilliseconds,
-                                          timeZone);
+                                          timeZone.isUtc);
 }
 </pre>
 </div>
@@ -364,6 +353,20 @@ String get timeZoneName() { throw "Unimplemented"; }
 
 <pre class="source">
 Duration get timeZoneOffset() { throw "Unimplemented"; }
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="toLocal">
+<span class="show-code">Code</span>
+<a href="../dart_core/Date.html">Date</a> <strong>toLocal</strong>() <a class="anchor-link" href="#toLocal"
+              title="Permalink to DateImplementation.toLocal">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+Date toLocal() {
+  if (isUtc()) return changeTimeZone(new TimeZoneImplementation.local());
+  return this;
+}
 </pre>
 </div>
 </div>
@@ -405,6 +408,20 @@ String toString() {
   } else {
     return "$y-$m-$d $h:$min:$sec.$ms";
   }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="toUtc">
+<span class="show-code">Code</span>
+<a href="../dart_core/Date.html">Date</a> <strong>toUtc</strong>() <a class="anchor-link" href="#toUtc"
+              title="Permalink to DateImplementation.toUtc">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+Date toUtc() {
+  if (isUtc()) return this;
+  return changeTimeZone(const TimeZoneImplementation.utc());
 }
 </pre>
 </div>
@@ -470,7 +487,7 @@ final int value;
         </div>
         
         <div class="footer">
-          <p>This page generated at 2012-05-26 23:32:59.352</p>
+          <p>This page generated at 2012-06-01 07:04:51.162Z</p>
           <div></div>
         </div>
         <script async src="../client-live-nav.js"></script>

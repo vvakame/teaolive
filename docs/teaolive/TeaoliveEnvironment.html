@@ -34,32 +34,23 @@ new <strong>TeaoliveEnvironment</strong>() <a class="anchor-link" href="#Teaoliv
 <div class="doc">
 
 <pre class="source">
-TeaoliveEnvironment(): _runner = new TeaoliveRunner(), _reporter = new TeaoliveReporter();
+TeaoliveEnvironment():
+  runner = new TeaoliveRunner(),
+  reporter = new TeaoliveReporter(),
+  matchers = new Map();
 </pre>
 </div>
 </div>
 <h3>Methods</h3>
-<div class="method"><h4 id="get:reporter">
+<div class="method"><h4 id="addMatcher">
 <span class="show-code">Code</span>
-<a href="../teaolive/TeaoliveReporter.html">TeaoliveReporter</a> <strong>get reporter</strong>() <a class="anchor-link" href="#get:reporter"
-              title="Permalink to TeaoliveEnvironment.get reporter">#</a></h4>
+<a href="../dart_core/void.html">void</a> <strong>addMatcher</strong>(<a href="../teaolive/Matcher.html">Matcher</a> matcher) <a class="anchor-link" href="#addMatcher"
+              title="Permalink to TeaoliveEnvironment.addMatcher">#</a></h4>
 <div class="doc">
 
 <pre class="source">
-TeaoliveReporter get reporter() =&gt; _reporter;
-</pre>
-</div>
-</div>
-<div class="method"><h4 id="set:reporter">
-<span class="show-code">Code</span>
-<a href="../dart_core/void.html">void</a> <strong>set reporter</strong>(<a href="../teaolive/TeaoliveReporter.html">TeaoliveReporter</a> reporter) <a class="anchor-link" href="#set:reporter"
-              title="Permalink to TeaoliveEnvironment.set reporter">#</a></h4>
-<div class="doc">
-
-<pre class="source">
-void set reporter(TeaoliveReporter reporter) {
-  assert(reporter != null);
-  _reporter = reporter;
+void addMatcher(Matcher matcher){
+  matchers[matcher.name] = matcher;
 }
 </pre>
 </div>
@@ -72,19 +63,48 @@ void set reporter(TeaoliveReporter reporter) {
 
 <pre class="source">
 void run() {
-  _runner.run();
+  runner.run();
 }
 </pre>
 </div>
 </div>
-<div class="method"><h4 id="get:runner">
+<h3>Fields</h3>
+<div class="field"><h4 id="matchers">
 <span class="show-code">Code</span>
-<a href="../teaolive/TeaoliveRunner.html">TeaoliveRunner</a> <strong>get runner</strong>() <a class="anchor-link" href="#get:runner"
-              title="Permalink to TeaoliveEnvironment.get runner">#</a></h4>
-<div class="doc">
+<a href="../dart_core/Map.html">Map</a>         <strong>matchers</strong> <a class="anchor-link"
+            href="#matchers"
+            title="Permalink to TeaoliveEnvironment.matchers">#</a>
+        </h4>
+        <div class="doc">
 
 <pre class="source">
-TeaoliveRunner get runner() =&gt; _runner;
+Map&lt;String, Matcher&gt; matchers;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="reporter">
+<span class="show-code">Code</span>
+<a href="../teaolive/TeaoliveReporter.html">TeaoliveReporter</a>         <strong>reporter</strong> <a class="anchor-link"
+            href="#reporter"
+            title="Permalink to TeaoliveEnvironment.reporter">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+TeaoliveReporter reporter;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="runner">
+<span class="show-code">Code</span>
+final <a href="../teaolive/TeaoliveRunner.html">TeaoliveRunner</a>         <strong>runner</strong> <a class="anchor-link"
+            href="#runner"
+            title="Permalink to TeaoliveEnvironment.runner">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+final TeaoliveRunner runner;
 </pre>
 </div>
 </div>
@@ -93,7 +113,7 @@ TeaoliveRunner get runner() =&gt; _runner;
         </div>
         
         <div class="footer">
-          <p>This page generated at 2012-05-26 23:32:59.416</p>
+          <p>This page generated at 2012-06-01 07:04:51.420Z</p>
           <div></div>
         </div>
         <script async src="../client-live-nav.js"></script>

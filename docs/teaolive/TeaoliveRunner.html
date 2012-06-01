@@ -26,6 +26,9 @@
 <div class="doc">
 
 </div>
+<h3>Extends</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../teaolive/TestPiece.html">TestPiece</a></span>&nbsp;&gt;&nbsp;<span class="type-box"><span class="icon-class"></span><strong>TeaoliveRunner</strong></span></p>
 <h3>Constructors</h3>
 <div class="method"><h4 id="TeaoliveRunner">
 <span class="show-code">Code</span>
@@ -34,7 +37,9 @@ new <strong>TeaoliveRunner</strong>() <a class="anchor-link" href="#TeaoliveRunn
 <div class="doc">
 
 <pre class="source">
-TeaoliveRunner(): tests = new List&lt;TestPiece&gt;();
+TeaoliveRunner(): super._runner(){
+  currentRunning = this;
+}
 </pre>
 </div>
 </div>
@@ -48,70 +53,42 @@ TeaoliveRunner(): tests = new List&lt;TestPiece&gt;();
 <pre class="source">
 void add(TestPiece piece){
   assert(piece != null);
-  piece.parent = _findAncestorSuite(_currentRunning);
-  if(piece.parent != null){
-    piece.parent.add(piece);
-  } else {
-    tests.add(piece);
-  }
-}
-</pre>
-</div>
-</div>
-<div class="method"><h4 id="get:currentRunning">
-<span class="show-code">Code</span>
-<a href="../teaolive/TestPiece.html">TestPiece</a> <strong>get currentRunning</strong>() <a class="anchor-link" href="#get:currentRunning"
-              title="Permalink to TeaoliveRunner.get currentRunning">#</a></h4>
-<div class="doc">
-
-<pre class="source">
-TestPiece get currentRunning() =&gt; _currentRunning;
-</pre>
-</div>
-</div>
-<div class="method"><h4 id="set:currentRunning">
-<span class="show-code">Code</span>
-<a href="../dart_core/void.html">void</a> <strong>set currentRunning</strong>(<a href="../teaolive/TestPiece.html">TestPiece</a> currentRunning) <a class="anchor-link" href="#set:currentRunning"
-              title="Permalink to TeaoliveRunner.set currentRunning">#</a></h4>
-<div class="doc">
-
-<pre class="source">
-void set currentRunning(TestPiece currentRunning){
-  _currentRunning = currentRunning;
+  piece.parent = _findAncestorSuite(currentRunning);
+  piece.parent.tests.add(piece);
 }
 </pre>
 </div>
 </div>
 <div class="method"><h4 id="run">
 <span class="show-code">Code</span>
-<a href="../dart_core/void.html">void</a> <strong>run</strong>() <a class="anchor-link" href="#run"
+<a href="../dart_core/void.html">void</a> <strong>run</strong>([<a href="../dart_core/void.html">void</a> nextTask()]) <a class="anchor-link" href="#run"
               title="Permalink to TeaoliveRunner.run">#</a></h4>
 <div class="doc">
 
 <pre class="source">
-void run(){
-  _environment.reporter.onRunnerStart();
-  
-  for(TestPiece piece in tests){
-    piece.run();
+void run([Task nextTask]){
+  if(nextTask == null){
+    nextTask = (){
+      _environment.reporter.onRunnerResult(this);
+    };
   }
-  
-  _environment.reporter.onRunnerResult(this);
+  _environment.reporter.onRunnerStart();
+  super.run(nextTask);
 }
 </pre>
 </div>
 </div>
 <h3>Fields</h3>
-<div class="field"><h4 id="tests">
+<div class="field"><h4 id="currentRunning">
 <span class="show-code">Code</span>
-<a href="../dart_core/List.html">List</a>         <strong>tests</strong> <a class="anchor-link"
-            href="#tests"
-            title="Permalink to TeaoliveRunner.tests">#</a>
+<a href="../teaolive/TestPiece.html">TestPiece</a>         <strong>currentRunning</strong> <a class="anchor-link"
+            href="#currentRunning"
+            title="Permalink to TeaoliveRunner.currentRunning">#</a>
         </h4>
         <div class="doc">
 
 <pre class="source">
-List&lt;TestPiece&gt; tests;
+TestPiece currentRunning;
 </pre>
 </div>
 </div>
@@ -120,7 +97,7 @@ List&lt;TestPiece&gt; tests;
         </div>
         
         <div class="footer">
-          <p>This page generated at 2012-05-26 23:32:59.417</p>
+          <p>This page generated at 2012-06-01 07:04:51.421Z</p>
           <div></div>
         </div>
         <script async src="../client-live-nav.js"></script>

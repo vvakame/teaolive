@@ -26,6 +26,9 @@
 <div class="doc">
 
 </div>
+<h3>Subclasses</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../teaolive/TeaoliveRunner.html">TeaoliveRunner</a></span></p>
 <h3>Constructors</h3>
 <div class="method"><h4 id="TestPiece">
 <span class="show-code">Code</span>
@@ -34,7 +37,9 @@ new <strong>TestPiece</strong>.describe(description, _test, [parent = null]) <a 
 <div class="doc">
 
 <pre class="source">
-TestPiece.describe(this.description, this._test, [this.parent = null]): _describe = true, ignore = false, tests = new List&lt;TestPiece&gt;();
+TestPiece.describe(this.description, this._test, [this.parent = null]): _describe = true, ignore = false {
+ _init();
+}
 </pre>
 </div>
 </div>
@@ -45,7 +50,9 @@ new <strong>TestPiece</strong>.it(description, _test, [parent = null]) <a class=
 <div class="doc">
 
 <pre class="source">
-TestPiece.it(this.description, this._test, [this.parent = null]): _describe = false, ignore = false, tests = new List&lt;TestPiece&gt;();
+TestPiece.it(this.description, this._test, [this.parent = null]): _describe = false, ignore = false {
+  _init();
+}
 </pre>
 </div>
 </div>
@@ -56,7 +63,9 @@ new <strong>TestPiece</strong>.xdescribe(description, _test, [parent = null]) <a
 <div class="doc">
 
 <pre class="source">
-TestPiece.xdescribe(this.description, this._test, [this.parent = null]): _describe = true, ignore = true, tests = new List&lt;TestPiece&gt;();
+TestPiece.xdescribe(this.description, this._test, [this.parent = null]): _describe = true, ignore = true {
+  _init();
+}
 </pre>
 </div>
 </div>
@@ -67,7 +76,9 @@ new <strong>TestPiece</strong>.xit(description, _test, [parent = null]) <a class
 <div class="doc">
 
 <pre class="source">
-TestPiece.xit(this.description, this._test, [this.parent = null]): _describe = false, ignore = true, tests = new List&lt;TestPiece&gt;();
+TestPiece.xit(this.description, this._test, [this.parent = null]): _describe = false, ignore = true {
+  _init();
+}
 </pre>
 </div>
 </div>
@@ -115,55 +126,102 @@ bool isSuite() =&gt; _describe;
 </div>
 <div class="method"><h4 id="run">
 <span class="show-code">Code</span>
-<a href="../dart_core/void.html">void</a> <strong>run</strong>() <a class="anchor-link" href="#run"
+<a href="../dart_core/void.html">void</a> <strong>run</strong>([<a href="../dart_core/void.html">void</a> nextTask()]) <a class="anchor-link" href="#run"
               title="Permalink to TestPiece.run">#</a></h4>
 <div class="doc">
 
 <pre class="source">
-void run(){
-  TeaoliveRunner runner = _environment.runner;
-  TestPiece pre = runner.currentRunning; 
-  runner.currentRunning = this;
-  try{
+void run([final Task nextTask]){
+  if(ignore){
     start = true;
-    if(ignore){
-      finish = true;
-      return;
-    }
-    _test();
-    for(TestPiece piece in tests){
-      piece.run();
-    }
     finish = true;
-    result = true;
-
-    List&lt;TestPiece&gt; fullset = new List&lt;TestPiece&gt;();
-    fullset.add(this);
-    fullset.addAll(tests);
-    for(TestPiece piece in fullset){
-      if(piece.start &amp;&amp; piece.finish &amp;&amp; piece.result){
-        continue;
-      } else if(piece.ignore){
-        continue;
-      }
-      result = false;
-    }
-  } catch(AssertionException e) {
-    errorMessage = e.msg;
-    error = e;
+    nextTask();
     return;
-  } catch(var e) {
-    error = e;
-    return;
-  } finally {
-    runner.currentRunning = pre;
-    finish = true;
   }
+
+  TeaoliveRunner runner = _environment.runner;
+  TestPiece restore = runner.currentRunning;
+  runner.currentRunning = this;
+
+  start = true;
+  
+  new Chain().trapException((var e, var _trace){
+    if(e is AssertionException){
+      errorMessage = e.msg;
+    }
+    this.error = e;
+    this.trace = _trace;
+    this.result = false;
+    this.finish = true;
+  })
+  .chain((Task next){
+    if(isSpec()){
+      _collectBeforeTask().forEach((Task task) =&gt; task());
+    }
+
+    _test();
+
+    Futures.wait(guardians).then((var v){
+      asyncResults.forEach((Task task) =&gt; task());
+      next();
+    });
+  })
+  .finish((){
+    if(isSpec()){
+      _collectAfterTask().forEach((Task task) =&gt; task());
+    }
+  })
+  .finish((){
+    _run((){
+      runner.currentRunning = restore;
+      nextTask(); 
+    });
+  })
+  .run();
 }
 </pre>
 </div>
 </div>
 <h3>Fields</h3>
+<div class="field"><h4 id="afterEach">
+<span class="show-code">Code</span>
+<a href="../dart_core/List.html">List</a>         <strong>afterEach</strong> <a class="anchor-link"
+            href="#afterEach"
+            title="Permalink to TestPiece.afterEach">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+List&lt;Task&gt; afterEach;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="asyncResults">
+<span class="show-code">Code</span>
+<a href="../dart_core/List.html">List</a>         <strong>asyncResults</strong> <a class="anchor-link"
+            href="#asyncResults"
+            title="Permalink to TestPiece.asyncResults">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+List&lt;Task&gt; asyncResults;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="beforeEach">
+<span class="show-code">Code</span>
+<a href="../dart_core/List.html">List</a>         <strong>beforeEach</strong> <a class="anchor-link"
+            href="#beforeEach"
+            title="Permalink to TestPiece.beforeEach">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+List&lt;Task&gt; beforeEach;
+</pre>
+</div>
+</div>
 <div class="field"><h4 id="description">
 <span class="show-code">Code</span>
 <a href="../dart_core/String.html">String</a>         <strong>description</strong> <a class="anchor-link"
@@ -186,7 +244,7 @@ var         <strong>error</strong> <a class="anchor-link"
         <div class="doc">
 
 <pre class="source">
-var error;
+Dynamic error;
 </pre>
 </div>
 </div>
@@ -213,6 +271,19 @@ String errorMessage;
 
 <pre class="source">
 bool finish = false;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="guardians">
+<span class="show-code">Code</span>
+<a href="../dart_core/List.html">List</a>         <strong>guardians</strong> <a class="anchor-link"
+            href="#guardians"
+            title="Permalink to TestPiece.guardians">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+List&lt;Future&gt; guardians;
 </pre>
 </div>
 </div>
@@ -281,12 +352,25 @@ List&lt;TestPiece&gt; tests;
 </pre>
 </div>
 </div>
+<div class="field"><h4 id="trace">
+<span class="show-code">Code</span>
+var         <strong>trace</strong> <a class="anchor-link"
+            href="#trace"
+            title="Permalink to TestPiece.trace">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+Dynamic trace;
+</pre>
+</div>
+</div>
         </div>
         <div class="clear"></div>
         </div>
         
         <div class="footer">
-          <p>This page generated at 2012-05-26 23:32:59.419</p>
+          <p>This page generated at 2012-06-01 07:04:51.425Z</p>
           <div></div>
         </div>
         <script async src="../client-live-nav.js"></script>
