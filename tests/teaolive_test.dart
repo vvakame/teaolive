@@ -202,7 +202,7 @@ void testCase(){
 
     it("custom matcher",(){
       // default, same toBe
-      addMatcher(new CustomMatcher()); 
+      addMatcher(new Matcher()); 
 
       expect(2).to.Be(2);
       expect(2).not.to.Be(1);
@@ -213,7 +213,7 @@ void testCase(){
         print("hoge");
         return "${pre}<${actual}> is not 3!!!";
       };
-      addMatcher(new CustomMatcher.create("Three", tester, message));
+      addMatcher(new Matcher.create("Three", tester, message));
 
       expect(3).to.Three();
       expect(10).not.to.Three();
@@ -398,7 +398,7 @@ void testCase(){
   });
 }
 
-class OkMatcher extends CustomMatcher {
+class OkMatcher extends Matcher {
   OkMatcher();
   
   String get name() => "Ok";

@@ -28,54 +28,54 @@ typedef void Task();
  * If you want to start writing BDD test, start with this function.
  */
 void describe(String description, Task test){
-  checkEnvironment();
+  _checkEnvironment();
   _environment.runner.add(new TestPiece.describe(description, test));
 }
 
 /**
- * If you do not want to use to "description" temporarily, you can use this function.
+ * If you do not want to use to [description] temporarily, you can use this function.
  */
 void xdescribe(String description, Task test){
-  checkEnvironment();
+  _checkEnvironment();
   _environment.runner.add(new TestPiece.xdescribe(description, test));
 }
 
 /**
  * "it".
  * If you want to describe the behavior, start with this function.
- * usually, this method is under "describe" function.
+ * usually, this method is under [describe] function.
  */
 void it(String description, Task test){
-  checkEnvironment();
+  _checkEnvironment();
   assert(_environment.runner.currentRunning != null);
   assert(_environment.runner.currentRunning.isSuite());
   _environment.runner.add(new TestPiece.it(description, test));
 }
 
 /**
- * If you do not want to use to "it" temporarily, you can use this function.
+ * If you do not want to use to [it] temporarily, you can use this function.
  */
 void xit(String description, Task test){
-  checkEnvironment();
+  _checkEnvironment();
   assert(_environment.runner.currentRunning != null);
   assert(_environment.runner.currentRunning.isSuite());
   _environment.runner.add(new TestPiece.xit(description, test));
 }
 
 /**
- * If you want setup for testing before each "describe"s.
+ * If you want setup for testing before each [describe]s.
  */
 void beforeEach(Task task){
-  checkEnvironment();
+  _checkEnvironment();
   assert(_environment.runner.currentRunning != null);
   _environment.runner.currentRunning.beforeEach.add(task);
 }
 
 /**
- * If you want clean up for testing after each "describe"s.
+ * If you want clean up for testing after each [describe]s.
  */
 void afterEach(Task task){
-  checkEnvironment();
+  _checkEnvironment();
   assert(_environment.runner.currentRunning != null);
   _environment.runner.currentRunning.afterEach.add(task);
 }
@@ -93,8 +93,8 @@ void addTest(void testCase()){
  * addMatcherFunction("Three", ([var a])=> (var e)=> a == 3);
  * expect(3).to.Three();
  */
-void addMatcher(CustomMatcher matcher){
-  checkEnvironment();
+void addMatcher(Matcher matcher){
+  _checkEnvironment();
   _environment.addMatcher(matcher);
 }
 
@@ -126,7 +126,7 @@ void fail([String description]){
 
 /**
  * create guardian for async test.
- * this method is used with Guardian#arrival and asyncResult method.
+ * this method is used with [Guardian] and [asyncResult].
  */
 Guardian createGuardian(){
   assert(_environment.runner.currentRunning != null);
@@ -136,8 +136,8 @@ Guardian createGuardian(){
 }
 
 /**
- * add a Future for async test.
- * this method is used with asyncResult method.
+ * add a [Future] for async test.
+ * this method is used with [asyncResult].
  */
 asyncWait(Future future){
   assert(_environment.runner.currentRunning != null);
@@ -145,12 +145,15 @@ asyncWait(Future future){
 }
 
 /**
- * task exec after all Future is completed.
+ * [Task] exec after all Future is completed.
  */
 void asyncResult(Task task){
   _environment.runner.currentRunning.asyncResults.add(task);
 }
 
+/**
+ * The interface for the [expect]. methods that exist in this interface are available.
+ */
 interface Expectation<T> {
   Expectation<T> get not();
   
@@ -179,9 +182,9 @@ interface Expectation<T> {
 
 /**
  * guardian for async test.
- * this is wrapper of Completer.
+ * this is wrapper of [Completer].
  */
-class Guardian extends CompleterImpl<Dynamic> {
+class Guardian extends CompleterImpl {
   void arrival(){
     if(future.isComplete == false){
       complete(null);
@@ -191,26 +194,26 @@ class Guardian extends CompleterImpl<Dynamic> {
 
 /**
  * start testing.
- * "describe" and "it" functions were already call?
+ * [describe] and [it] functions were already call?
  */
 void teaoliveRun() {
-  checkEnvironment();
+  _checkEnvironment();
   _environment.run();
 }
 
 /**
- * set TeaoliveReporter.
- * the default is to use the TeaoliveTextReporter class.
- * It's use a "print" function.
+ * set [TeaoliveReporter].
+ * the default is to use the [TeaoliveTapReporter] class.
+ * It's use a [print] function.
  */
 void setTeaoliveReporter(TeaoliveReporter reporter) {
-  checkEnvironment();
+  _checkEnvironment();
   _environment.reporter = reporter;
 }
 
 /**
  * this class takes the test results and convert it to a human-readable format.
- * and more. if reporter output the TAP( http://en.wikipedia.org/wiki/Test_Anything_Protocol ) format. Dart can be a CI friendly.
+ * and more. if reporter output the [TAP](http://en.wikipedia.org/wiki/Test_Anything_Protocol) format. Dart can be a CI friendly.
  */
 interface TeaoliveReporter default TeaoliveTapReporter {
 
@@ -222,21 +225,21 @@ interface TeaoliveReporter default TeaoliveTapReporter {
   /** this method called when finish test running. */
   void onRunnerResult(TeaoliveRunner runner);
   
-  /** this method called when finish one of "describe". */
+  /** this method called when finish one of [describe]. */
   void onSuiteResult(TestPiece piece);
 
-  /** this method called when finish one of "it". */
+  /** this method called when finish one of [it]. */
   void onSpecResult(TestPiece piece);
 }
 
 /**
- * get TeaoliveEnvironment.
+ * get [TeaoliveEnvironment].
  * this function is use for self testing about Teaolive.
  */
 TeaoliveEnvironment getCurrentTeaoliveEnvironment() => _environment;
 
 /**
- * restore TeaoliveEnvironment.
+ * restore [TeaoliveEnvironment].
  * this function is use for self testing about Teaolive.
  */
 void restoreTeaoliveEnvironment(TeaoliveEnvironment environment){
@@ -244,7 +247,7 @@ void restoreTeaoliveEnvironment(TeaoliveEnvironment environment){
 }
 
 /**
- * re-initialize TeaoliveEnvironment.
+ * re-initialize [TeaoliveEnvironment].
  * this function is use for self testing about Teaolive.
  */
 void resetTeoliveEnvironment(){
@@ -255,36 +258,30 @@ void resetTeoliveEnvironment(){
 
 TeaoliveEnvironment _environment;
 
-void checkEnvironment() {
+void _checkEnvironment() {
   if(_environment == null){
     _environment = new TeaoliveEnvironment();
   }
 }
 
 class TeaoliveEnvironment {
-  TeaoliveReporter _reporter;
-  TeaoliveRunner _runner;
+  TeaoliveReporter reporter;
+  final TeaoliveRunner runner;
   
-  Map<String, CustomMatcher> matchers;
+  Map<String, Matcher> matchers;
   
-  TeaoliveEnvironment(): _runner = new TeaoliveRunner(), _reporter = new TeaoliveReporter(), matchers = new Map<String, CustomMatcher>();
+  TeaoliveEnvironment():
+    runner = new TeaoliveRunner(),
+    reporter = new TeaoliveReporter(),
+    matchers = new Map();
   
   void run() {
-    _runner.run();
+    runner.run();
   }
   
-  void addMatcher(CustomMatcher matcher){
+  void addMatcher(Matcher matcher){
     matchers[matcher.name] = matcher;
   }
-  
-  void set reporter(TeaoliveReporter reporter) {
-    assert(reporter != null);
-    _reporter = reporter;
-  }
-  
-  TeaoliveReporter get reporter() => _reporter;
-  
-  TeaoliveRunner get runner() => _runner;
 }
 
 class TeaoliveRunner extends TestPiece {
@@ -573,32 +570,27 @@ class Chain {
 }
 
 class AssertionException implements Exception {
-  String msg;
+  final String msg;
   
-  AssertionException(): super() {
-    msg = "";
-  }
-  
+  AssertionException(): super(), msg = "";
   AssertionException.msg(this.msg) : super();
 }
 
-class CustomMatcher {
+class Matcher {
   
-  String _name;
+  final String name;
   Function _tester;
   Function _consMessage;
   
   var _expect;
   var _actual;
   
-  CustomMatcher() {
-    _name = "Be";
+  Matcher(): name = "Be" {
     _tester = (var expected, var actual) => expected == actual;
     _consMessage = (String pre, var actual, var expected) => "expected is ${pre}<${expected}>, but got <${actual}>.";
   }
 
-  CustomMatcher.create(String matcherName, bool tester(var actual, var expected), String consMessage(String pre, var actual, var expected)) {
-    _name = matcherName;
+  Matcher.create(this.name, bool tester(var actual, var expected), String consMessage(String pre, var actual, var expected)) {
     _tester = tester;
     _consMessage = consMessage;
   }
@@ -609,7 +601,6 @@ class CustomMatcher {
     return _tester(actual, expected);
   }
   
-  String get name() => _name;
   String message(String pre, var actual, var expected) => _consMessage(pre, actual, expected);
 }
 
@@ -714,7 +705,7 @@ class _ExpectationImpl<T> implements Expectation<T> {
   Dynamic get to() => dynamic;
   
   Dynamic noSuchMethod(String name, List args) {
-    final CustomMatcher matcher = _environment.matchers[name];
+    final Matcher matcher = _environment.matchers[name];
     if(matcher == null){
       throw new NoSuchMethodException(this, name, args);
     }
