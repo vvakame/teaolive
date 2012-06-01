@@ -18,7 +18,7 @@
 
 #import('dart:coreimpl');
 
-#import('reporter/teaolive_text_reporter.dart');
+#import('reporter/teaolive_tap_reporter.dart');
 
 /** Task. Represent an action, such as testing and cleanup. */
 typedef void Task();
@@ -212,7 +212,7 @@ void setTeaoliveReporter(TeaoliveReporter reporter) {
  * this class takes the test results and convert it to a human-readable format.
  * and more. if reporter output the TAP( http://en.wikipedia.org/wiki/Test_Anything_Protocol ) format. Dart can be a CI friendly.
  */
-interface TeaoliveReporter default TeaoliveTextReporter {
+interface TeaoliveReporter default TeaoliveTapReporter {
 
   TeaoliveReporter();
 
