@@ -47,7 +47,7 @@ class TeaoliveTapReporter implements TeaoliveReporter {
   
   void printBody(TeaoliveRunner runner){
     for(TestPiece piece in runner.tests){
-      if(piece.isSuite()){
+      if(piece.isRunner() || piece.isSuite()){
         processSuite(piece);
       } else {
         processSpec(piece);
@@ -69,7 +69,7 @@ class TeaoliveTapReporter implements TeaoliveReporter {
       writeLine("# describe ${suite.description}");
     }
     for(TestPiece piece in suite.tests){
-      if(piece.isSuite()){
+      if(piece.isRunner() || piece.isSuite()){
         processSuite(piece);
       } else {
         processSpec(piece);

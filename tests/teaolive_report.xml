@@ -5,6 +5,12 @@
 <testsuite name="save environment" errors="0" failures="0" tests="1" time="0.0">
 <testcase name="save and restore" classname="default" time="0.0" />
 </testsuite>
+<testsuite name="reporter" errors="0" failures="0" tests="4" time="0.0">
+<testcase name="call addOnRunnerStart" classname="default" time="0.0" />
+<testcase name="call onSuiteResult" classname="default" time="0.0" />
+<testcase name="call onSpecResult" classname="default" time="0.0" />
+<testcase name="call onRunnerResult" classname="default" time="0.0" />
+</testsuite>
 <testsuite name="matchers" errors="0" failures="0" tests="11" time="0.0">
 <testcase name="toBe matcher compare by ===" classname="default" time="0.0" />
 <testcase name="toBeLessThan matcher compare by &gt;" classname="default" time="0.0" />

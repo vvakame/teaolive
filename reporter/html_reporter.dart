@@ -29,7 +29,7 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
     _parent.nodes.clear();
     
     for(TestPiece piece in runner.tests){
-      if(piece.isSuite()){
+      if(piece.isRunner() || piece.isSuite()){
         addSuite2dom(_parent, piece);
       } else {
         addSpec2dom(_parent, piece);
@@ -57,7 +57,7 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
       parent.nodes.add(el);
 
       for(TestPiece piece in suite.tests){
-        if(piece.isSuite()){
+        if(piece.isRunner() || piece.isSuite()){
           addSuite2dom(el, piece);
         } else {
           addSpec2dom(el, piece);

@@ -48,7 +48,6 @@ void xdescribe(String description, Task test){
 void it(String description, Task test){
   _checkEnvironment();
   assert(_environment.runner.currentRunning != null);
-  assert(_environment.runner.currentRunning.isSuite());
   _environment.runner.add(new TestPiece.it(description, test));
 }
 
@@ -309,11 +308,9 @@ class TeaoliveRunner extends TestPiece {
   }
   
   TestPiece _findAncestorSuite(TestPiece current){
-    if(current == this){
-      return this;
-    } else if(current == null){
+    if(current == null){
       return null;
-    } else if(current.isSuite()){
+    } else if(current.isRunner() || current.isSuite()){
       return current;
     } else {
       return _findAncestorSuite(current.parent);
@@ -329,8 +326,9 @@ class TestPiece {
   List<Task> beforeEach;
   List<Task> afterEach;
 
-  bool _describe;
-  bool ignore;
+  bool _runner = false;
+  bool _describe = false;
+  bool ignore = false;
 
   bool result = false;
   bool start = false;
@@ -343,23 +341,27 @@ class TestPiece {
   String errorMessage;
   Dynamic trace;
   
-  TestPiece._runner(): _describe = true, ignore = false {
+  TestPiece._runner(): _runner = true {
     this.description = "testing root";
     this._test = (){};
     _init();
   }
 
-  TestPiece.describe(this.description, this._test, [this.parent = null]): _describe = true, ignore = false {
+  TestPiece.describe(this.description, this._test, [this.parent = null]): _describe = true {
    _init();
   }
-  TestPiece.it(this.description, this._test, [this.parent = null]): _describe = false, ignore = false {
+  TestPiece.it(this.description, this._test, [this.parent = null]) {
     _init();
   }
 
-  TestPiece.xdescribe(this.description, this._test, [this.parent = null]): _describe = true, ignore = true {
+  TestPiece.xdescribe(this.description, this._test, [this.parent = null]):
+    _describe = true,
+    ignore = true {
     _init();
   }
-  TestPiece.xit(this.description, this._test, [this.parent = null]): _describe = false, ignore = true {
+  TestPiece.xit(this.description, this._test, [this.parent = null]):
+    _describe = false,
+    ignore = true {
     _init();
   }
 
@@ -371,8 +373,9 @@ class TestPiece {
     asyncResults = new List<Task>();
   }
   
-  bool isSuite() => _describe;
-  bool isSpec() => !_describe;
+  bool isRunner() => _runner;
+  bool isSuite() => !_runner && _describe;
+  bool isSpec() => !_runner && !_describe;
   
   void run([final Task nextTask]){
     if(ignore){
@@ -412,6 +415,13 @@ class TestPiece {
     .finish((){
       if(isSpec()){
         _collectAfterTask().forEach((Task task) => task());
+      }
+    })
+    .finish((){
+      if(isSuite()){
+        _environment.reporter.onSuiteResult(this);
+      } else if(isSpec()){
+        _environment.reporter.onSpecResult(this);
       }
     })
     .finish((){
@@ -459,7 +469,7 @@ class TestPiece {
   
   void add(TestPiece piece){
     assert(piece != null);
-    if(isSuite()){
+    if(isRunner() || isSuite()){
       tests.add(piece);
     } else {
       assert(parent != null);

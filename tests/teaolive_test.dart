@@ -74,6 +74,112 @@ void testCase(){
       expect(sniffer.it.ignore).toBe(1);
     });
   });
+  
+  describe("reporter", (){
+    it("call addOnRunnerStart", (){
+      TeaoliveEnvironment env = getCurrentTeaoliveEnvironment();
+      resetTeoliveEnvironment();
+      
+      // under new environment
+      InjectableReporter reporter = new InjectableReporter();
+      String result;
+      reporter.addOnRunnerStart(() => result = "ok");
+      setTeaoliveReporter(reporter);
+
+      addTest((){
+        describe("success describe", (){
+          it("success it", (){
+          });
+        });
+      });
+      
+      teaoliveRun();
+      
+      // continue root testing...
+      restoreTeaoliveEnvironment(env);
+
+      expect(result).toEqual("ok");
+    });
+
+    it("call onSuiteResult", (){
+      TeaoliveEnvironment env = getCurrentTeaoliveEnvironment();
+      resetTeoliveEnvironment();
+      
+      // under new environment
+      InjectableReporter reporter = new InjectableReporter();
+      StringBuffer buffer = new StringBuffer();
+      reporter.addOnSuiteResult((TestPiece suite) => buffer.add("ok"));
+      setTeaoliveReporter(reporter);
+
+      addTest((){
+        describe("success describe1", (){
+          it("success it", (){
+          });
+        });
+        describe("success describe2", (){
+        });
+      });
+      
+      teaoliveRun();
+      
+      // continue root testing...
+      restoreTeaoliveEnvironment(env);
+
+      expect(buffer.toString()).toEqual("okok");
+    });
+
+    it("call onSpecResult", (){
+      TeaoliveEnvironment env = getCurrentTeaoliveEnvironment();
+      resetTeoliveEnvironment();
+      
+      // under new environment
+      InjectableReporter reporter = new InjectableReporter();
+      StringBuffer buffer = new StringBuffer();
+      reporter.addOnSpecResult((TestPiece spec) => buffer.add("ok"));
+      setTeaoliveReporter(reporter);
+
+      addTest((){
+        describe("success describe1", (){
+          it("success it", (){
+          });
+        });
+        describe("success describe2", (){
+        });
+      });
+      
+      teaoliveRun();
+      
+      // continue root testing...
+      restoreTeaoliveEnvironment(env);
+
+      expect(buffer.toString()).toEqual("ok");
+    });
+
+    it("call onRunnerResult", (){
+      TeaoliveEnvironment env = getCurrentTeaoliveEnvironment();
+      resetTeoliveEnvironment();
+      
+      // under new environment
+      InjectableReporter reporter = new InjectableReporter();
+      StringBuffer buffer = new StringBuffer();
+      reporter.addOnRunnerResult((TeaoliveRunner runner) => buffer.add("ok"));
+      setTeaoliveReporter(reporter);
+
+      addTest((){
+        describe("success describe1", (){
+          it("success it", (){
+          });
+        });
+      });
+      
+      teaoliveRun();
+      
+      // continue root testing...
+      restoreTeaoliveEnvironment(env);
+
+      expect(buffer.toString()).toEqual("ok");
+    });
+  });
 
   describe("matchers", (){
     it("toBe matcher compare by ===", (){

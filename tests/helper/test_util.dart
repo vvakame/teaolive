@@ -2,6 +2,52 @@
 
 #import('../../teaolive.dart');
 
+class InjectableReporter implements TeaoliveReporter {
+  
+  List<Function> onRunnerStartListener;
+  List<Function> onSuiteResultListener;
+  List<Function> onSpecResultListener;
+  List<Function> onRunnerResultListener;
+  
+  InjectableReporter():
+    onRunnerStartListener = new List(),
+    onSuiteResultListener = new List(),
+    onSpecResultListener = new List(),
+    onRunnerResultListener = new List();
+  
+  void addOnRunnerStart(void listener()) {
+    onRunnerStartListener.add(listener);
+  }
+
+  void addOnSuiteResult(void listener(TestPiece suite)) {
+    onSuiteResultListener.add(listener);
+  }
+  
+  void addOnSpecResult(void listener(TestPiece spec)) {
+    onSpecResultListener.add(listener);
+  }
+  
+  void addOnRunnerResult(void listener(TeaoliveRunner runner)) {
+    onRunnerResultListener.add(listener);
+  }
+  
+  void onRunnerStart() {
+    onRunnerStartListener.forEach((Function func) => func());
+  }
+  
+  void onSuiteResult(TestPiece suite) {
+    onSuiteResultListener.forEach((Function func) => func(suite));
+  }
+
+  void onSpecResult(TestPiece spec) {
+    onSpecResultListener.forEach((Function func) => func(spec));
+  }
+
+  void onRunnerResult(TeaoliveRunner runner) {
+    onRunnerResultListener.forEach((Function func) => func(runner));
+  }
+}
+
 class Sniffer implements TeaoliveReporter {
   
   TeaoliveRunner _runner;
