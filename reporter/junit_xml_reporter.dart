@@ -58,13 +58,13 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
       if(piece.isSuite()){
         int testCount = testutil.countIt(piece.tests) - testutil.countIgnoreIt(piece.tests);
         int failures = testutil.countFailureIt(piece.tests);
-        writeTestSuiteStart(piece.description, testCount, failures: failures);
+        writeTestSuiteStart(piece, testCount, failures: failures);
         writeTestSuites(piece);
         writeTestSuiteEnd();
         
       } else {
         int errors = piece.result ? 0 : 1;
-        writeTestSuiteStart(piece.description, 1, errors: errors);
+        writeTestSuiteStart(piece, 1, errors: errors);
         writeSpec(piece);
         writeTestSuiteEnd();
       }
@@ -80,18 +80,18 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
         continue;
       }
       if(piece.result){
-        writeTestCaseSuccess(piece.description);
+        writeTestCaseSuccess(piece);
       } else if(piece.error is AssertionException) {
-        writeTestCaseFailure(piece.description, piece.errorMessage, piece.trace);
+        writeTestCaseFailure(piece);
       } else {
-        writeTestCaseError(piece.description, piece.errorMessage, piece.trace);
+        writeTestCaseError(piece);
       }
     }
   }
   
   void writeSpec(TestPiece piece){
     assert(piece.isSpec());
-    writeTestCaseSuccess(piece.description);
+    writeTestCaseSuccess(piece);
   }
   
   void writeXmlDocType(){
@@ -106,36 +106,45 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
     writeLine("</testsuites>");
   }
   
-  void writeTestSuiteStart(String name, int tests, [int errors = 0, int failures = 0, double time = 0.0]){
-    writeLine('<testsuite name="${escape(name)}" errors="${errors}" failures="${failures}" tests="${tests}" time="${time}">');
+  void writeTestSuiteStart(TestPiece suite, int tests, [int errors = 0, int failures = 0]){
+    num time = suite.microseconds / 1000 / 1000; // JUnit use "second".
+    writeLine('<testsuite name="${escape(suite.description)}" errors="${errors}" failures="${failures}" tests="${tests}" time="${time}">');
   }
 
   void writeTestSuiteEnd(){
     writeLine("</testsuite>");
   }
   
-  void writeTestCaseSuccess(String name, [String className = "default", time = 0.0]){
-    writeLine('<testcase name="${escape(name)}" classname="${escape(className)}" time="${time}" />');
+  void writeTestCaseSuccess(TestPiece spec){
+    num time = spec.microseconds / 1000 / 1000; // JUnit use "second".
+    var className = "unknown";
+    writeLine('<testcase name="${escape(spec.description)}" classname="${escape(className)}" time="${time}" />');
   }
 
-  void writeTestCaseFailure(String name, String reason, Dynamic trace, [String className = "default", time = 0.0]){
+  void writeTestCaseFailure(TestPiece spec){
+    var reason = spec.errorMessage;
     if(reason == null){
       reason = "unknown";
     }
-    writeLine('<testcase name="${escape(name)}" classname="${escape(className)}" time="${time}">');
+    var className = spec.error.toString();
+    num time = spec.microseconds / 1000 / 1000; // JUnit use "second".
+    writeLine('<testcase name="${escape(spec.description)}" classname="${escape(className)}" time="${time}">');
     write('<failure message="${escape(reason)}" type="AsserionException">');
-    write(escape(trace.toString()));
+    write(escape(spec.trace.toString()));
     writeLine('</failure>');
     writeLine('</testcase>');
   }
 
-  void writeTestCaseError(String name, String reason, Dynamic trace, [String className = "default", time = 0.0]){
+  void writeTestCaseError(TestPiece spec){
+    var reason = spec.errorMessage;
     if(reason == null){
       reason = "unknown";
     }
-    writeLine('<testcase name="${escape(name)}" classname="${escape(className)}" time="${time}">');
+    var className = spec.error.toString();
+    num time = spec.microseconds / 1000 / 1000; // JUnit use "second".
+    writeLine('<testcase name="${spec.description}" classname="${escape(className)}" time="${time}">');
     write('<error message="${escape(reason)}" type="Unknown">');
-    write(escape(trace.toString()));
+    write(escape(spec.trace.toString()));
     writeLine('</error>');
     writeLine('</testcase>');
   }

@@ -330,6 +330,8 @@ class TestPiece {
   bool _describe = false;
   bool ignore = false;
 
+  Stopwatch _stopwatch;
+  int microseconds = null;
   bool result = false;
   bool start = false;
   bool finish = false;
@@ -384,6 +386,8 @@ class TestPiece {
       nextTask();
       return;
     }
+    
+    _stopwatch = new Stopwatch.start();
 
     TeaoliveRunner runner = _environment.runner;
     TestPiece restore = runner.currentRunning;
@@ -418,6 +422,9 @@ class TestPiece {
       }
     })
     .finish((){
+      microseconds = _stopwatch.elapsedInUs();
+      _stopwatch.stop();
+      _stopwatch = null;
       if(isSuite()){
         _environment.reporter.onSuiteResult(this);
       } else if(isSpec()){
