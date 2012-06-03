@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<testsuites>
+<testsuite name="empty describe" errors="0" failures="0" tests="0" time="0.0">
+</testsuite>
+<testsuite name="save environment" errors="0" failures="0" tests="1" time="0.0">
+<testcase name="save and restore" classname="default" time="0.0" />
+</testsuite>
+<testsuite name="matchers" errors="0" failures="0" tests="11" time="0.0">
+<testcase name="toBe matcher compare by ===" classname="default" time="0.0" />
+<testcase name="toBeLessThan matcher compare by &gt;" classname="default" time="0.0" />
+<testcase name="toBeLessThanOrEqual matcher compare by &gt;=" classname="default" time="0.0" />
+<testcase name="toBeGreaterThan matcher compare by &lt;" classname="default" time="0.0" />
+<testcase name="toBeGreaterThanOrEqual matcher compare by &lt;=" classname="default" time="0.0" />
+<testcase name="toEqual matcher compare by ==" classname="default" time="0.0" />
+<testcase name="toBeTrue matcher compare to true" classname="default" time="0.0" />
+<testcase name="toBeFalse matcher compare to false" classname="default" time="0.0" />
+<testcase name="toBeNull matcher is check null" classname="default" time="0.0" />
+<testcase name="toThrow matcher is catch exceptions" classname="default" time="0.0" />
+<testcase name="custom matcher" classname="default" time="0.0" />
+</testsuite>
+<testsuite name="operator functions" errors="0" failures="0" tests="1" time="0.0">
+<testcase name="beforeEach and afterEach" classname="default" time="0.0" />
+</testsuite>
+<testsuite name="capture exception" errors="0" failures="0" tests="1" time="0.0">
+<testcase name="save stack trace" classname="default" time="0.0" />
+</testsuite>
+<testsuite name="asynchronous specs" errors="0" failures="0" tests="2" time="0.0">
+<testcase name="createGuardian" classname="default" time="0.0" />
+<testcase name="use Future" classname="default" time="0.0" />
+</testsuite>
+</testsuites>

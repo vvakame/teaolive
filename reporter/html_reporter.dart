@@ -4,17 +4,20 @@
 
 #import('../teaolive.dart');
 
+/**
+ * For implementation of HTML Reporters of [TeaoliveReporter].
+ * this class is working with teaolive.html and teaolive.css.
+ */
 class TeaoliveHtmlReporter implements TeaoliveReporter {
   
   Element _parent;
   
-  TeaoliveHtmlReporter();
+  TeaoliveHtmlReporter() {
+    _parent = document.query("#teaolive-result");
+  }
   TeaoliveHtmlReporter.withParent(this._parent);
   
   void onRunnerStart(){
-    if(_parent == null){
-      _parent = document.query("#teaolive-result");
-    }
     _parent.innerHTML = "test is started...";
   }
   

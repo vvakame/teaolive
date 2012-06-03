@@ -2,6 +2,9 @@
 
 #import('../teaolive.dart');
 
+/**
+ * print text report.
+ */
 class TeaoliveTextReporter implements TeaoliveReporter {
   
   TeaoliveReporter(){}

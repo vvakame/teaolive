@@ -2,6 +2,9 @@
 
 #import('../teaolive.dart');
 
+/**
+ * Generate a [TAP](http://en.wikipedia.org/wiki/Test_Anything_Protocol) format report.
+ */
 class TeaoliveTapReporter implements TeaoliveReporter {
     
   TeaoliveReporter(){}
@@ -19,7 +22,7 @@ class TeaoliveTapReporter implements TeaoliveReporter {
   
   void printHeader(TeaoliveRunner runner){
     int specTotal = countSpec(runner);
-    print("1..${specTotal}");
+    writeLine("1..${specTotal}");
   }
   
   int countSpec(TeaoliveRunner runner){
@@ -61,9 +64,9 @@ class TeaoliveTapReporter implements TeaoliveReporter {
   
   void processSuite(TestPiece suite){
     if(suite.ignore){
-      print("# describe ${suite.description} # SKIP");
+      writeLine("# describe ${suite.description} # SKIP");
     } else {
-      print("# describe ${suite.description}");
+      writeLine("# describe ${suite.description}");
     }
     for(TestPiece piece in suite.tests){
       if(piece.isSuite()){
@@ -76,15 +79,19 @@ class TeaoliveTapReporter implements TeaoliveReporter {
 
   void processSpec(TestPiece spec){
     if(spec.ignore){
-      print("ok ${getNo()} it ${spec.description} # SKIP");
+      writeLine("ok ${getNo()} it ${spec.description} # SKIP");
     } else if(spec.result){
-      print("ok ${getNo()} it ${spec.description}");
+      writeLine("ok ${getNo()} it ${spec.description}");
     } else {
       if(spec.errorMessage != null){
-        print("not ok ${getNo()} it ${spec.description}, ${spec.errorMessage}");
+        writeLine("not ok ${getNo()} it ${spec.description}, ${spec.errorMessage}");
       } else {
-        print("not ok ${getNo()} it ${spec.description}");
+        writeLine("not ok ${getNo()} it ${spec.description}");
       }
     }
+  }
+  
+  void writeLine(String str){
+    print(str);
   }
 }

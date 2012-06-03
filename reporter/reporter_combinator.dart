@@ -3,6 +3,9 @@
 #import('../teaolive.dart');
 #import('../tests/helper/test_util.dart', prefix: "testutil");
 
+/**
+ * If you want to use more than one reporter, please use this class.
+ */
 class TeaoliveReporterCombinator implements TeaoliveReporter {
   
   List<TeaoliveReporter> reporters;

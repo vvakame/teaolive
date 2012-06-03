@@ -5,6 +5,11 @@
 #import('../teaolive.dart');
 #import('../tests/helper/test_util.dart', prefix: "testutil");
 
+/**
+ * Generate a JUnit XML format report.
+ * this is useful when running on the CI.
+ * typically, this class generate 'teaolive_report.xml'.
+ */
 class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
   
   File _output;
@@ -15,7 +20,7 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
   }
   
   TeaoliveJUnitXMLReporter(){
-    _output = new File('junit_output.xml');
+    _output = new File('teaolive_report.xml');
     _init();
   }
   
