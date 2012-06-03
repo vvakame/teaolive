@@ -3,8 +3,12 @@
 #import('helper/test_util.dart');
 
 #import('../teaolive.dart');
-// #import('../reporter/teaolive_html_reporter.dart');
-#import('../reporter/teaolive_junit_xml_reporter.dart');
+
+#import('../reporter/teaolive_tap_reporter.dart', prefix: 'tap');
+#import('../reporter/teaolive_reporter_combinator.dart', prefix: 'combinator');
+
+// #import('../reporter/teaolive_html_reporter.dart', prefix: 'html');
+#import('../reporter/teaolive_junit_xml_reporter.dart', prefix: 'junit');
 
 // DO NOT USE print FUNCTION!!
 // We can't change the standard output stream in the current version of Dart.
@@ -13,8 +17,15 @@ void main(){
     
   addTest(testCase);
 
-  // setTeaoliveReporter(new TeaoliveHtmlReporter());
-  setTeaoliveReporter(new TeaoliveJUnitXMLReporter());
+  // setTeaoliveReporter(new combinator.TeaoliveReporterCombinator([new html.TeaoliveHtmlReporter(), new tap.TeaoliveTapReporter()]));
+  setTeaoliveReporter(
+    new combinator.TeaoliveReporterCombinator(
+      [
+        new junit.TeaoliveJUnitXMLReporter(),
+        new tap.TeaoliveTapReporter()
+      ]
+    ));
+
   teaoliveRun();
 }
 
