@@ -5,7 +5,7 @@
 // #import('package:teaolive/teaolive.dart');
 // #import('package:teaolive/libs/teaolive_html_reporter.dart');
 #import('../teaolive.dart');
-#import('../reporter/teaolive_html_reporter.dart'); // if you want to run from command-line. remove this line.
+#import('../reporter/html_reporter.dart'); // if you want to run from command-line. remove this line.
 
 #import('tests/sample_test.dart', prefix: "sample");
 #import('tests/hoge_test.dart', prefix: "hoge");

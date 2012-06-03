@@ -4,11 +4,11 @@
 
 #import('../teaolive.dart');
 
-#import('../reporter/teaolive_tap_reporter.dart', prefix: 'tap');
-#import('../reporter/teaolive_reporter_combinator.dart', prefix: 'combinator');
+#import('../reporter/tap_reporter.dart', prefix: 'tap');
+#import('../reporter/reporter_combinator.dart', prefix: 'combinator');
 
-// #import('../reporter/teaolive_html_reporter.dart', prefix: 'html');
-#import('../reporter/teaolive_junit_xml_reporter.dart', prefix: 'junit');
+// #import('../reporter/html_reporter.dart', prefix: 'html');
+#import('../reporter/junit_xml_reporter.dart', prefix: 'junit');
 
 // DO NOT USE print FUNCTION!!
 // We can't change the standard output stream in the current version of Dart.

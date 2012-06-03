@@ -18,7 +18,7 @@
 
 #import('dart:coreimpl');
 
-#import('reporter/teaolive_tap_reporter.dart');
+#import('reporter/tap_reporter.dart');
 
 /** Task. Represent an action, such as testing and cleanup. */
 typedef void Task();
