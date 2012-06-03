@@ -422,17 +422,17 @@ class TestPiece {
       }
     })
     .finish((){
-      microseconds = _stopwatch.elapsedInUs();
-      _stopwatch.stop();
-      _stopwatch = null;
-      if(isSuite()){
-        _environment.reporter.onSuiteResult(this);
-      } else if(isSpec()){
-        _environment.reporter.onSpecResult(this);
-      }
-    })
-    .finish((){
       _run((){
+        microseconds = _stopwatch.elapsedInUs();
+        _stopwatch.stop();
+        _stopwatch = null;
+
+        if(isSuite()){
+          _environment.reporter.onSuiteResult(this);
+        } else if(isSpec()){
+          _environment.reporter.onSpecResult(this);
+        }
+        
         runner.currentRunning = restore;
         nextTask(); 
       });

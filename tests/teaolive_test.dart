@@ -166,7 +166,7 @@ void testCase(){
       setTeaoliveReporter(reporter);
 
       addTest((){
-        describe("success describe1", (){
+        describe("success describe", (){
           it("success it", (){
           });
         });
@@ -178,6 +178,34 @@ void testCase(){
       restoreTeaoliveEnvironment(env);
 
       expect(buffer.toString()).toEqual("ok");
+    });
+
+    it("all", (){
+      TeaoliveEnvironment env = getCurrentTeaoliveEnvironment();
+      resetTeoliveEnvironment();
+      
+      // under new environment
+      InjectableReporter reporter = new InjectableReporter();
+      StringBuffer buffer = new StringBuffer();
+      reporter.addOnRunnerStart(() => buffer.add("RunnerStart "));
+      reporter.addOnSuiteResult((TestPiece suite) => buffer.add("Suite "));
+      reporter.addOnSpecResult((TestPiece spec) => buffer.add("Spec "));
+      reporter.addOnRunnerResult((TeaoliveRunner runner) => buffer.add("RunnerEnd"));
+      setTeaoliveReporter(reporter);
+
+      addTest((){
+        describe("success describe", (){
+          it("success it", (){
+          });
+        });
+      });
+      
+      teaoliveRun();
+      
+      // continue root testing...
+      restoreTeaoliveEnvironment(env);
+
+      expect(buffer.toString()).toEqual("RunnerStart Spec Suite RunnerEnd");
     });
   });
 
@@ -327,7 +355,6 @@ void testCase(){
       // testing to be 3
       Function tester = (var actual, var expected) => actual == 3;
       Function message = (String pre, var actual, var expected){
-        print("hoge");
         return "${pre}<${actual}> is not 3!!!";
       };
       addMatcher(new Matcher.create("Three", tester, message));
