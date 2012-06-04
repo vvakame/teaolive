@@ -330,6 +330,10 @@ void testCase() {
   });
 }
 
+// ## More documents
+//
+// * [docs](./docs/index.html)
+//
 // ## Downloads
 //
 // * strong recommended use [Pub](http://www.dartlang.org/docs/pub-package-manager/). [for example](https://github.com/vvakame/teaolive/blob/gh-pages/pubspec)
