@@ -24,7 +24,7 @@
         </h2>
         
 <div class="doc">
-
+<p>Generate a <a href="http://en.wikipedia.org/wiki/Test_Anything_Protocol">TAP</a> format report.</p>
 </div>
 <h3>Implements</h3>
 <p>
@@ -117,7 +117,7 @@ void onSuiteResult(TestPiece suite){}
 <pre class="source">
 void printBody(TeaoliveRunner runner){
   for(TestPiece piece in runner.tests){
-    if(piece.isSuite()){
+    if(piece.isRunner() || piece.isSuite()){
       processSuite(piece);
     } else {
       processSpec(piece);
@@ -136,7 +136,7 @@ void printBody(TeaoliveRunner runner){
 <pre class="source">
 void printHeader(TeaoliveRunner runner){
   int specTotal = countSpec(runner);
-  print("1..${specTotal}");
+  writeLine("1..${specTotal}");
 }
 </pre>
 </div>
@@ -150,14 +150,14 @@ void printHeader(TeaoliveRunner runner){
 <pre class="source">
 void processSpec(TestPiece spec){
   if(spec.ignore){
-    print("ok ${getNo()} it ${spec.description} # SKIP");
+    writeLine("ok ${getNo()} it ${spec.description} # SKIP");
   } else if(spec.result){
-    print("ok ${getNo()} it ${spec.description}");
+    writeLine("ok ${getNo()} it ${spec.description}");
   } else {
     if(spec.errorMessage != null){
-      print("not ok ${getNo()} it ${spec.description}, ${spec.errorMessage}");
+      writeLine("not ok ${getNo()} it ${spec.description}, ${spec.errorMessage}");
     } else {
-      print("not ok ${getNo()} it ${spec.description}");
+      writeLine("not ok ${getNo()} it ${spec.description}");
     }
   }
 }
@@ -173,12 +173,12 @@ void processSpec(TestPiece spec){
 <pre class="source">
 void processSuite(TestPiece suite){
   if(suite.ignore){
-    print("# describe ${suite.description} # SKIP");
+    writeLine("# describe ${suite.description} # SKIP");
   } else {
-    print("# describe ${suite.description}");
+    writeLine("# describe ${suite.description}");
   }
   for(TestPiece piece in suite.tests){
-    if(piece.isSuite()){
+    if(piece.isRunner() || piece.isSuite()){
       processSuite(piece);
     } else {
       processSpec(piece);
@@ -199,12 +199,25 @@ TeaoliveReporter(){}
 </pre>
 </div>
 </div>
+<div class="method"><h4 id="writeLine">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>writeLine</strong>(<a href="../dart_core/String.html">String</a> str) <a class="anchor-link" href="#writeLine"
+              title="Permalink to TeaoliveTapReporter.writeLine">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+void writeLine(String str){
+  print(str);
+}
+</pre>
+</div>
+</div>
         </div>
         <div class="clear"></div>
         </div>
         
         <div class="footer">
-          <p>This page generated at 2012-06-01 07:04:51.435Z</p>
+          <p>This page generated at 2012-06-04 04:10:19.064Z</p>
           <div></div>
         </div>
         <script async src="../client-live-nav.js"></script>

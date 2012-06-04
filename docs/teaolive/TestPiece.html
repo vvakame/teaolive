@@ -37,7 +37,7 @@ new <strong>TestPiece</strong>.describe(description, _test, [parent = null]) <a 
 <div class="doc">
 
 <pre class="source">
-TestPiece.describe(this.description, this._test, [this.parent = null]): _describe = true, ignore = false {
+TestPiece.describe(this.description, this._test, [this.parent = null]): _describe = true {
  _init();
 }
 </pre>
@@ -50,7 +50,7 @@ new <strong>TestPiece</strong>.it(description, _test, [parent = null]) <a class=
 <div class="doc">
 
 <pre class="source">
-TestPiece.it(this.description, this._test, [this.parent = null]): _describe = false, ignore = false {
+TestPiece.it(this.description, this._test, [this.parent = null]) {
   _init();
 }
 </pre>
@@ -63,7 +63,9 @@ new <strong>TestPiece</strong>.xdescribe(description, _test, [parent = null]) <a
 <div class="doc">
 
 <pre class="source">
-TestPiece.xdescribe(this.description, this._test, [this.parent = null]): _describe = true, ignore = true {
+TestPiece.xdescribe(this.description, this._test, [this.parent = null]):
+  _describe = true,
+  ignore = true {
   _init();
 }
 </pre>
@@ -76,7 +78,9 @@ new <strong>TestPiece</strong>.xit(description, _test, [parent = null]) <a class
 <div class="doc">
 
 <pre class="source">
-TestPiece.xit(this.description, this._test, [this.parent = null]): _describe = false, ignore = true {
+TestPiece.xit(this.description, this._test, [this.parent = null]):
+  _describe = false,
+  ignore = true {
   _init();
 }
 </pre>
@@ -92,13 +96,24 @@ TestPiece.xit(this.description, this._test, [this.parent = null]): _describe = f
 <pre class="source">
 void add(TestPiece piece){
   assert(piece != null);
-  if(isSuite()){
+  if(isRunner() || isSuite()){
     tests.add(piece);
   } else {
     assert(parent != null);
     parent.add(piece);
   }
 }
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="isRunner">
+<span class="show-code">Code</span>
+<a href="../dart_core/bool.html">bool</a> <strong>isRunner</strong>() <a class="anchor-link" href="#isRunner"
+              title="Permalink to TestPiece.isRunner">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+bool isRunner() =&gt; _runner;
 </pre>
 </div>
 </div>
@@ -109,7 +124,7 @@ void add(TestPiece piece){
 <div class="doc">
 
 <pre class="source">
-bool isSpec() =&gt; !_describe;
+bool isSpec() =&gt; !_runner &amp;&amp; !_describe;
 </pre>
 </div>
 </div>
@@ -120,7 +135,7 @@ bool isSpec() =&gt; !_describe;
 <div class="doc">
 
 <pre class="source">
-bool isSuite() =&gt; _describe;
+bool isSuite() =&gt; !_runner &amp;&amp; _describe;
 </pre>
 </div>
 </div>
@@ -138,6 +153,8 @@ void run([final Task nextTask]){
     nextTask();
     return;
   }
+  
+  _stopwatch = new Stopwatch.start();
 
   TeaoliveRunner runner = _environment.runner;
   TestPiece restore = runner.currentRunning;
@@ -173,6 +190,16 @@ void run([final Task nextTask]){
   })
   .finish((){
     _run((){
+      microseconds = _stopwatch.elapsedInUs();
+      _stopwatch.stop();
+      _stopwatch = null;
+
+      if(isSuite()){
+        _environment.reporter.onSuiteResult(this);
+      } else if(isSpec()){
+        _environment.reporter.onSpecResult(this);
+      }
+      
       runner.currentRunning = restore;
       nextTask(); 
     });
@@ -296,7 +323,20 @@ List&lt;Future&gt; guardians;
         <div class="doc">
 
 <pre class="source">
-bool ignore;
+bool ignore = false;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="microseconds">
+<span class="show-code">Code</span>
+<a href="../dart_core/int.html">int</a>         <strong>microseconds</strong> <a class="anchor-link"
+            href="#microseconds"
+            title="Permalink to TestPiece.microseconds">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+int microseconds = null;
 </pre>
 </div>
 </div>
@@ -370,7 +410,7 @@ Dynamic trace;
         </div>
         
         <div class="footer">
-          <p>This page generated at 2012-06-01 07:04:51.425Z</p>
+          <p>This page generated at 2012-06-04 04:10:19.051Z</p>
           <div></div>
         </div>
         <script async src="../client-live-nav.js"></script>
