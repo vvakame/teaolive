@@ -93,6 +93,58 @@ function $eq$(x, y) {
 $defProp(Object.prototype, '$eq', function(other) {
   return this === other;
 });
+function $gt$complex$(x, y) {
+  if (typeof(x) == 'number') {
+    $throw(new IllegalArgumentException(y));
+  } else if (typeof(x) == 'object') {
+    return x.$gt(y);
+  } else {
+    $throw(new NoSuchMethodException(x, "operator >", [y]));
+  }
+}
+function $gt$(x, y) {
+  if (typeof(x) == 'number' && typeof(y) == 'number') return x > y;
+  return $gt$complex$(x, y);
+}
+function $gte$complex$(x, y) {
+  if (typeof(x) == 'number') {
+    $throw(new IllegalArgumentException(y));
+  } else if (typeof(x) == 'object') {
+    return x.$gte(y);
+  } else {
+    $throw(new NoSuchMethodException(x, "operator >=", [y]));
+  }
+}
+function $gte$(x, y) {
+  if (typeof(x) == 'number' && typeof(y) == 'number') return x >= y;
+  return $gte$complex$(x, y);
+}
+function $lt$complex$(x, y) {
+  if (typeof(x) == 'number') {
+    $throw(new IllegalArgumentException(y));
+  } else if (typeof(x) == 'object') {
+    return x.$lt(y);
+  } else {
+    $throw(new NoSuchMethodException(x, "operator <", [y]));
+  }
+}
+function $lt$(x, y) {
+  if (typeof(x) == 'number' && typeof(y) == 'number') return x < y;
+  return $lt$complex$(x, y);
+}
+function $lte$complex$(x, y) {
+  if (typeof(x) == 'number') {
+    $throw(new IllegalArgumentException(y));
+  } else if (typeof(x) == 'object') {
+    return x.$lte(y);
+  } else {
+    $throw(new NoSuchMethodException(x, "operator <=", [y]));
+  }
+}
+function $lte$(x, y) {
+  if (typeof(x) == 'number' && typeof(y) == 'number') return x <= y;
+  return $lte$complex$(x, y);
+}
 function $ne$(x, y) {
   if (x == null) return y != null;
   return (typeof(x) != 'object') ? x !== y : !x.$eq(y);
@@ -247,6 +299,9 @@ function $dynamicSetMetadata(inputTable) {
   }
   $dynamicMetadata = table;
 }
+$defProp(Object.prototype, "get$dynamic", function() {
+  "use strict"; return this;
+});
 $defProp(Object.prototype, "noSuchMethod", function(name, args) {
   $throw(new NoSuchMethodException(this, name, args));
 });
@@ -434,6 +489,15 @@ Function.prototype.call$2 = function($0, $1) {
   return this.to$call$2()($0, $1);
 };
 function to$call$2(f) { return f && f.to$call$2(); }
+Function.prototype.to$call$3 = function() {
+  this.call$3 = this._genStub(3);
+  this.to$call$3 = function() { return this.call$3; };
+  return this.call$3;
+};
+Function.prototype.call$3 = function($0, $1, $2) {
+  return this.to$call$3()($0, $1, $2);
+};
+function to$call$3(f) { return f && f.to$call$3(); }
 function FutureNotCompleteException() {
 
 }
@@ -814,7 +878,9 @@ FutureImpl.prototype._setException = function(exception) {
 }
 $inherits(FutureImpl_List, FutureImpl);
 function FutureImpl_List() {}
-function CompleterImpl() {}
+function CompleterImpl() {
+  this._futureImpl = new FutureImpl();
+}
 CompleterImpl.prototype.get$future = function() {
   return this._futureImpl;
 }
@@ -1407,460 +1473,6 @@ _FunctionImplementation.prototype._genStub = function(argsLength, names) {
 function _constList(other) {
     other.__proto__ = ImmutableList.prototype;
     return other;
-}
-function TeaoliveTapReporter() {
-  this._seq = (0);
-}
-TeaoliveTapReporter.prototype.onRunnerStart = function() {
-
-}
-TeaoliveTapReporter.prototype.onSuiteResult = function(suite) {
-
-}
-TeaoliveTapReporter.prototype.onSpecResult = function(spec) {
-
-}
-TeaoliveTapReporter.prototype.onRunnerResult = function(runner) {
-  this.printHeader(runner);
-  this.printBody(runner);
-}
-TeaoliveTapReporter.prototype.printHeader = function(runner) {
-  var specTotal = this.countSpec(runner);
-  this.writeLine(("1.." + specTotal));
-}
-TeaoliveTapReporter.prototype.countSpec = function(runner) {
-  var sum = (0);
-  var $$list = runner.tests;
-  for (var $$i = $$list.iterator(); $$i.hasNext(); ) {
-    var piece = $$i.next();
-    sum += this._countSpec(piece);
-  }
-  return sum;
-}
-TeaoliveTapReporter.prototype._countSpec = function(piece) {
-  if (piece.isSpec()) {
-    return (1);
-  }
-  else {
-    var sum = (0);
-    var $$list = piece.tests;
-    for (var $$i = $$list.iterator(); $$i.hasNext(); ) {
-      var child = $$i.next();
-      sum += this._countSpec(child);
-    }
-    return sum;
-  }
-}
-TeaoliveTapReporter.prototype.printBody = function(runner) {
-  var $$list = runner.tests;
-  for (var $$i = $$list.iterator(); $$i.hasNext(); ) {
-    var piece = $$i.next();
-    if (piece.isRunner() || piece.isSuite()) {
-      this.processSuite(piece);
-    }
-    else {
-      this.processSpec(piece);
-    }
-  }
-}
-TeaoliveTapReporter.prototype.getNo = function() {
-  this._seq++;
-  return this._seq;
-}
-TeaoliveTapReporter.prototype.processSuite = function(suite) {
-  if (suite.ignore) {
-    this.writeLine(("# describe " + suite.description + " # SKIP"));
-  }
-  else {
-    this.writeLine(("# describe " + suite.description));
-  }
-  var $$list = suite.tests;
-  for (var $$i = $$list.iterator(); $$i.hasNext(); ) {
-    var piece = $$i.next();
-    if (piece.isRunner() || piece.isSuite()) {
-      this.processSuite(piece);
-    }
-    else {
-      this.processSpec(piece);
-    }
-  }
-}
-TeaoliveTapReporter.prototype.processSpec = function(spec) {
-  if (spec.ignore) {
-    this.writeLine(("ok " + this.getNo() + " it " + spec.description + " # SKIP"));
-  }
-  else if (spec.result) {
-    this.writeLine(("ok " + this.getNo() + " it " + spec.description));
-  }
-  else {
-    if (spec.errorMessage != null) {
-      this.writeLine(("not ok " + this.getNo() + " it " + spec.description + ", " + spec.errorMessage));
-    }
-    else {
-      this.writeLine(("not ok " + this.getNo() + " it " + spec.description));
-    }
-  }
-}
-TeaoliveTapReporter.prototype.writeLine = function(str) {
-  print$(str);
-}
-function TeaoliveEnvironment() {
-  this.runner = new TeaoliveRunner();
-  this.reporter = new TeaoliveTapReporter();
-  this.matchers = new HashMapImplementation();
-}
-TeaoliveEnvironment.prototype.run = function() {
-  this.runner.run(to$call$0(null));
-}
-TestPiece._runner$ctor = function() {
-  this._describe = false;
-  this.ignore = false;
-  this.microseconds = null;
-  this.result = false;
-  this.start = false;
-  this.finish = false;
-  this._runner = true;
-  this.description = "testing root";
-  this._test = (function () {
-
-  })
-  ;
-  this._init();
-}
-TestPiece._runner$ctor.prototype = TestPiece.prototype;
-TestPiece.describe$ctor = function(description, _test, parent) {
-  this._runner = false;
-  this.ignore = false;
-  this.microseconds = null;
-  this.result = false;
-  this.start = false;
-  this.finish = false;
-  this.description = description;
-  this._test = _test;
-  this.parent = parent;
-  this._describe = true;
-  this._init();
-}
-TestPiece.describe$ctor.prototype = TestPiece.prototype;
-TestPiece.it$ctor = function(description, _test, parent) {
-  this._runner = false;
-  this._describe = false;
-  this.ignore = false;
-  this.microseconds = null;
-  this.result = false;
-  this.start = false;
-  this.finish = false;
-  this.description = description;
-  this._test = _test;
-  this.parent = parent;
-  this._init();
-}
-TestPiece.it$ctor.prototype = TestPiece.prototype;
-function TestPiece() {}
-TestPiece.prototype._init = function() {
-  this.tests = new Array();
-  this.beforeEach = new Array();
-  this.afterEach = new Array();
-  this.guardians = new Array();
-  this.asyncResults = new Array();
-}
-TestPiece.prototype.isRunner = function() {
-  return this._runner;
-}
-TestPiece.prototype.isSuite = function() {
-  return !this._runner && this._describe;
-}
-TestPiece.prototype.isSpec = function() {
-  return !this._runner && !this._describe;
-}
-TestPiece.prototype.run = function(nextTask) {
-  var $this = this;
-  if (this.ignore) {
-    this.start = true;
-    this.finish = true;
-    nextTask();
-    return;
-  }
-  this._stopwatch = new StopwatchImplementation.start$ctor();
-  var runner = $globals._environment.runner;
-  var restore = runner.currentRunning;
-  runner.currentRunning = this;
-  this.start = true;
-  new Chain().trapException((function (e, _trace) {
-    if ((e instanceof AssertionException)) {
-      $this.errorMessage = e.get$msg();
-    }
-    $this.error = e;
-    $this.trace = _trace;
-    $this.result = false;
-    $this.finish = true;
-  })
-  ).chain((function (next) {
-    if ($this.isSpec()) {
-      $this._collectBeforeTask().forEach$1((function (task) {
-        return task();
-      })
-      );
-    }
-    $this._test();
-    Futures.wait($this.guardians).then((function (v) {
-      $this.asyncResults.forEach$1((function (task) {
-        return task();
-      })
-      );
-      next();
-    })
-    );
-  })
-  ).finish((function () {
-    if ($this.isSpec()) {
-      $this._collectAfterTask().forEach$1((function (task) {
-        return task();
-      })
-      );
-    }
-  })
-  ).finish((function () {
-    $this._run((function () {
-      $this.microseconds = $this._stopwatch.elapsedInUs();
-      $this._stopwatch.stop();
-      $this._stopwatch = null;
-      if ($this.isSuite()) {
-        $globals._environment.reporter.onSuiteResult($this);
-      }
-      else if ($this.isSpec()) {
-        $globals._environment.reporter.onSpecResult($this);
-      }
-      runner.currentRunning = restore;
-      nextTask();
-    })
-    );
-  })
-  ).run();
-}
-TestPiece.prototype._run = function(nextTask) {
-  var $this = this;
-  var $$list = this.tests;
-  for (var $$i = $$list.iterator(); $$i.hasNext(); ) {
-    var piece = $$i.next();
-    if (piece.start || piece.finish) {
-      continue;
-    }
-    piece.run((function () {
-      $this._run(nextTask);
-    })
-    );
-    return;
-  }
-  this._run_finish(nextTask);
-}
-TestPiece.prototype._run_finish = function(nextTask) {
-  this.finish = true;
-  if ($eq$(this.error)) {
-    this.result = true;
-  }
-  var fullset = new Array();
-  fullset.add(this);
-  fullset.addAll(this.tests);
-  for (var $$i = fullset.iterator(); $$i.hasNext(); ) {
-    var piece = $$i.next();
-    if (piece.start && piece.finish && piece.result) {
-      continue;
-    }
-    else if (piece.ignore) {
-      continue;
-    }
-    this.result = false;
-  }
-  nextTask();
-}
-TestPiece.prototype.add = function(piece) {
-  if (this.isRunner() || this.isSuite()) {
-    this.tests.add(piece);
-  }
-  else {
-    this.parent.add(piece);
-  }
-}
-TestPiece.prototype._collectBeforeTask = function(piece, tasks) {
-  if (this.parent == null) {
-    return new Array();
-  }
-  if (piece == null) {
-    piece = this.parent;
-  }
-  if (tasks == null) {
-    tasks = new Array();
-  }
-  if (piece.parent != null) {
-    this._collectBeforeTask(piece.parent, tasks);
-  }
-  tasks.addAll(piece.beforeEach);
-  return tasks;
-}
-TestPiece.prototype._collectAfterTask = function(piece, tasks) {
-  if (this.parent == null) {
-    return new Array();
-  }
-  if (piece == null) {
-    piece = this.parent;
-  }
-  if (tasks == null) {
-    tasks = new Array();
-  }
-  this._collectAfterTask_collect(piece, tasks);
-  var reverse = new Array();
-  while (tasks.get$length() != (0)) {
-    var task = to$call$0(tasks.removeLast());
-    reverse.add(task);
-  }
-  return reverse;
-}
-TestPiece.prototype._collectAfterTask_collect = function(piece, tasks) {
-  if (piece.parent != null) {
-    this._collectAfterTask_collect(piece.parent, tasks);
-  }
-  tasks.addAll(piece.afterEach);
-}
-TestPiece.prototype.add$1 = TestPiece.prototype.add;
-$inherits(TeaoliveRunner, TestPiece);
-function TeaoliveRunner() {
-  TestPiece._runner$ctor.call(this);
-  this.currentRunning = this;
-}
-TeaoliveRunner.prototype.run = function(nextTask) {
-  var $this = this;
-  if (nextTask == null) {
-    nextTask = (function () {
-      $globals._environment.reporter.onRunnerResult($this);
-    })
-    ;
-  }
-  $globals._environment.reporter.onRunnerStart();
-  TestPiece.prototype.run.call(this, nextTask);
-}
-TeaoliveRunner.prototype.add = function(piece) {
-  piece.parent = this._findAncestorSuite(this.currentRunning);
-  piece.parent.tests.add(piece);
-}
-TeaoliveRunner.prototype._findAncestorSuite = function(current) {
-  if (current == null) {
-    return null;
-  }
-  else if (current.isRunner() || current.isSuite()) {
-    return current;
-  }
-  else {
-    return this._findAncestorSuite(current.parent);
-  }
-}
-TeaoliveRunner.prototype.add$1 = TeaoliveRunner.prototype.add;
-function Chain() {
-  this._tasks = new Array();
-  this._finalizer = new Array();
-}
-Chain.prototype.chain = function(task) {
-  this._tasks.add(task);
-  return this;
-}
-Chain.prototype.finish = function(task) {
-  this._finalizer.add(task);
-  return this;
-}
-Chain.prototype.trapException = function(handler) {
-  this._handler = handler;
-  return this;
-}
-Chain.prototype.run = function() {
-  var $this = this;
-  if (this._tasks.get$length() != (0)) {
-    try {
-      var task = this._tasks.$index((0));
-      this._tasks.removeRange((0), (1));
-      task.call$1((function () {
-        $this.run();
-      })
-      );
-    } catch (e) {
-      var trace = _stackTraceOf(e);
-      e = _toDartException(e);
-      if (this._handler != null) {
-        this._handler.call$2(e, trace);
-      }
-      this._finish();
-    }
-  }
-  else {
-    this._finish();
-  }
-}
-Chain.prototype._finish = function() {
-  if (this._finalizer.get$length() != (0)) {
-    try {
-      var task = this._finalizer.$index((0));
-      this._finalizer.removeRange((0), (1));
-      task.call$0();
-    } catch (e) {
-      var trace = _stackTraceOf(e);
-      e = _toDartException(e);
-    } finally {
-      this._finish();
-    }
-  }
-}
-function AssertionException() {}
-AssertionException.prototype.get$msg = function() { return this.msg; };
-function describe(description, test) {
-  _checkEnvironment();
-  $globals._environment.runner.add(new TestPiece.describe$ctor(description, test));
-}
-function it(description, test) {
-  _checkEnvironment();
-  $globals._environment.runner.add(new TestPiece.it$ctor(description, test));
-}
-function addTest(testCase) {
-  testCase();
-}
-function teaoliveRun() {
-  _checkEnvironment();
-  $globals._environment.run();
-}
-function setTeaoliveReporter(reporter) {
-  _checkEnvironment();
-  $globals._environment.reporter = reporter;
-}
-var _environment;
-function _checkEnvironment() {
-  if ($globals._environment == null) {
-    $globals._environment = new TeaoliveEnvironment();
-  }
-}
-function TeaoliveReporterCombinator(reporters) {
-  this.reporters = reporters;
-}
-TeaoliveReporterCombinator.prototype.onRunnerStart = function() {
-  this.reporters.forEach$1((function (reporter) {
-    return reporter.onRunnerStart();
-  })
-  );
-}
-TeaoliveReporterCombinator.prototype.onSuiteResult = function(suite) {
-  this.reporters.forEach$1((function (reporter) {
-    return reporter.onSuiteResult(suite);
-  })
-  );
-}
-TeaoliveReporterCombinator.prototype.onSpecResult = function(spec) {
-  this.reporters.forEach$1((function (reporter) {
-    return reporter.onSpecResult(spec);
-  })
-  );
-}
-TeaoliveReporterCombinator.prototype.onRunnerResult = function(runner) {
-  this.reporters.forEach$1((function (reporter) {
-    return reporter.onRunnerResult(runner);
-  })
-  );
 }
 $dynamic("$dom_addEventListener$3").EventTarget = function($0, $1, $2) {
   if (Object.getPrototypeOf(this).hasOwnProperty("$dom_addEventListener$3")) {
@@ -3242,26 +2854,26 @@ $dynamic("iterator").NodeList = function() {
   return new _FixedSizeListIterator_html_Node(this);
 }
 $dynamic("add").NodeList = function(value) {
-  this._html_parent.appendChild(value);
+  this._parent.appendChild(value);
 }
 $dynamic("addAll").NodeList = function(collection) {
   for (var $$i = collection.iterator(); $$i.hasNext(); ) {
     var node = $$i.next();
-    this._html_parent.appendChild(node);
+    this._parent.appendChild(node);
   }
 }
 $dynamic("removeLast").NodeList = function() {
   var result = this.last();
   if ($ne$(result)) {
-    this._html_parent.removeChild(result);
+    this._parent.removeChild(result);
   }
   return result;
 }
 $dynamic("clear$_").NodeList = function() {
-  this._html_parent.set$text("");
+  this._parent.set$text("");
 }
 $dynamic("$setindex").NodeList = function(index, value) {
-  this._html_parent.replaceChild(value, this.$index(index));
+  this._parent.replaceChild(value, this.$index(index));
 }
 $dynamic("forEach").NodeList = function(f) {
   return _Collections.forEach(this, f);
@@ -3874,17 +3486,714 @@ _Lists.getRange = function(a, start, length, accumulator) {
   }
   return accumulator;
 }
+function get$$window() {
+  return window;
+}
 function get$$document() {
   return document;
 }
 var _cachedBrowserPrefix;
 var _pendingRequests;
 var _pendingMeasurementFrameCallbacks;
+function TeaoliveTapReporter() {
+  this._seq = (0);
+}
+TeaoliveTapReporter.prototype.onRunnerStart = function() {
+
+}
+TeaoliveTapReporter.prototype.onSuiteResult = function(suite) {
+
+}
+TeaoliveTapReporter.prototype.onSpecResult = function(spec) {
+
+}
+TeaoliveTapReporter.prototype.onRunnerResult = function(runner) {
+  this.printHeader(runner);
+  this.printBody(runner);
+}
+TeaoliveTapReporter.prototype.printHeader = function(runner) {
+  var specTotal = this.countSpec(runner);
+  this.writeLine(("1.." + specTotal));
+}
+TeaoliveTapReporter.prototype.countSpec = function(runner) {
+  var sum = (0);
+  var $$list = runner.tests;
+  for (var $$i = $$list.iterator(); $$i.hasNext(); ) {
+    var piece = $$i.next();
+    sum += this._countSpec(piece);
+  }
+  return sum;
+}
+TeaoliveTapReporter.prototype._countSpec = function(piece) {
+  if (piece.isSpec()) {
+    return (1);
+  }
+  else {
+    var sum = (0);
+    var $$list = piece.tests;
+    for (var $$i = $$list.iterator(); $$i.hasNext(); ) {
+      var child = $$i.next();
+      sum += this._countSpec(child);
+    }
+    return sum;
+  }
+}
+TeaoliveTapReporter.prototype.printBody = function(runner) {
+  var $$list = runner.tests;
+  for (var $$i = $$list.iterator(); $$i.hasNext(); ) {
+    var piece = $$i.next();
+    if (piece.isRunner() || piece.isSuite()) {
+      this.processSuite(piece);
+    }
+    else {
+      this.processSpec(piece);
+    }
+  }
+}
+TeaoliveTapReporter.prototype.getNo = function() {
+  this._seq++;
+  return this._seq;
+}
+TeaoliveTapReporter.prototype.processSuite = function(suite) {
+  if (suite.ignore) {
+    this.writeLine(("# describe " + suite.description + " # SKIP"));
+  }
+  else {
+    this.writeLine(("# describe " + suite.description));
+  }
+  var $$list = suite.tests;
+  for (var $$i = $$list.iterator(); $$i.hasNext(); ) {
+    var piece = $$i.next();
+    if (piece.isRunner() || piece.isSuite()) {
+      this.processSuite(piece);
+    }
+    else {
+      this.processSpec(piece);
+    }
+  }
+}
+TeaoliveTapReporter.prototype.processSpec = function(spec) {
+  if (spec.ignore) {
+    this.writeLine(("ok " + this.getNo() + " it " + spec.description + " # SKIP"));
+  }
+  else if (spec.result) {
+    this.writeLine(("ok " + this.getNo() + " it " + spec.description));
+  }
+  else {
+    if (spec.errorMessage != null) {
+      this.writeLine(("not ok " + this.getNo() + " it " + spec.description + ", " + spec.errorMessage));
+    }
+    else {
+      this.writeLine(("not ok " + this.getNo() + " it " + spec.description));
+    }
+  }
+}
+TeaoliveTapReporter.prototype.writeLine = function(str) {
+  print$(str);
+}
+$inherits(Guardian, CompleterImpl);
+function Guardian() {
+  CompleterImpl.call(this);
+}
+Guardian.prototype.arrival = function() {
+  if ($eq$(this.get$future().get$isComplete(), false)) {
+    this.complete(null);
+  }
+}
+function TeaoliveEnvironment() {
+  this.runner = new TeaoliveRunner();
+  this.reporter = new TeaoliveTapReporter();
+  this.matchers = new HashMapImplementation();
+}
+TeaoliveEnvironment.prototype.run = function() {
+  this.runner.run(to$call$0(null));
+}
+TeaoliveEnvironment.prototype.addMatcher = function(matcher) {
+  this.matchers.$setindex(matcher.name, matcher);
+}
+TestPiece._runner$ctor = function() {
+  this._describe = false;
+  this.ignore = false;
+  this.microseconds = null;
+  this.result = false;
+  this.start = false;
+  this.finish = false;
+  this._runner = true;
+  this.description = "testing root";
+  this._test = (function () {
+
+  })
+  ;
+  this._init();
+}
+TestPiece._runner$ctor.prototype = TestPiece.prototype;
+TestPiece.describe$ctor = function(description, _test, parent) {
+  this._runner = false;
+  this.ignore = false;
+  this.microseconds = null;
+  this.result = false;
+  this.start = false;
+  this.finish = false;
+  this.description = description;
+  this._test = _test;
+  this.parent = parent;
+  this._describe = true;
+  this._init();
+}
+TestPiece.describe$ctor.prototype = TestPiece.prototype;
+TestPiece.it$ctor = function(description, _test, parent) {
+  this._runner = false;
+  this._describe = false;
+  this.ignore = false;
+  this.microseconds = null;
+  this.result = false;
+  this.start = false;
+  this.finish = false;
+  this.description = description;
+  this._test = _test;
+  this.parent = parent;
+  this._init();
+}
+TestPiece.it$ctor.prototype = TestPiece.prototype;
+TestPiece.xdescribe$ctor = function(description, _test, parent) {
+  this._runner = false;
+  this.microseconds = null;
+  this.result = false;
+  this.start = false;
+  this.finish = false;
+  this.description = description;
+  this._test = _test;
+  this.parent = parent;
+  this._describe = true;
+  this.ignore = true;
+  this._init();
+}
+TestPiece.xdescribe$ctor.prototype = TestPiece.prototype;
+TestPiece.xit$ctor = function(description, _test, parent) {
+  this._runner = false;
+  this.microseconds = null;
+  this.result = false;
+  this.start = false;
+  this.finish = false;
+  this.description = description;
+  this._test = _test;
+  this.parent = parent;
+  this._describe = false;
+  this.ignore = true;
+  this._init();
+}
+TestPiece.xit$ctor.prototype = TestPiece.prototype;
+function TestPiece() {}
+TestPiece.prototype._init = function() {
+  this.tests = new Array();
+  this.beforeEach = new Array();
+  this.afterEach = new Array();
+  this.guardians = new Array();
+  this.asyncResults = new Array();
+}
+TestPiece.prototype.isRunner = function() {
+  return this._runner;
+}
+TestPiece.prototype.isSuite = function() {
+  return !this._runner && this._describe;
+}
+TestPiece.prototype.isSpec = function() {
+  return !this._runner && !this._describe;
+}
+TestPiece.prototype.run = function(nextTask) {
+  var $this = this;
+  if (this.ignore) {
+    this.start = true;
+    this.finish = true;
+    nextTask();
+    return;
+  }
+  this._stopwatch = new StopwatchImplementation.start$ctor();
+  var runner = $globals._environment.runner;
+  var restore = runner.currentRunning;
+  runner.currentRunning = this;
+  this.start = true;
+  new Chain().trapException((function (e, _trace) {
+    if ((e instanceof AssertionException)) {
+      $this.errorMessage = e.get$msg();
+    }
+    $this.error = e;
+    $this.trace = _trace;
+    $this.result = false;
+    $this.finish = true;
+  })
+  ).chain((function (next) {
+    if ($this.isSpec()) {
+      $this._collectBeforeTask().forEach$1((function (task) {
+        return task();
+      })
+      );
+    }
+    $this._test();
+    Futures.wait($this.guardians).then((function (v) {
+      $this.asyncResults.forEach$1((function (task) {
+        return task();
+      })
+      );
+      next();
+    })
+    );
+  })
+  ).finish((function () {
+    if ($this.isSpec()) {
+      $this._collectAfterTask().forEach$1((function (task) {
+        return task();
+      })
+      );
+    }
+  })
+  ).finish((function () {
+    $this._run((function () {
+      $this.microseconds = $this._stopwatch.elapsedInUs();
+      $this._stopwatch.stop();
+      $this._stopwatch = null;
+      if ($this.isSuite()) {
+        $globals._environment.reporter.onSuiteResult($this);
+      }
+      else if ($this.isSpec()) {
+        $globals._environment.reporter.onSpecResult($this);
+      }
+      runner.currentRunning = restore;
+      nextTask();
+    })
+    );
+  })
+  ).run();
+}
+TestPiece.prototype._run = function(nextTask) {
+  var $this = this;
+  var $$list = this.tests;
+  for (var $$i = $$list.iterator(); $$i.hasNext(); ) {
+    var piece = $$i.next();
+    if (piece.start || piece.finish) {
+      continue;
+    }
+    piece.run((function () {
+      $this._run(nextTask);
+    })
+    );
+    return;
+  }
+  this._run_finish(nextTask);
+}
+TestPiece.prototype._run_finish = function(nextTask) {
+  this.finish = true;
+  if ($eq$(this.error)) {
+    this.result = true;
+  }
+  var fullset = new Array();
+  fullset.add(this);
+  fullset.addAll(this.tests);
+  for (var $$i = fullset.iterator(); $$i.hasNext(); ) {
+    var piece = $$i.next();
+    if (piece.start && piece.finish && piece.result) {
+      continue;
+    }
+    else if (piece.ignore) {
+      continue;
+    }
+    this.result = false;
+  }
+  nextTask();
+}
+TestPiece.prototype.add = function(piece) {
+  if (this.isRunner() || this.isSuite()) {
+    this.tests.add(piece);
+  }
+  else {
+    this.parent.add(piece);
+  }
+}
+TestPiece.prototype._collectBeforeTask = function(piece, tasks) {
+  if (this.parent == null) {
+    return new Array();
+  }
+  if (piece == null) {
+    piece = this.parent;
+  }
+  if (tasks == null) {
+    tasks = new Array();
+  }
+  if (piece.parent != null) {
+    this._collectBeforeTask(piece.parent, tasks);
+  }
+  tasks.addAll(piece.beforeEach);
+  return tasks;
+}
+TestPiece.prototype._collectAfterTask = function(piece, tasks) {
+  if (this.parent == null) {
+    return new Array();
+  }
+  if (piece == null) {
+    piece = this.parent;
+  }
+  if (tasks == null) {
+    tasks = new Array();
+  }
+  this._collectAfterTask_collect(piece, tasks);
+  var reverse = new Array();
+  while (tasks.get$length() != (0)) {
+    var task = to$call$0(tasks.removeLast());
+    reverse.add(task);
+  }
+  return reverse;
+}
+TestPiece.prototype._collectAfterTask_collect = function(piece, tasks) {
+  if (piece.parent != null) {
+    this._collectAfterTask_collect(piece.parent, tasks);
+  }
+  tasks.addAll(piece.afterEach);
+}
+TestPiece.prototype.add$1 = TestPiece.prototype.add;
+$inherits(TeaoliveRunner, TestPiece);
+function TeaoliveRunner() {
+  TestPiece._runner$ctor.call(this);
+  this.currentRunning = this;
+}
+TeaoliveRunner.prototype.run = function(nextTask) {
+  var $this = this;
+  if (nextTask == null) {
+    nextTask = (function () {
+      $globals._environment.reporter.onRunnerResult($this);
+    })
+    ;
+  }
+  $globals._environment.reporter.onRunnerStart();
+  TestPiece.prototype.run.call(this, nextTask);
+}
+TeaoliveRunner.prototype.add = function(piece) {
+  piece.parent = this._findAncestorSuite(this.currentRunning);
+  piece.parent.tests.add(piece);
+}
+TeaoliveRunner.prototype._findAncestorSuite = function(current) {
+  if (current == null) {
+    return null;
+  }
+  else if (current.isRunner() || current.isSuite()) {
+    return current;
+  }
+  else {
+    return this._findAncestorSuite(current.parent);
+  }
+}
+TeaoliveRunner.prototype.add$1 = TeaoliveRunner.prototype.add;
+function Chain() {
+  this._tasks = new Array();
+  this._finalizer = new Array();
+}
+Chain.prototype.chain = function(task) {
+  this._tasks.add(task);
+  return this;
+}
+Chain.prototype.finish = function(task) {
+  this._finalizer.add(task);
+  return this;
+}
+Chain.prototype.trapException = function(handler) {
+  this._handler = handler;
+  return this;
+}
+Chain.prototype.run = function() {
+  var $this = this;
+  if (this._tasks.get$length() != (0)) {
+    try {
+      var task = this._tasks.$index((0));
+      this._tasks.removeRange((0), (1));
+      task.call$1((function () {
+        $this.run();
+      })
+      );
+    } catch (e) {
+      var trace = _stackTraceOf(e);
+      e = _toDartException(e);
+      if (this._handler != null) {
+        this._handler.call$2(e, trace);
+      }
+      this._finish();
+    }
+  }
+  else {
+    this._finish();
+  }
+}
+Chain.prototype._finish = function() {
+  if (this._finalizer.get$length() != (0)) {
+    try {
+      var task = this._finalizer.$index((0));
+      this._finalizer.removeRange((0), (1));
+      task.call$0();
+    } catch (e) {
+      var trace = _stackTraceOf(e);
+      e = _toDartException(e);
+    } finally {
+      this._finish();
+    }
+  }
+}
+function AssertionException() {
+  this.msg = "";
+}
+AssertionException.msg$ctor = function(msg) {
+  this.msg = msg;
+}
+AssertionException.msg$ctor.prototype = AssertionException.prototype;
+AssertionException.prototype.get$msg = function() { return this.msg; };
+Matcher.create$ctor = function(name, tester, consMessage) {
+  this.name = name;
+  this._tester = tester;
+  this._consMessage = consMessage;
+}
+Matcher.create$ctor.prototype = Matcher.prototype;
+function Matcher() {}
+Matcher.prototype.get$name = function() { return this.name; };
+Matcher.prototype.test = function(actual, expected) {
+  this._expect = expected;
+  this._actual = actual;
+  return this._tester.call$2(actual, expected);
+}
+Matcher.prototype.message = function(pre, actual, expected) {
+  return this._consMessage.call$3(pre, actual, expected);
+}
+_ExpectationImpl.actual$ctor = function(_actual) {
+  this._actual = _actual;
+  this._opList = new Array();
+}
+_ExpectationImpl.actual$ctor.prototype = _ExpectationImpl.prototype;
+_ExpectationImpl._actualWithOp$ctor = function(expectation, op) {
+  this._opList = new Array();
+  this._actual = expectation._actual;
+  this._opList.addAll(expectation._opList);
+  this._opList.add(op);
+}
+_ExpectationImpl._actualWithOp$ctor.prototype = _ExpectationImpl.prototype;
+function _ExpectationImpl() {}
+_ExpectationImpl.prototype.get$not = function() {
+  var op = (function (buffer, result) {
+    buffer.add$1("not ");
+    return !result;
+  })
+  ;
+  return new _ExpectationImpl._actualWithOp$ctor(this, op);
+}
+_ExpectationImpl.prototype.toBe = function(_expect) {
+  if ($eq$(this._opBool((null == _expect ? null == (this._actual) : _expect === this._actual)), false)) {
+    $throw(new AssertionException.msg$ctor(("expected is " + this._opPrefix() + "<" + _expect + ">, but got <" + this._actual + ">.")));
+  }
+}
+_ExpectationImpl.prototype.toBeLessThan = function(_expect) {
+  this._checkNull(_expect, this._actual);
+  if ($eq$(this._opBool($gt$(_expect.get$dynamic(), this._actual.get$dynamic())), false)) {
+    $throw(new AssertionException.msg$ctor(("don't expect the result, " + this._opPrefix() + "<" + _expect + "> > <" + this._actual + ">")));
+  }
+}
+_ExpectationImpl.prototype.toBeLessThanOrEqual = function(_expect) {
+  this._checkNull(_expect, this._actual);
+  if ($eq$(this._opBool($gte$(_expect.get$dynamic(), this._actual.get$dynamic())), false)) {
+    $throw(new AssertionException.msg$ctor(("don't expect the result, " + this._opPrefix() + "<" + _expect + "> >= <" + this._actual + ">")));
+  }
+}
+_ExpectationImpl.prototype.toBeGreaterThan = function(_expect) {
+  this._checkNull(_expect, this._actual);
+  if ($eq$(this._opBool($lt$(_expect.get$dynamic(), this._actual.get$dynamic())), false)) {
+    $throw(new AssertionException.msg$ctor(("don't expect the result, " + this._opPrefix() + "<" + _expect + "> < <" + this._actual + ">")));
+  }
+}
+_ExpectationImpl.prototype.toBeGreaterThanOrEqual = function(_expect) {
+  this._checkNull(_expect, this._actual);
+  if ($eq$(this._opBool($lte$(_expect.get$dynamic(), this._actual.get$dynamic())), false)) {
+    $throw(new AssertionException.msg$ctor(("don't expect the result, " + this._opPrefix() + "<" + _expect + "> <= <" + this._actual + ">")));
+  }
+}
+_ExpectationImpl.prototype.toEqual = function(_expect) {
+  if ($eq$(this._opBool($eq$(_expect.get$dynamic(), this._actual.get$dynamic())), false)) {
+    $throw(new AssertionException.msg$ctor(("expected is " + this._opPrefix() + "<" + _expect + ">, but got <" + this._actual + ">.")));
+  }
+}
+_ExpectationImpl.prototype.toBeTrue = function() {
+  this._checkBool(this._actual);
+  this.toBe(true.get$dynamic());
+}
+_ExpectationImpl.prototype.toBeFalse = function() {
+  this._checkBool(this._actual);
+  this.toBe(false.get$dynamic());
+}
+_ExpectationImpl.prototype.toBeNull = function() {
+  if ($eq$(this._opBool(null == this._actual.get$dynamic()), false)) {
+    $throw(new AssertionException.msg$ctor(("expected is " + this._opPrefix() + " null, but got <" + this._actual + ">.")));
+  }
+}
+_ExpectationImpl.prototype.toThrow = function(judge) {
+  this._checkFunction(this._actual);
+  try {
+    var func = this._actual.get$dynamic();
+    func.call$0();
+    fail("function not raise a exception");
+  } catch ($$ex) {
+    var $$trace = _stackTraceOf($$ex);
+    $$ex = _toDartException($$ex);
+    if (($$ex instanceof ClosureArgumentMismatchException)) {
+      var e = $$ex;
+      $throw(new AssertionException.msg$ctor("actual function is argument mismatch. please use the 'void actual()'"));
+    } else {
+      var e = $$ex;
+      var trace = $$trace;
+      if (judge != null && $eq$(this._opBool(judge(e)), false)) {
+        $throw(new AssertionException.msg$ctor(("don't expect the result, " + this._opPrefix() + "throw <" + e + ">")));
+      }
+    }
+  }
+}
+_ExpectationImpl.prototype.get$to = function() {
+  return this.get$dynamic();
+}
+_ExpectationImpl.prototype.noSuchMethod = function(name, args) {
+  var matcher = $globals._environment.matchers.$index(name);
+  if (matcher == null) {
+    $throw(new NoSuchMethodException(this, name, args));
+  }
+  var expected = args.get$length() != (0) ? args.$index((0)) : null;
+  var result = matcher.test(this._actual, expected);
+  if ($eq$(this._opBool(result), false)) {
+    $throw(new AssertionException.msg$ctor(matcher.message(this._opPrefix(), this._actual, expected)));
+  }
+}
+_ExpectationImpl.prototype._opPrefix = function() {
+  var buffer = new StringBufferImpl("");
+  var $$list = this._opList;
+  for (var $$i = $$list.iterator(); $$i.hasNext(); ) {
+    var op = $$i.next();
+    op(buffer, true);
+  }
+  return buffer.toString();
+}
+_ExpectationImpl.prototype._opBool = function(result) {
+  var buffer = new StringBufferImpl("");
+  var $$list = this._opList;
+  for (var $$i = $$list.iterator(); $$i.hasNext(); ) {
+    var op = $$i.next();
+    result = op(buffer, result);
+  }
+  return result;
+}
+_ExpectationImpl.prototype._checkNull = function(_expect, __actual) {
+  if ($eq$(_expect)) {
+    $throw(new AssertionException.msg$ctor("expect value is null"));
+  }
+  else if ($eq$(__actual)) {
+    $throw(new AssertionException.msg$ctor("actual value is null"));
+  }
+}
+_ExpectationImpl.prototype._checkBool = function(actual) {
+  if ($eq$((typeof(actual) == 'boolean'), false)) {
+    $throw(new AssertionException.msg$ctor(("actual<" + actual + "> is not bool")));
+  }
+}
+_ExpectationImpl.prototype._checkFunction = function(actual) {
+  if ($eq$((typeof(actual) == 'function'), false)) {
+    $throw(new AssertionException.msg$ctor(("actual<" + actual + "> is not Function")));
+  }
+}
+function describe(description, test) {
+  _checkEnvironment();
+  $globals._environment.runner.add(new TestPiece.describe$ctor(description, test));
+}
+function xdescribe(description, test) {
+  _checkEnvironment();
+  $globals._environment.runner.add(new TestPiece.xdescribe$ctor(description, test));
+}
+function it(description, test) {
+  _checkEnvironment();
+  $globals._environment.runner.add(new TestPiece.it$ctor(description, test));
+}
+function xit(description, test) {
+  _checkEnvironment();
+  $globals._environment.runner.add(new TestPiece.xit$ctor(description, test));
+}
+function beforeEach(task) {
+  _checkEnvironment();
+  $globals._environment.runner.currentRunning.beforeEach.add(task);
+}
+function afterEach(task) {
+  _checkEnvironment();
+  $globals._environment.runner.currentRunning.afterEach.add(task);
+}
+function addTest(testCase) {
+  testCase();
+}
+function addMatcher(matcher) {
+  _checkEnvironment();
+  $globals._environment.addMatcher(matcher);
+}
+function expect(actual) {
+  return new _ExpectationImpl.actual$ctor(actual);
+}
+function fail(description) {
+  if (description != null) {
+    $throw(new AssertionException.msg$ctor(description));
+  }
+  else {
+    $throw(new AssertionException());
+  }
+}
+function createGuardian() {
+  var completer = new Guardian();
+  $globals._environment.runner.currentRunning.guardians.add(completer.get$future());
+  return completer;
+}
+function asyncResult(task) {
+  $globals._environment.runner.currentRunning.asyncResults.add(task);
+}
+function teaoliveRun() {
+  _checkEnvironment();
+  $globals._environment.run();
+}
+function setTeaoliveReporter(reporter) {
+  _checkEnvironment();
+  $globals._environment.reporter = reporter;
+}
+var _environment;
+function _checkEnvironment() {
+  if ($globals._environment == null) {
+    $globals._environment = new TeaoliveEnvironment();
+  }
+}
+function TeaoliveReporterCombinator(reporters) {
+  this.reporters = reporters;
+}
+TeaoliveReporterCombinator.prototype.onRunnerStart = function() {
+  this.reporters.forEach$1((function (reporter) {
+    return reporter.onRunnerStart();
+  })
+  );
+}
+TeaoliveReporterCombinator.prototype.onSuiteResult = function(suite) {
+  this.reporters.forEach$1((function (reporter) {
+    return reporter.onSuiteResult(suite);
+  })
+  );
+}
+TeaoliveReporterCombinator.prototype.onSpecResult = function(spec) {
+  this.reporters.forEach$1((function (reporter) {
+    return reporter.onSpecResult(spec);
+  })
+  );
+}
+TeaoliveReporterCombinator.prototype.onRunnerResult = function(runner) {
+  this.reporters.forEach$1((function (reporter) {
+    return reporter.onRunnerResult(runner);
+  })
+  );
+}
 function TeaoliveHtmlReporter() {
-  this._parent = get$$document().query("#teaolive-result");
+  this._teaolive_html_reporter_parent = get$$document().query("#teaolive-result");
 }
 TeaoliveHtmlReporter.prototype.onRunnerStart = function() {
-  this._parent.set$innerHTML("test is started...");
+  this._teaolive_html_reporter_parent.set$innerHTML("test is started...");
 }
 TeaoliveHtmlReporter.prototype.onSuiteResult = function(suite) {
 
@@ -3893,15 +4202,15 @@ TeaoliveHtmlReporter.prototype.onSpecResult = function(spec) {
 
 }
 TeaoliveHtmlReporter.prototype.onRunnerResult = function(runner) {
-  this._parent.get$nodes().clear$_();
+  this._teaolive_html_reporter_parent.get$nodes().clear$_();
   var $$list = runner.tests;
   for (var $$i = $$list.iterator(); $$i.hasNext(); ) {
     var piece = $$i.next();
     if (piece.isRunner() || piece.isSuite()) {
-      this.addSuite2dom(this._parent, piece);
+      this.addSuite2dom(this._teaolive_html_reporter_parent, piece);
     }
     else {
-      this.addSpec2dom(this._parent, piece);
+      this.addSpec2dom(this._teaolive_html_reporter_parent, piece);
     }
   }
 }
@@ -3967,12 +4276,237 @@ function main() {
   teaoliveRun();
 }
 function testCase() {
-  describe("sample", (function () {
-    it("sample", (function () {
-
+  describe("A suite", (function () {
+    it("contains spec with an expectation", (function () {
+      expect(true).toBe(true);
     })
     );
   })
+  );
+  describe("A suite is just a function", (function () {
+    var a;
+    it("and so is a spec", (function () {
+      a = true;
+      expect(a).toBe(true);
+    })
+    );
+  })
+  );
+  describe("The 'toBe' matcher compares with ===", (function () {
+    it("and has a positive case ", (function () {
+      expect(true).toBe(true);
+    })
+    );
+    it("and can have a negative case", (function () {
+      expect(false).get$not().toBe(true);
+    })
+    );
+  })
+  );
+  describe("Included matchers:", (function () {
+    it("The 'toBe' matcher compares with ===", (function () {
+      var a = (12);
+      var b = a;
+      expect(a).toBe(b);
+      expect(a).get$not().toBe(null);
+    })
+    );
+    describe("The 'toEqual' matcher", (function () {
+      it("works for simple literals and variables", (function () {
+        var a = (12);
+        expect(a).toEqual((12));
+      })
+      );
+      it("should work for objects", (function () {
+        var a = "foo";
+        var b = new StringBufferImpl("");
+        b.add("foo");
+        expect(b.toString()).toEqual(a);
+      })
+      );
+    })
+    );
+    it("The 'toBeNull' matcher compares against null", (function () {
+      var a = null;
+      var foo = "foo";
+      expect(null).toBeNull();
+      expect(a).toBeNull();
+      expect(foo).get$not().toBeNull();
+    })
+    );
+    it("The 'toBeLessThan' matcher is for mathematical comparisons", (function () {
+      var pi = (3.1415926), e = (2.78);
+      expect(e).toBeLessThan(pi);
+      expect(pi).get$not().toBeLessThan(e);
+    })
+    );
+    it("The 'toBeLessThanOrEqual' matcher is for mathematical comparisons", (function () {
+      var pi = (3.1415926), e = (2.78);
+      expect(e).toBeLessThanOrEqual(e);
+      expect(pi).get$not().toBeLessThanOrEqual(e);
+    })
+    );
+    it("The 'toBeGreaterThan' is for mathematical comparisons", (function () {
+      var pi = (3.1415926);
+      var e = (2.78);
+      expect(pi).toBeGreaterThan(e);
+      expect(e).get$not().toBeGreaterThan(pi);
+    })
+    );
+    it("The 'toBeGreaterThanOrEqual' matcher is for mathematical comparisons", (function () {
+      var pi = (3.1415926), e = (2.78);
+      expect(pi).toBeGreaterThanOrEqual(e);
+      expect(e).get$not().toBeGreaterThanOrEqual(pi);
+    })
+    );
+    it("The 'toBeTrue' matcher compares to true", (function () {
+      expect(true).toBeTrue();
+      expect(false).get$not().toBeTrue();
+    })
+    );
+    it("The 'toBeFalse' matcher compares to false", (function () {
+      expect(false).toBeFalse();
+      expect(true).get$not().toBeFalse();
+    })
+    );
+    it("The 'toThrow' matcher is for testing if a function throws an exception", (function () {
+      var foo = (function () {
+        return (3);
+      })
+      ;
+      var bar = (function () {
+        return $add$(null, (1));
+      })
+      ;
+      expect(foo).get$not().toThrow(to$call$1(null));
+      expect(bar).toThrow(to$call$1(null));
+      var raiseException = (function () {
+        $throw(new UnsupportedOperationException("for test"));
+      })
+      ;
+      expect(raiseException).toThrow((function (e) {
+        return (e instanceof UnsupportedOperationException);
+      })
+      );
+    })
+    );
+    it("The custom matcher provides a test that you define", (function () {
+      var tester = (function (actual, expected) {
+        return $eq$(actual, (3));
+      })
+      ;
+      var message = (function (pre, actual, expected) {
+        return ("" + pre + "<" + actual + "> is not 3!!!");
+      })
+      ;
+      addMatcher(new Matcher.create$ctor("Three", to$call$2(tester), to$call$3(message)));
+      expect((3)).get$to().noSuchMethod("Three", []);
+      expect((10)).get$not().get$to().noSuchMethod("Three", []);
+    })
+    );
+  })
+  );
+  describe("A spec", function function_() {
+    it("is just a function, so it can contain any code", (function () {
+      var foo = (0);
+      foo += (1);
+      expect(foo).toEqual((1));
+    })
+    );
+    it("can have more than one expectation", (function () {
+      var foo = (0);
+      foo += (1);
+      expect(foo).toEqual((1));
+      expect(true).toEqual(true);
+    })
+    );
+  }
+  );
+  describe("A spec (with setup and tear-down)", (function () {
+    var foo;
+    beforeEach((function () {
+      foo = (0);
+      foo += (1);
+    })
+    );
+    afterEach((function () {
+      foo = (0);
+    })
+    );
+    it("is just a function, so it can contain any code", (function () {
+      expect(foo).toEqual((1));
+    })
+    );
+    it("can have more than one expectation", (function () {
+      expect(foo).toEqual((1));
+      expect(true).toEqual(true);
+    })
+    );
+  })
+  );
+  describe("A spec", (function () {
+    var foo;
+    beforeEach((function () {
+      foo = (0);
+      foo += (1);
+    })
+    );
+    afterEach((function () {
+      foo = (0);
+    })
+    );
+    it("is just a function, so it can contain any code", (function () {
+      expect(foo).toEqual((1));
+    })
+    );
+    it("can have more than one expectation", (function () {
+      expect(foo).toEqual((1));
+      expect(true).toEqual(true);
+    })
+    );
+    describe("nested inside a second describe", (function () {
+      var bar;
+      beforeEach((function () {
+        bar = (1);
+      })
+      );
+      it("can reference both scopes as needed ", (function () {
+        expect(foo).toEqual(bar);
+      })
+      );
+    })
+    );
+  })
+  );
+  xdescribe("A spec", (function () {
+    var foo;
+    beforeEach((function () {
+      foo = (0);
+      foo += (1);
+    })
+    );
+    xit("is just a function, so it can contain any code", (function () {
+      expect(foo).toEqual((1));
+    })
+    );
+  })
+  );
+  describe("Asynchronous specs", function function_() {
+    it("should support async execution of test preparation and exepectations", (function () {
+      var guardian = createGuardian();
+      var flag = false;
+      get$$window().setTimeout($wrap_call$0((function () {
+        flag = true;
+        guardian.arrival();
+      })
+      ), (500));
+      asyncResult((function () {
+        expect(flag).toBeTrue();
+      })
+      );
+    })
+    );
+  }
   );
 }
 (function(){
