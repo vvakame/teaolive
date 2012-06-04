@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>introduction.dart</title>
+  <link rel="stylesheet" href="http://jashkenas.github.com/docco/resources/docco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>introduction.dart</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-1'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-1">&#182;</a>
+        </div>
+        
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>#<span class="k">library</span><span class="p">(</span><span class="s1">&#39;teaolive_introduction&#39;</span><span class="p">);</span>
+
+#<span class="k">import</span><span class="p">(</span><span class="s1">&#39;packages/teaolive/teaolive.dart&#39;</span><span class="p">);</span>
+
+#<span class="k">import</span><span class="p">(</span><span class="s1">&#39;packages/teaolive/reporter/reporter_combinator.dart&#39;</span><span class="p">,</span> <span class="nl">prefix:</span> <span class="s1">&#39;combinator&#39;</span><span class="p">);</span>
+#<span class="k">import</span><span class="p">(</span><span class="s1">&#39;packages/teaolive/reporter/tap_reporter.dart&#39;</span><span class="p">,</span> <span class="nl">prefix:</span> <span class="s1">&#39;tap&#39;</span><span class="p">);</span>
+#<span class="k">import</span><span class="p">(</span><span class="s1">&#39;packages/teaolive/reporter/html_reporter.dart&#39;</span><span class="p">,</span> <span class="nl">prefix:</span> <span class="s1">&#39;html&#39;</span><span class="p">);</span>
+
+<span class="cm">/*</span>
+<span class="cm"> entry point of testing.</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-2'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-2">&#182;</a>
+        </div>
+        <p>report</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="n">addTest</span><span class="p">(</span><span class="n">testCase</span><span class="p">);</span>
+  </pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-3">&#182;</a>
+        </div>
+        <p>setup Reporter</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="n">setTeaoliveReporter</span><span class="p">(</span>
+    <span class="k">new</span> <span class="n">combinator</span><span class="p">.</span><span class="n">TeaoliveReporterCombinator</span><span class="p">(</span>
+      <span class="p">[</span>
+        <span class="k">new</span> <span class="n">html</span><span class="p">.</span><span class="n">TeaoliveHtmlReporter</span><span class="p">(),</span>
+        <span class="k">new</span> <span class="n">tap</span><span class="p">.</span><span class="n">TeaoliveTapReporter</span><span class="p">()</span>
+      <span class="p">]</span>
+    <span class="p">));</span>
+
+  <span class="n">teaoliveRun</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">testCase</span><span class="p">()</span> <span class="p">{</span>
+  
+<span class="p">}</span></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>
