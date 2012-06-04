@@ -1,0 +1,418 @@
+        <!DOCTYPE html>
+        <html>
+        <head>
+                <meta charset="utf-8">
+        <title>TestPiece Class / teaolive Library / Dart Documentation</title>
+        <link rel="stylesheet" type="text/css"
+            href="../styles.css">
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet" type="text/css">
+        <link rel="shortcut icon" href="../favicon.ico">
+        
+        </head>
+        <body data-library="teaolive" data-type="TestPiece">
+        <div class="page">
+        <div class="header">
+          <a href="../index.html"><div class="logo"></div></a>
+          <a href="../index.html">Dart Documentation</a>
+         &rsaquo; <a href="../teaolive.html">teaolive</a> &rsaquo; <a href="../teaolive/TestPiece.html">TestPiece</a></div>
+        <div class="nav">
+        
+</div>
+<div class="content">
+        <h2><strong>TestPiece</strong>
+          Class
+        </h2>
+        
+<div class="doc">
+
+</div>
+<h3>Subclasses</h3>
+<p>
+<span class="type-box"><span class="icon-class"></span><a href="../teaolive/TeaoliveRunner.html">TeaoliveRunner</a></span></p>
+<h3>Constructors</h3>
+<div class="method"><h4 id="TestPiece">
+<span class="show-code">Code</span>
+new <strong>TestPiece</strong>.describe(description, _test, [parent = null]) <a class="anchor-link" href="#TestPiece"
+              title="Permalink to TestPiece.TestPiece">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+TestPiece.describe(this.description, this._test, [this.parent = null]): _describe = true {
+ _init();
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="TestPiece">
+<span class="show-code">Code</span>
+new <strong>TestPiece</strong>.it(description, _test, [parent = null]) <a class="anchor-link" href="#TestPiece"
+              title="Permalink to TestPiece.TestPiece">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+TestPiece.it(this.description, this._test, [this.parent = null]) {
+  _init();
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="TestPiece">
+<span class="show-code">Code</span>
+new <strong>TestPiece</strong>.xdescribe(description, _test, [parent = null]) <a class="anchor-link" href="#TestPiece"
+              title="Permalink to TestPiece.TestPiece">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+TestPiece.xdescribe(this.description, this._test, [this.parent = null]):
+  _describe = true,
+  ignore = true {
+  _init();
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="TestPiece">
+<span class="show-code">Code</span>
+new <strong>TestPiece</strong>.xit(description, _test, [parent = null]) <a class="anchor-link" href="#TestPiece"
+              title="Permalink to TestPiece.TestPiece">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+TestPiece.xit(this.description, this._test, [this.parent = null]):
+  _describe = false,
+  ignore = true {
+  _init();
+}
+</pre>
+</div>
+</div>
+<h3>Methods</h3>
+<div class="method"><h4 id="add">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>add</strong>(<a href="../teaolive/TestPiece.html">TestPiece</a> piece) <a class="anchor-link" href="#add"
+              title="Permalink to TestPiece.add">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+void add(TestPiece piece){
+  assert(piece != null);
+  if(isRunner() || isSuite()){
+    tests.add(piece);
+  } else {
+    assert(parent != null);
+    parent.add(piece);
+  }
+}
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="isRunner">
+<span class="show-code">Code</span>
+<a href="../dart_core/bool.html">bool</a> <strong>isRunner</strong>() <a class="anchor-link" href="#isRunner"
+              title="Permalink to TestPiece.isRunner">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+bool isRunner() =&gt; _runner;
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="isSpec">
+<span class="show-code">Code</span>
+<a href="../dart_core/bool.html">bool</a> <strong>isSpec</strong>() <a class="anchor-link" href="#isSpec"
+              title="Permalink to TestPiece.isSpec">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+bool isSpec() =&gt; !_runner &amp;&amp; !_describe;
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="isSuite">
+<span class="show-code">Code</span>
+<a href="../dart_core/bool.html">bool</a> <strong>isSuite</strong>() <a class="anchor-link" href="#isSuite"
+              title="Permalink to TestPiece.isSuite">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+bool isSuite() =&gt; !_runner &amp;&amp; _describe;
+</pre>
+</div>
+</div>
+<div class="method"><h4 id="run">
+<span class="show-code">Code</span>
+<a href="../dart_core/void.html">void</a> <strong>run</strong>([<a href="../dart_core/void.html">void</a> nextTask()]) <a class="anchor-link" href="#run"
+              title="Permalink to TestPiece.run">#</a></h4>
+<div class="doc">
+
+<pre class="source">
+void run([final Task nextTask]){
+  if(ignore){
+    start = true;
+    finish = true;
+    nextTask();
+    return;
+  }
+  
+  _stopwatch = new Stopwatch.start();
+
+  TeaoliveRunner runner = _environment.runner;
+  TestPiece restore = runner.currentRunning;
+  runner.currentRunning = this;
+
+  start = true;
+  
+  new Chain().trapException((var e, var _trace){
+    if(e is AssertionException){
+      errorMessage = e.msg;
+    }
+    this.error = e;
+    this.trace = _trace;
+    this.result = false;
+    this.finish = true;
+  })
+  .chain((Task next){
+    if(isSpec()){
+      _collectBeforeTask().forEach((Task task) =&gt; task());
+    }
+
+    _test();
+
+    Futures.wait(guardians).then((var v){
+      asyncResults.forEach((Task task) =&gt; task());
+      next();
+    });
+  })
+  .finish((){
+    if(isSpec()){
+      _collectAfterTask().forEach((Task task) =&gt; task());
+    }
+  })
+  .finish((){
+    _run((){
+      microseconds = _stopwatch.elapsedInUs();
+      _stopwatch.stop();
+      _stopwatch = null;
+
+      if(isSuite()){
+        _environment.reporter.onSuiteResult(this);
+      } else if(isSpec()){
+        _environment.reporter.onSpecResult(this);
+      }
+      
+      runner.currentRunning = restore;
+      nextTask(); 
+    });
+  })
+  .run();
+}
+</pre>
+</div>
+</div>
+<h3>Fields</h3>
+<div class="field"><h4 id="afterEach">
+<span class="show-code">Code</span>
+<a href="../dart_core/List.html">List</a>         <strong>afterEach</strong> <a class="anchor-link"
+            href="#afterEach"
+            title="Permalink to TestPiece.afterEach">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+List&lt;Task&gt; afterEach;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="asyncResults">
+<span class="show-code">Code</span>
+<a href="../dart_core/List.html">List</a>         <strong>asyncResults</strong> <a class="anchor-link"
+            href="#asyncResults"
+            title="Permalink to TestPiece.asyncResults">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+List&lt;Task&gt; asyncResults;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="beforeEach">
+<span class="show-code">Code</span>
+<a href="../dart_core/List.html">List</a>         <strong>beforeEach</strong> <a class="anchor-link"
+            href="#beforeEach"
+            title="Permalink to TestPiece.beforeEach">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+List&lt;Task&gt; beforeEach;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="description">
+<span class="show-code">Code</span>
+<a href="../dart_core/String.html">String</a>         <strong>description</strong> <a class="anchor-link"
+            href="#description"
+            title="Permalink to TestPiece.description">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+String description;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="error">
+<span class="show-code">Code</span>
+var         <strong>error</strong> <a class="anchor-link"
+            href="#error"
+            title="Permalink to TestPiece.error">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+Dynamic error;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="errorMessage">
+<span class="show-code">Code</span>
+<a href="../dart_core/String.html">String</a>         <strong>errorMessage</strong> <a class="anchor-link"
+            href="#errorMessage"
+            title="Permalink to TestPiece.errorMessage">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+String errorMessage;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="finish">
+<span class="show-code">Code</span>
+<a href="../dart_core/bool.html">bool</a>         <strong>finish</strong> <a class="anchor-link"
+            href="#finish"
+            title="Permalink to TestPiece.finish">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+bool finish = false;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="guardians">
+<span class="show-code">Code</span>
+<a href="../dart_core/List.html">List</a>         <strong>guardians</strong> <a class="anchor-link"
+            href="#guardians"
+            title="Permalink to TestPiece.guardians">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+List&lt;Future&gt; guardians;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="ignore">
+<span class="show-code">Code</span>
+<a href="../dart_core/bool.html">bool</a>         <strong>ignore</strong> <a class="anchor-link"
+            href="#ignore"
+            title="Permalink to TestPiece.ignore">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+bool ignore = false;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="microseconds">
+<span class="show-code">Code</span>
+<a href="../dart_core/int.html">int</a>         <strong>microseconds</strong> <a class="anchor-link"
+            href="#microseconds"
+            title="Permalink to TestPiece.microseconds">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+int microseconds = null;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="parent">
+<span class="show-code">Code</span>
+<a href="../teaolive/TestPiece.html">TestPiece</a>         <strong>parent</strong> <a class="anchor-link"
+            href="#parent"
+            title="Permalink to TestPiece.parent">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+TestPiece parent;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="result">
+<span class="show-code">Code</span>
+<a href="../dart_core/bool.html">bool</a>         <strong>result</strong> <a class="anchor-link"
+            href="#result"
+            title="Permalink to TestPiece.result">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+bool result = false;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="start">
+<span class="show-code">Code</span>
+<a href="../dart_core/bool.html">bool</a>         <strong>start</strong> <a class="anchor-link"
+            href="#start"
+            title="Permalink to TestPiece.start">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+bool start = false;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="tests">
+<span class="show-code">Code</span>
+<a href="../dart_core/List.html">List</a>         <strong>tests</strong> <a class="anchor-link"
+            href="#tests"
+            title="Permalink to TestPiece.tests">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+List&lt;TestPiece&gt; tests;
+</pre>
+</div>
+</div>
+<div class="field"><h4 id="trace">
+<span class="show-code">Code</span>
+var         <strong>trace</strong> <a class="anchor-link"
+            href="#trace"
+            title="Permalink to TestPiece.trace">#</a>
+        </h4>
+        <div class="doc">
+
+<pre class="source">
+Dynamic trace;
+</pre>
+</div>
+</div>
+        </div>
+        <div class="clear"></div>
+        </div>
+        
+        <div class="footer">
+          <p>This page generated at 2012-06-04 16:36:29.917Z</p>
+          <div></div>
+        </div>
+        <script async src="../client-live-nav.js"></script>
+        </body></html>
+        
