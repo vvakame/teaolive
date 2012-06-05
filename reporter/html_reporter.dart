@@ -3,6 +3,7 @@
 #import('dart:html');
 
 #import('../teaolive.dart');
+#import('../tests/helper/test_util.dart');
 
 /**
  * For implementation of HTML Reporters of [TeaoliveReporter].
@@ -11,11 +12,13 @@
 class TeaoliveHtmlReporter implements TeaoliveReporter {
   
   Element _parent;
+  final String _classPrefix;
   
-  TeaoliveHtmlReporter() {
+  TeaoliveHtmlReporter(): _classPrefix = "" {
     _parent = document.query("#teaolive-result");
   }
-  TeaoliveHtmlReporter.withParent(this._parent);
+  TeaoliveHtmlReporter.withParent(this._parent): _classPrefix = "";
+  TeaoliveHtmlReporter.withParentAndPrefix(this._parent, this._classPrefix);
   
   void onRunnerStart(){
     _parent.innerHTML = "test is started...";
@@ -28,74 +31,102 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
   void onRunnerResult(TeaoliveRunner runner){
     _parent.nodes.clear();
     
+    addHeader(_parent, runner);
+    addSummary(_parent, runner);
+
+    final DivElement el = new DivElement();
+    el.classes.add("${_classPrefix}results-frame");
+
     for(TestPiece piece in runner.tests){
-      if(piece.isRunner() || piece.isSuite()){
-        addSuite2dom(_parent, piece);
-      } else {
-        addSpec2dom(_parent, piece);
-      }
+      addPiece(el, piece);
     }
+    _parent.nodes.add(el);
   }
   
-  void addSuite2dom(final Element parent, final TestPiece suite){
+  void addHeader(final Element parent, TestPiece piece){
+    final DivElement el = new DivElement();
+    el.classes.add("${_classPrefix}header-frame");
+    el.innerHTML = "Teaolive test result. Elapsed time is ${piece.microseconds / 1000 / 1000} seconds.";
+    parent.nodes.add(el);
+  }
+
+  void addSummary(final Element parent, TestPiece piece){
+    final DivElement el = new DivElement();
+    el.classes.add("${_classPrefix}summary-frame");
+    if(piece.result){
+      el.classes.add("${_classPrefix}success");
+    } else {
+      el.classes.add("${_classPrefix}failure");
+    }
+    
+    Function construct = (Function counter, String type, String result, [bool force = false]){
+      int count = counter(piece.tests);
+      if(count == 0 && force == false){
+        return;
+      }
+      final SpanElement node = new SpanElement();
+      node.innerHTML = "${count} ${type} ${result}";
+      node.classes.add("${_classPrefix}summary");
+      node.classes.add("${_classPrefix}${type}");
+      node.classes.add("${_classPrefix}${result}");
+      el.nodes.add(node);
+    };
+    
+    construct(countSuccessDescribe, "describe", "passed", true);
+    construct(countFailureDescribe, "describe", "failed");
+    construct(countIgnoreDescribe, "describe", "ignored");
+
+    construct(countSuccessIt, "it", "passed", true);
+    construct(countFailureIt, "it", "failed");
+    construct(countIgnoreIt, "it", "ignored");
+    
+    parent.nodes.add(el);
+  }
+
+  void addPiece(final Element parent, final TestPiece piece){
     
     final Element el = new Element.tag("div");
-    el.classes.add("teaolieve-describe");
-
-    if(suite.ignore){
-      el.classes.add("teaolive-skipped");
-      el.innerHTML = "describe ${suite.description} is skipped";
-
-    } else if(suite.result){
-      el.classes.add("teaolive-success");
-      el.innerHTML = "describe ${suite.description} is success!";
-
+    if(piece.isSuite()) {
+      el.classes.add("${_classPrefix}describe");
     } else {
-      el.classes.add("teaolive-failure");
-      el.innerHTML = "describe ${suite.description} is failure...";
+      el.classes.add("${_classPrefix}it");
+    }
+    
+    DivElement description = new DivElement();
+    description.classes.add("description");
+    description.innerHTML = piece.description;
+
+    el.nodes.add(description);
+
+    if(piece.ignore){
+      el.classes.add("${_classPrefix}skipped");
+
+    } else if(piece.result){
+      el.classes.add("${_classPrefix}success");
+
+    } else if(piece.isSpec()) {
+      el.classes.add("${_classPrefix}failure");
       
-      parent.nodes.add(el);
+      DivElement error = new DivElement();
+      error.classes.add("error");
+      el.nodes.add(error);
 
-      for(TestPiece piece in suite.tests){
-        if(piece.isRunner() || piece.isSuite()){
-          addSuite2dom(el, piece);
-        } else {
-          addSpec2dom(el, piece);
-        }
-      }
-    }
-    parent.nodes.add(el);
-  }
-  
-  void addSpec2dom(Element parent, TestPiece spec){
-    
-    final Element el = new Element.tag("div");
-    el.classes.add("teaolieve-it");
-
-    if(spec.ignore){
-      el.classes.add("teaolive-skipped");
-      el.innerHTML = "it ${spec.description} is skipped";
-    
-    } else if(spec.result){
-      el.classes.add("teaolive-success");
-      el.innerHTML = "it ${spec.description} is success!";
-
-    } else {
-
-      el.classes.add("teaolive-failure");
-      el.innerHTML = "it ${spec.description} is failure...";
-
-      if(spec.errorMessage != null){
-        el.innerHTML += " ${spec.errorMessage}";
+      if(piece.errorMessage != null){
+        error.innerHTML += " ${piece.errorMessage}";
       } else {
-        el.innerHTML += " unknown error ${spec.error}";
+        error.innerHTML += " unknown error ${piece.error}";
       }
-      if(spec.error is AssertionException == false){
+      if(piece.error is AssertionException == false){
         final Element pre = new Element.tag("pre");
-        pre.text = spec.trace.toString();
-        el.nodes.add(pre);
+        pre.text = piece.trace.toString();
+        error.nodes.add(pre);
       }
     }
+    
     parent.nodes.add(el);
+
+    for(TestPiece child in piece.tests){
+      addPiece(el, child);
+    }
   }
 }

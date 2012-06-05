@@ -56,6 +56,13 @@ void testCase(){
       it("ng", (){
         expect(1).not.toBe(1);
       });
+
+      describe("grandchild", (){
+
+        it("ok", (){
+          expect(1).not.toBe(2);
+        });
+      });
     });
   });
   
