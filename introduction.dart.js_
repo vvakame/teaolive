@@ -498,6 +498,15 @@ Function.prototype.call$3 = function($0, $1, $2) {
   return this.to$call$3()($0, $1, $2);
 };
 function to$call$3(f) { return f && f.to$call$3(); }
+Function.prototype.to$call$4 = function() {
+  this.call$4 = this._genStub(4);
+  this.to$call$4 = function() { return this.call$4; };
+  return this.call$4;
+};
+Function.prototype.call$4 = function($0, $1, $2, $3) {
+  return this.to$call$4()($0, $1, $2, $3);
+};
+function to$call$4(f) { return f && f.to$call$4(); }
 function FutureNotCompleteException() {
 
 }
@@ -3354,6 +3363,14 @@ function _XMLSerializerFactoryProvider() {}
 function _XPathEvaluatorFactoryProvider() {}
 function _XSLTProcessorFactoryProvider() {}
 function _Elements() {}
+_Elements.DivElement$factory = function() {
+  var _e = get$$_document().createElement("div");
+  return _e;
+}
+_Elements.SpanElement$factory = function() {
+  var _e = get$$_document().createElement("span");
+  return _e;
+}
 function _Collections() {}
 _Collections.forEach = function(iterable, f) {
   for (var $$i = iterable.iterator(); $$i.hasNext(); ) {
@@ -3490,6 +3507,9 @@ function get$$window() {
   return window;
 }
 function get$$document() {
+  return document;
+}
+function get$$_document() {
   return document;
 }
 var _cachedBrowserPrefix;
@@ -4162,6 +4182,55 @@ function _checkEnvironment() {
     $globals._environment = new TeaoliveEnvironment();
   }
 }
+function countSuccessDescribe(tests) {
+  return _countResult(tests, (function (piece) {
+    return piece.isSuite() && piece.result;
+  })
+  );
+}
+function countIgnoreDescribe(tests, recursive) {
+  return _countResult(tests, (function (piece) {
+    return piece.isSuite() && piece.ignore;
+  })
+  );
+}
+countIgnoreDescribe.$optional = ['recursive', 'false']
+function countFailureDescribe(tests) {
+  return _countResult(tests, (function (piece) {
+    return piece.isSuite() && !piece.ignore && !piece.result;
+  })
+  );
+}
+function countSuccessIt(tests, recursive) {
+  return _countResult(tests, (function (piece) {
+    return piece.isSpec() && piece.result;
+  })
+  );
+}
+countSuccessIt.$optional = ['recursive', 'false']
+function countIgnoreIt(tests) {
+  return _countResult(tests, (function (piece) {
+    return piece.isSpec() && piece.ignore;
+  })
+  );
+}
+function countFailureIt(tests) {
+  return _countResult(tests, (function (piece) {
+    return piece.isSpec() && !piece.ignore && !piece.result;
+  })
+  );
+}
+function _countResult(pieces, counter) {
+  var result = (0);
+  for (var $$i = pieces.iterator(); $$i.hasNext(); ) {
+    var piece = $$i.next();
+    if (counter(piece)) {
+      result += (1);
+    }
+    result += _countResult(piece.tests, counter);
+  }
+  return result;
+}
 function TeaoliveReporterCombinator(reporters) {
   this.reporters = reporters;
 }
@@ -4190,6 +4259,7 @@ TeaoliveReporterCombinator.prototype.onRunnerResult = function(runner) {
   );
 }
 function TeaoliveHtmlReporter() {
+  this._classPrefix = "";
   this._teaolive_html_reporter_parent = get$$document().query("#teaolive-result");
 }
 TeaoliveHtmlReporter.prototype.onRunnerStart = function() {
@@ -4203,72 +4273,95 @@ TeaoliveHtmlReporter.prototype.onSpecResult = function(spec) {
 }
 TeaoliveHtmlReporter.prototype.onRunnerResult = function(runner) {
   this._teaolive_html_reporter_parent.get$nodes().clear$_();
+  this.addHeader(this._teaolive_html_reporter_parent, runner);
+  this.addSummary(this._teaolive_html_reporter_parent, runner);
+  var el = _Elements.DivElement$factory();
+  el.get$classes().add$1(("" + this._classPrefix + "results-frame"));
   var $$list = runner.tests;
   for (var $$i = $$list.iterator(); $$i.hasNext(); ) {
     var piece = $$i.next();
-    if (piece.isRunner() || piece.isSuite()) {
-      this.addSuite2dom(this._teaolive_html_reporter_parent, piece);
-    }
-    else {
-      this.addSpec2dom(this._teaolive_html_reporter_parent, piece);
-    }
+    this.addPiece(el, piece);
   }
+  this._teaolive_html_reporter_parent.get$nodes().add(el);
 }
-TeaoliveHtmlReporter.prototype.addSuite2dom = function(parent, suite) {
-  var el = _ElementFactoryProvider.Element$tag$factory("div");
-  el.get$classes().add$1("teaolieve-describe");
-  if (suite.ignore) {
-    el.get$classes().add$1("teaolive-skipped");
-    el.set$innerHTML(("describe " + suite.description + " is skipped"));
-  }
-  else if (suite.result) {
-    el.get$classes().add$1("teaolive-success");
-    el.set$innerHTML(("describe " + suite.description + " is success!"));
-  }
-  else {
-    el.get$classes().add$1("teaolive-failure");
-    el.set$innerHTML(("describe " + suite.description + " is failure..."));
-    parent.get$nodes().add(el);
-    var $$list = suite.tests;
-    for (var $$i = $$list.iterator(); $$i.hasNext(); ) {
-      var piece = $$i.next();
-      if (piece.isRunner() || piece.isSuite()) {
-        this.addSuite2dom(el, piece);
-      }
-      else {
-        this.addSpec2dom(el, piece);
-      }
-    }
-  }
+TeaoliveHtmlReporter.prototype.addHeader = function(parent, piece) {
+  var el = _Elements.DivElement$factory();
+  el.get$classes().add$1(("" + this._classPrefix + "header-frame"));
+  el.set$innerHTML(("Teaolive test result. Elapsed time is " + (piece.microseconds / (1000) / (1000)) + " seconds."));
   parent.get$nodes().add(el);
 }
-TeaoliveHtmlReporter.prototype.addSpec2dom = function(parent, spec) {
-  var el = _ElementFactoryProvider.Element$tag$factory("div");
-  el.get$classes().add$1("teaolieve-it");
-  if (spec.ignore) {
-    el.get$classes().add$1("teaolive-skipped");
-    el.set$innerHTML(("it " + spec.description + " is skipped"));
-  }
-  else if (spec.result) {
-    el.get$classes().add$1("teaolive-success");
-    el.set$innerHTML(("it " + spec.description + " is success!"));
+TeaoliveHtmlReporter.prototype.addSummary = function(parent, piece) {
+  var $this = this;
+  var el = _Elements.DivElement$factory();
+  el.get$classes().add$1(("" + this._classPrefix + "summary-frame"));
+  if (piece.result) {
+    el.get$classes().add$1(("" + this._classPrefix + "success"));
   }
   else {
-    el.get$classes().add$1("teaolive-failure");
-    el.set$innerHTML(("it " + spec.description + " is failure..."));
-    if (spec.errorMessage != null) {
-      el.set$innerHTML($add$(el.get$innerHTML(), (" " + spec.errorMessage)));
+    el.get$classes().add$1(("" + this._classPrefix + "failure"));
+  }
+  var construct = (function (counter, type, result, force) {
+    var count = counter.call$1(piece.tests);
+    if (count == (0) && $eq$(force, false)) {
+      return;
+    }
+    var node = _Elements.SpanElement$factory();
+    node.set$innerHTML(("" + count + " " + type + " " + result));
+    node.get$classes().add$1(("" + $this._classPrefix + "summary"));
+    node.get$classes().add$1(("" + $this._classPrefix + type));
+    node.get$classes().add$1(("" + $this._classPrefix + result));
+    el.get$nodes().add(node);
+  })
+  ;
+  construct.call$4(countSuccessDescribe, "describe", "passed", true);
+  construct.call$3(countFailureDescribe, "describe", "failed");
+  construct.call$3(countIgnoreDescribe, "describe", "ignored");
+  construct.call$4(countSuccessIt, "it", "passed", true);
+  construct.call$3(countFailureIt, "it", "failed");
+  construct.call$3(countIgnoreIt, "it", "ignored");
+  parent.get$nodes().add(el);
+}
+TeaoliveHtmlReporter.prototype.addPiece = function(parent, piece) {
+  var el = _ElementFactoryProvider.Element$tag$factory("div");
+  if (piece.isSuite()) {
+    el.get$classes().add$1(("" + this._classPrefix + "describe"));
+  }
+  else {
+    el.get$classes().add$1(("" + this._classPrefix + "it"));
+  }
+  var description = _Elements.DivElement$factory();
+  description.get$classes().add$1("description");
+  description.set$innerHTML(piece.description);
+  el.get$nodes().add(description);
+  if (piece.ignore) {
+    el.get$classes().add$1(("" + this._classPrefix + "skipped"));
+  }
+  else if (piece.result) {
+    el.get$classes().add$1(("" + this._classPrefix + "success"));
+  }
+  else if (piece.isSpec()) {
+    el.get$classes().add$1(("" + this._classPrefix + "failure"));
+    var error = _Elements.DivElement$factory();
+    error.get$classes().add$1("error");
+    el.get$nodes().add(error);
+    if (piece.errorMessage != null) {
+      error.set$innerHTML($add$(error.get$innerHTML(), (" " + piece.errorMessage)));
     }
     else {
-      el.set$innerHTML($add$(el.get$innerHTML(), (" unknown error " + spec.error)));
+      error.set$innerHTML($add$(error.get$innerHTML(), (" unknown error " + piece.error)));
     }
-    if ($eq$((spec.error instanceof AssertionException), false)) {
+    if ($eq$((piece.error instanceof AssertionException), false)) {
       var pre = _ElementFactoryProvider.Element$tag$factory("pre");
-      pre.set$text(spec.trace.toString());
-      el.get$nodes().add(pre);
+      pre.set$text(piece.trace.toString());
+      error.get$nodes().add(pre);
     }
   }
   parent.get$nodes().add(el);
+  var $$list = piece.tests;
+  for (var $$i = $$list.iterator(); $$i.hasNext(); ) {
+    var child = $$i.next();
+    this.addPiece(el, child);
+  }
 }
 function main() {
   addTest(testCase);
