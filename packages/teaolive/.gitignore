@@ -1,0 +1,6 @@
+.idea/
+.project
+.children
+
+*.dart.js
+*.dart.js_
