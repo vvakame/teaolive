@@ -1,9 +1,5 @@
 @charset "utf-8";
 
-body {
-    background-color: #d9e1ff;
-}
-
 .summary-frame {
     padding: 5px;
 }
@@ -17,7 +13,7 @@ body {
 }
 
 .summary-frame.failure {
-    background-color: #f7a89f;
+    background-color: #ffc6bd;
 }
 
 .summary-frame .failed {
