@@ -112,9 +112,9 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
       el.nodes.add(error);
 
       if(piece.errorMessage != null){
-        error.innerHTML += " ${piece.errorMessage}";
+        error.innerHTML = "${error.innerHTML} ${piece.errorMessage}";
       } else {
-        error.innerHTML += " unknown error ${piece.error}";
+        error.innerHTML = "${error.innerHTML} unknown error ${piece.error}";
       }
       if(piece.error is AssertionException == false){
         final Element pre = new Element.tag("pre");
