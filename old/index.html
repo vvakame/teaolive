@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>introduction.dart</title>
+  <link rel="stylesheet" href="src/docco.css">
+  <link rel="stylesheet" href="packages/teaolive/tests/teaolive.css">
+  <link rel="stylesheet" href="src/style.css">
+</head>
+<body>
+<div id='container'>
+  <!-- <div id="background"></div> -->
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>introduction.dart</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-Teaolive'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Teaolive">&#182;</a>
+        </div>
+        <h1>Teaolive</h1>
+
+<p>Teaolive is a Behavior Driven Development testing framework for Dart.<br>
+It does not rely on browser. Thus it&rsquo;s suited for Server Application or Web Application. I like <a href="http://pivotal.github.com/jasmine/">Jasmine</a> Test Framework.<br>
+It&rsquo;s really cool product when use with CoffeeScript.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>#<span class="k">library</span><span class="p">(</span><span class="s1">&#39;teaolive_introduction&#39;</span><span class="p">);</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-2'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-2">&#182;</a>
+        </div>
+        <p>import html library.
+this introduction is an assumption run on Browser.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>#<span class="k">import</span><span class="p">(</span><span class="s1">&#39;dart:html&#39;</span><span class="p">);</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-3'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-3">&#182;</a>
+        </div>
+        <p>import main library.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>#<span class="k">import</span><span class="p">(</span><span class="s1">&#39;packages/teaolive/teaolive.dart&#39;</span><span class="p">);</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-4'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-4">&#182;</a>
+        </div>
+        <p>import reporter combinator library.
+this introduction uses TAP reporter and HTML reporter both.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>#<span class="k">import</span><span class="p">(</span><span class="s1">&#39;packages/teaolive/reporter/reporter_combinator.dart&#39;</span><span class="p">,</span> <span class="nl">prefix:</span> <span class="s1">&#39;combinator&#39;</span><span class="p">);</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-5'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-5">&#182;</a>
+        </div>
+        <p>import <a href="http://en.wikipedia.org/wiki/Test_Anything_Protocol">TAP</a> format reporter.
+this reporter output to standard output by <code>print</code>.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>#<span class="k">import</span><span class="p">(</span><span class="s1">&#39;packages/teaolive/reporter/tap_reporter.dart&#39;</span><span class="p">,</span> <span class="nl">prefix:</span> <span class="s1">&#39;tap&#39;</span><span class="p">);</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-6'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-6">&#182;</a>
+        </div>
+        <p>import HTML format reporter. this reporter construct DOM parts.
+Scroll down the page to see the results of the above specs. All of the specs should pass.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>#<span class="k">import</span><span class="p">(</span><span class="s1">&#39;packages/teaolive/reporter/html_reporter.dart&#39;</span><span class="p">,</span> <span class="nl">prefix:</span> <span class="s1">&#39;html&#39;</span><span class="p">);</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-The_Runner_and_Reporter'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-The_Runner_and_Reporter">&#182;</a>
+        </div>
+        <h2>The Runner and Reporter</h2>
+
+<p>This file is written in Dart and is compiled into HTML via <a href="https://github.com/rtomayko/rocco/">Rocco</a>. The Dart file is then included, via a <code>&lt;script&gt;</code> tag, so that all of the above specs are evaluated and recorded with Teaolive. Thus can run all of these specs. This page is then considered a &lsquo;runner&rsquo;.</p>
+
+<p>Meanwhile, here is how a runner works to execute a  suite.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><span class="kt">void</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Add_report_function.'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Add_report_function.">&#182;</a>
+        </div>
+        <h3>Add report function.</h3>
+
+<p>Teaolive can include test case from other file. If you want.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="n">addTest</span><span class="p">(</span><span class="n">testCase</span><span class="p">);</span>
+  </pre></div>
+      </td>
+    </tr>
+    <tr id='section-Setup_Reporters.'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Setup_Reporters.">&#182;</a>
+        </div>
+        <h3>Setup Reporters.</h3>
+
+<p>Create the <code>TeaoliveHtmlReporter</code> and <code>TeaoliveTapReporter</code>, which calls to provide results of each spec and each suite. The Reporter is responsible for presenting results to the user.
+this instroduction is setup about <a href="http://en.wikipedia.org/wiki/Test_Anything_Protocol">TAP</a> format reporter and HTML format reporter.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="n">setTeaoliveReporter</span><span class="p">(</span>
+    <span class="k">new</span> <span class="n">combinator</span><span class="p">.</span><span class="n">TeaoliveReporterCombinator</span><span class="p">(</span>
+      <span class="p">[</span>
+        <span class="k">new</span> <span class="n">html</span><span class="p">.</span><span class="n">TeaoliveHtmlReporter</span><span class="p">(),</span>
+        <span class="k">new</span> <span class="n">tap</span><span class="p">.</span><span class="n">TeaoliveTapReporter</span><span class="p">()</span>
+      <span class="p">]</span>
+    <span class="p">));</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Test_Results'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Test_Results">&#182;</a>
+        </div>
+        <h3>Test Results</h3>
+
+<p>Start test runner and collecting results.
+Scroll down to see the results of all of these specs.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="n">teaoliveRun</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">testCase</span><span class="p">()</span> <span class="p">{</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Suites:_&lt;code&gt;describe&lt;/code&gt;_Your_Tests'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Suites:_&lt;code&gt;describe&lt;/code&gt;_Your_Tests">&#182;</a>
+        </div>
+        <h2>Suites: <code>describe</code> Your Tests</h2>
+
+<p>A test suite begins with a call to the global function <code>describe</code> with two parameters: a string and a function. The string is a name or title for a spec suite &ndash; usually what is under test. The function is a block of code that implements the suite.</p>
+
+<h2>Specs</h2>
+
+<p>Specs are defined by calling the global function <code>it</code>, which, like <code>describe</code> takes a string and a function. The string is a title for this spec and the function is the spec, or test. A spec contains one or more expectations that test the state of the code under test.</p>
+
+<p>An expectation in is an assertion that can be either true or false. A spec with all true expectations is a passing spec. A spec with one or more expectations that evaluate to false is a failing spec.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="n">describe</span><span class="p">(</span><span class="s2">&quot;A suite&quot;</span><span class="p">,</span> <span class="p">(){</span>
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;contains spec with an expectation&quot;</span><span class="p">,</span> <span class="p">(){</span>
+      <span class="n">expect</span><span class="p">(</span><span class="kc">true</span><span class="p">).</span><span class="n">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+  </pre></div>
+      </td>
+    </tr>
+    <tr id='section-It&amp;rsquo;s_Just_Functions'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-It&amp;rsquo;s_Just_Functions">&#182;</a>
+        </div>
+        <h3>It&rsquo;s Just Functions</h3>
+
+<p>Since <code>describe</code> and <code>it</code> blocks are functions, they can contain any executable code necessary to implement the test. JavaScript scoping rules apply, so variables declared in a <code>describe</code> are available to any <code>it</code> block inside the suite.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="n">describe</span><span class="p">(</span><span class="s2">&quot;A suite is just a function&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kt">bool</span> <span class="n">a</span><span class="p">;</span>
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;and so is a spec&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="n">a</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">a</span><span class="p">).</span><span class="n">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+  </pre></div>
+      </td>
+    </tr>
+    <tr id='section-Expectations'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Expectations">&#182;</a>
+        </div>
+        <h2>Expectations</h2>
+
+<p>Expectations are built with the function <code>expect</code> which takes a value, called the actual. It is chained with a Matcher function, which takes the expected value.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="n">describe</span><span class="p">(</span><span class="s2">&quot;The &#39;toBe&#39; matcher compares with ===&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Matchers'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Matchers">&#182;</a>
+        </div>
+        <h3>Matchers</h3>
+
+<p>Each matcher implements a boolean comparison between the actual value and the expected value. It is responsible for reporting to  if the expectation is true or false.  will then pass or fail the spec.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;and has a positive case &quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="n">expect</span><span class="p">(</span><span class="kc">true</span><span class="p">).</span><span class="n">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+    <span class="p">});</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-15'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-15">&#182;</a>
+        </div>
+        <p>Any matcher can evaluate to a negative assertion by chaining the call to <code>expect</code> with a <code>not</code> before calling the matcher.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;and can have a negative case&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="n">expect</span><span class="p">(</span><span class="kc">false</span><span class="p">).</span><span class="n">not</span><span class="p">.</span><span class="n">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">});</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Included_Matchers'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Included_Matchers">&#182;</a>
+        </div>
+        <h3>Included Matchers</h3>
+
+<p> as a rich set of matchers included. Each is used here &ndash; all expectations and specs pass.</p>
+
+<p>There is also the ability to write custom matchers for when a project&rsquo;s domain calls for specific assertions that are not included below.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="n">describe</span><span class="p">(</span><span class="s2">&quot;Included matchers:&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;The &#39;toBe&#39; matcher compares with ===&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="m">12</span><span class="p">;</span>
+      <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="p">;</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="n">a</span><span class="p">).</span><span class="n">toBe</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">a</span><span class="p">).</span><span class="n">not</span><span class="p">.</span><span class="n">toBe</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="n">describe</span><span class="p">(</span><span class="s2">&quot;The &#39;toEqual&#39; matcher&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+
+      <span class="n">it</span><span class="p">(</span><span class="s2">&quot;works for simple literals and variables&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="m">12</span><span class="p">;</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">a</span><span class="p">).</span><span class="n">toEqual</span><span class="p">(</span><span class="m">12</span><span class="p">);</span>
+      <span class="p">});</span>
+
+      <span class="n">it</span><span class="p">(</span><span class="s2">&quot;should work for objects&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="kt">String</span> <span class="n">a</span> <span class="o">=</span> <span class="s2">&quot;foo&quot;</span><span class="p">;</span>
+        <span class="kt">String</span><span class="n">Buffer</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">String</span><span class="n">Buffer</span><span class="p">();</span>
+        <span class="n">b</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">);</span>
+        
+        <span class="n">expect</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">toString</span><span class="p">()).</span><span class="n">toEqual</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+      <span class="p">});</span>
+    <span class="p">});</span>
+
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;The &#39;toBeNull&#39; matcher compares against null&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="n">a</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+      <span class="kt">String</span> <span class="n">foo</span> <span class="o">=</span> <span class="s1">&#39;foo&#39;</span><span class="p">;</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="kc">null</span><span class="p">).</span><span class="n">toBeNull</span><span class="p">();</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">a</span><span class="p">).</span><span class="n">toBeNull</span><span class="p">();</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">foo</span><span class="p">).</span><span class="n">not</span><span class="p">.</span><span class="n">toBeNull</span><span class="p">();</span>
+    <span class="p">});</span>
+
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;The &#39;toBeLessThan&#39; matcher is for mathematical comparisons&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="n">pi</span> <span class="o">=</span> <span class="m">3.1415926</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="m">2.78</span><span class="p">;</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="n">e</span><span class="p">).</span><span class="n">toBeLessThan</span><span class="p">(</span><span class="n">pi</span><span class="p">);</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">pi</span><span class="p">).</span><span class="n">not</span><span class="p">.</span><span class="n">toBeLessThan</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;The &#39;toBeLessThanOrEqual&#39; matcher is for mathematical comparisons&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="n">pi</span> <span class="o">=</span> <span class="m">3.1415926</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="m">2.78</span><span class="p">;</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="n">e</span><span class="p">).</span><span class="n">toBeLessThanOrEqual</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">pi</span><span class="p">).</span><span class="n">not</span><span class="p">.</span><span class="n">toBeLessThanOrEqual</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;The &#39;toBeGreaterThan&#39; is for mathematical comparisons&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="kt">num</span> <span class="n">pi</span> <span class="o">=</span> <span class="m">3.1415926</span><span class="p">;</span>
+      <span class="kt">num</span> <span class="n">e</span> <span class="o">=</span> <span class="m">2.78</span><span class="p">;</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="n">pi</span><span class="p">).</span><span class="n">toBeGreaterThan</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">e</span><span class="p">).</span><span class="n">not</span><span class="p">.</span><span class="n">toBeGreaterThan</span><span class="p">(</span><span class="n">pi</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;The &#39;toBeGreaterThanOrEqual&#39; matcher is for mathematical comparisons&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="n">pi</span> <span class="o">=</span> <span class="m">3.1415926</span><span class="p">,</span> <span class="n">e</span> <span class="o">=</span> <span class="m">2.78</span><span class="p">;</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="n">pi</span><span class="p">).</span><span class="n">toBeGreaterThanOrEqual</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">e</span><span class="p">).</span><span class="n">not</span><span class="p">.</span><span class="n">toBeGreaterThanOrEqual</span><span class="p">(</span><span class="n">pi</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;The &#39;toBeTrue&#39; matcher compares to true&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="n">expect</span><span class="p">(</span><span class="m">1</span> <span class="o">+</span> <span class="m">1</span> <span class="o">==</span> <span class="m">2</span><span class="p">).</span><span class="n">toBeTrue</span><span class="p">();</span>
+      <span class="n">expect</span><span class="p">(</span><span class="m">1</span> <span class="o">+</span> <span class="m">1</span> <span class="o">==</span> <span class="m">3</span><span class="p">).</span><span class="n">not</span><span class="p">.</span><span class="n">toBeTrue</span><span class="p">();</span>
+    <span class="p">});</span>
+
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;The &#39;toBeFalse&#39; matcher compares to false&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="n">expect</span><span class="p">(</span><span class="m">1</span> <span class="o">*</span> <span class="m">1</span> <span class="o">==</span> <span class="m">2</span><span class="p">).</span><span class="n">toBeFalse</span><span class="p">();</span>
+      <span class="n">expect</span><span class="p">(</span><span class="m">1</span> <span class="o">*</span> <span class="m">1</span> <span class="o">==</span> <span class="m">1</span><span class="p">).</span><span class="n">not</span><span class="p">.</span><span class="n">toBeFalse</span><span class="p">();</span>
+    <span class="p">});</span>
+
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;The &#39;toThrow&#39; matcher is for testing if a function throws an exception&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="n">Function</span> <span class="n">foo</span> <span class="o">=</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="m">1</span> <span class="o">+</span> <span class="m">2</span><span class="p">;</span>
+      <span class="p">};</span>
+      <span class="n">Function</span> <span class="n">bar</span> <span class="o">=</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">null</span> <span class="o">+</span> <span class="m">1</span><span class="p">;</span>
+      <span class="p">};</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="n">foo</span><span class="p">).</span><span class="n">not</span><span class="p">.</span><span class="n">toThrow</span><span class="p">();</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">bar</span><span class="p">).</span><span class="n">toThrow</span><span class="p">();</span>
+      
+      <span class="n">Function</span> <span class="n">raiseException</span> <span class="o">=</span> <span class="p">(){</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">UnsupportedOperationException</span><span class="p">(</span><span class="s2">&quot;for test&quot;</span><span class="p">);</span>
+      <span class="p">};</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">raiseException</span><span class="p">).</span><span class="n">toThrow</span><span class="p">((</span><span class="kd">var</span> <span class="n">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">e</span> <span class="k">is</span> <span class="n">UnsupportedOperationException</span><span class="p">);</span>
+    <span class="p">});</span>
+    
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;The custom matcher provides a test that you define&quot;</span><span class="p">,</span> <span class="p">(){</span>
+      <span class="n">Function</span> <span class="n">tester</span> <span class="o">=</span> <span class="p">(</span><span class="kd">var</span> <span class="n">actual</span><span class="p">,</span> <span class="kd">var</span> <span class="n">expected</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">actual</span> <span class="o">==</span> <span class="m">3</span><span class="p">;</span>
+      <span class="n">Function</span> <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="kt">String</span> <span class="n">pre</span><span class="p">,</span> <span class="kd">var</span> <span class="n">actual</span><span class="p">,</span> <span class="kd">var</span> <span class="n">expected</span><span class="p">){</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">${</span><span class="n">pre</span><span class="si">}</span><span class="s2">&lt;</span><span class="si">${</span><span class="n">actual</span><span class="si">}</span><span class="s2">&gt; is not 3!!!&quot;</span><span class="p">;</span>
+      <span class="p">};</span>
+      <span class="n">addMatcher</span><span class="p">(</span><span class="k">new</span> <span class="n">Matcher</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;Three&quot;</span><span class="p">,</span> <span class="n">tester</span><span class="p">,</span> <span class="n">message</span><span class="p">));</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="m">3</span><span class="p">).</span><span class="n">to</span><span class="p">.</span><span class="n">Three</span><span class="p">();</span>
+      <span class="n">expect</span><span class="p">(</span><span class="m">10</span><span class="p">).</span><span class="n">not</span><span class="p">.</span><span class="n">to</span><span class="p">.</span><span class="n">Three</span><span class="p">();</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+  </pre></div>
+      </td>
+    </tr>
+    <tr id='section-Grouping_Related_Specs_with_&lt;code&gt;describe&lt;/code&gt;'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Grouping_Related_Specs_with_&lt;code&gt;describe&lt;/code&gt;">&#182;</a>
+        </div>
+        <h2>Grouping Related Specs with <code>describe</code></h2>
+
+<p>The <code>describe</code> function is for grouping related specs. The string parameter is for naming the collection of specs, and will be contatenated with specs to make a spec&rsquo;s full name. This aids in finding specs in a large suite. If you name them well, your specs read as full sentences in traditional BDD style.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="n">describe</span><span class="p">(</span><span class="s2">&quot;A spec&quot;</span><span class="p">,</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;is just a function, so it can contain any code&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="kt">int</span> <span class="n">foo</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span>
+      <span class="n">foo</span> <span class="o">+=</span> <span class="m">1</span><span class="p">;</span>
+ 
+      <span class="n">expect</span><span class="p">(</span><span class="n">foo</span><span class="p">).</span><span class="n">toEqual</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;can have more than one expectation&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="kt">int</span> <span class="n">foo</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span>
+      <span class="n">foo</span> <span class="o">+=</span> <span class="m">1</span><span class="p">;</span>
+
+      <span class="n">expect</span><span class="p">(</span><span class="n">foo</span><span class="p">).</span><span class="n">toEqual</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+      <span class="n">expect</span><span class="p">(</span><span class="kc">true</span><span class="p">).</span><span class="n">toEqual</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">});</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Setup_and_Teardown'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Setup_and_Teardown">&#182;</a>
+        </div>
+        <h3>Setup and Teardown</h3>
+
+<p>To help a test suite DRY up any duplicated setup and teardown code,  provides the global <code>beforeEach</code> and <code>afterEach</code> functions. As the name implies the <code>beforeEach</code> function is called once before each spec in the <code>describe</code> is run and the <code>afterEach</code> function is called once after each spec.</p>
+
+<p>Here is the same set of specs written a little differently. The variable under test is defined at the top-level scope &mdash; the <code>describe</code> block &mdash;  and initialization code is moved into a <code>beforeEach</code> function. The <code>afterEach</code> function resets the variable before continuing.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="n">describe</span><span class="p">(</span><span class="s2">&quot;A spec (with setup and tear-down)&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">foo</span><span class="p">;</span>
+
+    <span class="n">beforeEach</span><span class="p">(()</span> <span class="p">{</span>
+      <span class="n">foo</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span>
+      <span class="n">foo</span> <span class="o">+=</span> <span class="m">1</span><span class="p">;</span>
+    <span class="p">});</span>
+
+    <span class="n">afterEach</span><span class="p">(()</span> <span class="p">{</span>
+      <span class="n">foo</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span>
+    <span class="p">});</span>
+
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;is just a function, so it can contain any code&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">foo</span><span class="p">).</span><span class="n">toEqual</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;can have more than one expectation&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">foo</span><span class="p">).</span><span class="n">toEqual</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+      <span class="n">expect</span><span class="p">(</span><span class="kc">true</span><span class="p">).</span><span class="n">toEqual</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">});</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Nesting_&lt;code&gt;describe&lt;/code&gt;_Blocks'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Nesting_&lt;code&gt;describe&lt;/code&gt;_Blocks">&#182;</a>
+        </div>
+        <h3>Nesting <code>describe</code> Blocks</h3>
+
+<p>Calls to <code>describe</code> can be nested, with specs defined at any level. This allows a suite to be composed as a tree of functions. Before a spec is executed,  walks down the tree executing each <code>beforeEach</code> function in order. After the spec is executed,  walks through the <code>afterEach</code> functions similarly.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="n">describe</span><span class="p">(</span><span class="s2">&quot;A spec&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">foo</span><span class="p">;</span>
+
+    <span class="n">beforeEach</span><span class="p">(()</span> <span class="p">{</span>
+      <span class="n">foo</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span>
+      <span class="n">foo</span> <span class="o">+=</span> <span class="m">1</span><span class="p">;</span>
+    <span class="p">});</span>
+
+    <span class="n">afterEach</span><span class="p">(()</span> <span class="p">{</span>
+      <span class="n">foo</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span>
+    <span class="p">});</span>
+
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;is just a function, so it can contain any code&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">foo</span><span class="p">).</span><span class="n">toEqual</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;can have more than one expectation&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">foo</span><span class="p">).</span><span class="n">toEqual</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+      <span class="n">expect</span><span class="p">(</span><span class="kc">true</span><span class="p">).</span><span class="n">toEqual</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="n">describe</span><span class="p">(</span><span class="s2">&quot;nested inside a second describe&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="kt">int</span> <span class="n">bar</span><span class="p">;</span>
+
+      <span class="n">beforeEach</span><span class="p">(()</span> <span class="p">{</span>
+        <span class="n">bar</span> <span class="o">=</span> <span class="m">1</span><span class="p">;</span>
+      <span class="p">});</span>
+
+      <span class="n">it</span><span class="p">(</span><span class="s2">&quot;can reference both scopes as needed &quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">foo</span><span class="p">).</span><span class="n">toEqual</span><span class="p">(</span><span class="n">bar</span><span class="p">);</span>
+      <span class="p">});</span>
+    <span class="p">});</span>
+  <span class="p">});</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-Disabling_Specs_and_Suites'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Disabling_Specs_and_Suites">&#182;</a>
+        </div>
+        <h2>Disabling Specs and Suites</h2>
+
+<p>Suites and specs can be disabled with the <code>xdescribe</code> and <code>xit</code> functions, respectively. These suites and specs are skipped when run and thus their results will not appear in the results.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="n">xdescribe</span><span class="p">(</span><span class="s2">&quot;A spec&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">foo</span><span class="p">;</span>
+
+    <span class="n">beforeEach</span><span class="p">(()</span> <span class="p">{</span>
+      <span class="n">foo</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span>
+      <span class="n">foo</span> <span class="o">+=</span> <span class="m">1</span><span class="p">;</span>
+    <span class="p">});</span>
+
+    <span class="n">xit</span><span class="p">(</span><span class="s2">&quot;is just a function, so it can contain any code&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">foo</span><span class="p">).</span><span class="n">toEqual</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+  </pre></div>
+      </td>
+    </tr>
+    <tr id='section-Asynchronous_Support'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-Asynchronous_Support">&#182;</a>
+        </div>
+        <h2>Asynchronous Support</h2>
+
+<p>Teaolive also has support for running specs that require testing asynchronous operations.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>  <span class="n">describe</span><span class="p">(</span><span class="s2">&quot;Asynchronous specs&quot;</span><span class="p">,</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="n">it</span><span class="p">(</span><span class="s2">&quot;should support async execution of test preparation and exepectations&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-22'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-22">&#182;</a>
+        </div>
+        <p>Specs are written by guardian and asyncResult. you should make a guardian before start async process. you must call <code>arrival</code> when finish async process.
+If you have a <code>Future</code>, call <code>asyncWait</code> with it.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="n">Guardian</span> <span class="n">guardian</span> <span class="o">=</span> <span class="n">createGuardian</span><span class="p">();</span>
+      
+      <span class="kt">bool</span> <span class="n">flag</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+      <span class="n">window</span><span class="p">.</span><span class="n">setTimeout</span><span class="p">(()</span> <span class="p">{</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="n">guardian</span><span class="p">.</span><span class="n">arrival</span><span class="p">();</span>
+      <span class="p">},</span> <span class="m">500</span><span class="p">);</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-23'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-23">&#182;</a>
+        </div>
+        <p>usually. process blocked by guardian or Future. It is an opportunity to restart when completed or arrival.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre>      <span class="n">asyncResult</span><span class="p">((){</span>
+        <span class="n">expect</span><span class="p">(</span><span class="n">flag</span><span class="p">).</span><span class="n">toBeTrue</span><span class="p">();</span>
+      <span class="p">});</span>
+    <span class="p">});</span>
+  <span class="p">});</span>
+<span class="p">}</span></pre></div>
+      </td>
+    </tr>
+    <tr id='section-More_documents'>
+      <td class=docs>
+        <div class="pilwrap">
+          <a class="pilcrow" href="#section-More_documents">&#182;</a>
+        </div>
+        <h2>More documents</h2>
+
+<ul>
+<li><a href="./docs/index.html">docs</a></li>
+</ul>
+
+
+<h2>Downloads</h2>
+
+<ul>
+<li>strong recommended use <a href="http://www.dartlang.org/docs/pub-package-manager/">Pub</a>. <a href="https://github.com/vvakame/teaolive/blob/gh-pages/pubspec">for example</a></li>
+<li>to clone using git, copy and paste as primitive man</li>
+</ul>
+
+
+<h2>Support</h2>
+
+<ul>
+<li><a href="https://github.com/vvakame/teaolive/issues">Report Issues</a> at Github</li>
+<li>Follow <a href="http://twitter.com/vvakame">@vvakame</a> on Twitter</li>
+<li>Mailing list is not avairable. Should I make? :)</li>
+</ul>
+
+
+<h2>Thanks</h2>
+
+<p>Teaolive inspired by <a href="http://pivotal.github.com/jasmine/">Jasmine</a> and Google Dart dev team.</p>
+
+      </td>
+      <td class=code>
+        <div class='highlight'><pre></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+<div id="teaolive-result"></div>
+<script type="application/dart" src="introduction.dart"></script>
+<script src="http://dart.googlecode.com/svn/branches/bleeding_edge/dart/client/dart.js"></script>
+</body>
