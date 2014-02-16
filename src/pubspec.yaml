@@ -3,4 +3,4 @@ author: vvakame
 description: A sample application
 dependencies:
   browser: any
-  teaolive: 0.0.5
+  teaolive: 0.0.6

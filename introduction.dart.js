@@ -4168,29 +4168,6 @@ $isEH:true},
 GS:{
 "":"Tp:15;",
 call$1:function(a){return J.Mp(a)},
-$isEH:true}}],["teaolive","package:teaolive/teaolive_browser.dart",,V,{
-"":"",
-fG:{
-"":"a;KT",
-tx:function(){H.bQ(this.KT,new V.v3())},
-eg:function(a){H.bQ(this.KT,new V.b2(a))},
-Oj:function(a){H.bQ(this.KT,new V.p8(a))},
-V9:function(a){H.bQ(this.KT,new V.LS(a))}},
-v3:{
-"":"Tp:25;",
-call$1:function(a){return a.tx()},
-$isEH:true},
-b2:{
-"":"Tp:25;a",
-call$1:function(a){return a.eg(this.a)},
-$isEH:true},
-p8:{
-"":"Tp:25;a",
-call$1:function(a){return a.Oj(this.a)},
-$isEH:true},
-LS:{
-"":"Tp:25;a",
-call$1:function(a){return a.V9(this.a)},
 $isEH:true}}],["teaolive_html_reporter","package:teaolive/src/reporter/html_reporter.dart",,G,{
 "":"",
 pY:{
@@ -4264,7 +4241,7 @@ J.t3(s,J.AG(b.gtN()))
 t.appendChild(s)}}}J.ow(a).NL.appendChild(z)
 for(y=b.ghR(),y=new H.a7(y,y.length,0,null);y.G();)this.Ax(z,y.mD)}},
 MV:{
-"":"Tp:26;a,b,c",
+"":"Tp:25;a,b,c",
 call$4:function(a,b,c,d){var z,y,x,w,v
 z=a.call$1(this.b.hR)
 if(J.xC(z,0)&&!d)return
@@ -4410,14 +4387,14 @@ z.yG=!1
 z.Wv=!0},
 $isEH:true},
 P8:{
-"":"Tp:27;b",
+"":"Tp:26;b",
 call$1:function(a){var z=this.b
 if(!z.u1&&!z.FT)H.bQ(z.nH(),new B.ff())
 z.Ca()
 P.pH(z.mB,!1).ml(new B.iK(z,a))},
 $isEH:true},
 ff:{
-"":"Tp:27;",
+"":"Tp:26;",
 call$1:function(a){return a.call$0()},
 $isEH:true},
 iK:{
@@ -4428,7 +4405,7 @@ H.bQ(z,new B.JF())
 this.d.call$0()},
 $isEH:true},
 JF:{
-"":"Tp:27;",
+"":"Tp:26;",
 call$1:function(a){return a.call$0()},
 $isEH:true},
 uA:{
@@ -4437,7 +4414,7 @@ call$0:function(){var z=this.e
 if(!z.u1&&!z.FT)H.bQ(z.na(),new B.NJ())},
 $isEH:true},
 NJ:{
-"":"Tp:27;",
+"":"Tp:26;",
 call$1:function(a){return a.call$0()},
 $isEH:true},
 Gm:{
@@ -4467,7 +4444,7 @@ nN:{
 "":"a;vA,Uf,JW",
 Pr:function(a,b){return this.vA.call$2(a,b)},
 QR:[function(a){this.JW.push(a)
-return this},"call$1","gWv",2,0,28],
+return this},"call$1","gWv",2,0,27],
 bL:function(){var z,y,x,w,v,u
 w=this.Uf
 v=w.length
@@ -4567,7 +4544,7 @@ Iq:[function(){U.f1().call$0()
 var z=new G.pY(null,"")
 z.iS=document.querySelector("#teaolive-result")
 B.pi()
-$.af.Pb=new V.fG([z,new D.P1(0)])
+$.af.Pb=new A.fG([z,new D.P1(0)])
 B.pi()
 $.af.HG.bL()},"call$0","eE",0,0,0],
 J6:[function(){var z,y
@@ -4781,7 +4758,7 @@ AC:{
 call$2:function(a,b){return J.xC(a,3)},
 $isEH:true},
 de:{
-"":"Tp:29;",
+"":"Tp:28;",
 call$3:function(a,b,c){return a+"<"+H.d(b)+"> is not 3!!!"},
 $isEH:true},
 A2:{
@@ -4924,7 +4901,30 @@ call$0:function(){var z,y
 z=this.f.f
 y=new B.Hn(z,H.VM([],[{func:"U8",ret:J.kn,args:[P.Rn,J.kn]}]))
 if(J.xC(y.cH(z),!1))H.vh(B.zU("expected is "+y.Lc()+"<true>, but got <"+H.d(y.xw)+">."))},
-$isEH:true}},1],["teaolive_tap_reporter","package:teaolive/src/reporter/tap_reporter.dart",,D,{
+$isEH:true}},1],["teaolive_reporter_combinator","package:teaolive/src/reporter/reporter_combinator.dart",,A,{
+"":"",
+fG:{
+"":"a;KT",
+tx:function(){H.bQ(this.KT,new A.v3())},
+eg:function(a){H.bQ(this.KT,new A.b2(a))},
+Oj:function(a){H.bQ(this.KT,new A.p8(a))},
+V9:function(a){H.bQ(this.KT,new A.LS(a))}},
+v3:{
+"":"Tp:29;",
+call$1:function(a){return a.tx()},
+$isEH:true},
+b2:{
+"":"Tp:29;a",
+call$1:function(a){return a.eg(this.a)},
+$isEH:true},
+p8:{
+"":"Tp:29;a",
+call$1:function(a){return a.Oj(this.a)},
+$isEH:true},
+LS:{
+"":"Tp:29;a",
+call$1:function(a){return a.V9(this.a)},
+$isEH:true}}],["teaolive_tap_reporter","package:teaolive/src/reporter/tap_reporter.dart",,D,{
 "":"",
 P1:{
 "":"a;la",
@@ -5375,7 +5375,7 @@ return z})
 I.$lazy($,"_attributeValidators","or","Qw",function(){return H.B7([],P.L5(null,null,null,null,null))})
 
 init.functionAliases={}
-init.metadata=[{func:"X0",void:true},{func:"G5",void:true,args:[null]},{func:"Vx",void:true,args:[null],opt:[P.mE]},,{func:"Gl",ret:J.kn,args:[null,null]},{func:"bX",ret:J.im,args:[null]},{func:"E0",ret:J.kn,args:[P.a,P.a]},{func:"ZY",ret:J.im,args:[P.a]},{func:"Vv",ret:J.kn,args:[W.cv,J.O,J.O,W.JQ]},{func:"vY",ret:B.xO,args:[null]},{func:"xv",ret:J.im,args:[[J.Q,B.aM]]},{func:"Yg",ret:J.im,args:[[J.Q,B.aM]],opt:[J.kn]},!1,{func:"NT"},{func:"bh",args:[null,null]},{func:"aB",args:[null]},{func:"TS",args:[null,J.O]},{func:"WD",args:[J.O]},{func:"rf",args:[P.a]},{func:"BG",args:[null],opt:[null]},{func:"bb",args:[null,P.mE]},{func:"lv",args:[P.wv,null]},{func:"Pt",ret:J.O,args:[J.im]},{func:"YI",void:true,args:[P.a]},{func:"jV",void:true,args:[W.KV]},{func:"M2",args:[B.Uh]},{func:"AB",args:[P.EH,J.O,J.O],opt:[J.kn]},{func:"S4",args:[{func:"X0",void:true}]},{func:"AA",ret:B.nN,args:[{func:"X0",void:true}]},{func:"Bg",args:[J.O,null,null]},{func:"Ug",args:[B.aM]},];$=null
+init.metadata=[{func:"X0",void:true},{func:"G5",void:true,args:[null]},{func:"Vx",void:true,args:[null],opt:[P.mE]},,{func:"Gl",ret:J.kn,args:[null,null]},{func:"bX",ret:J.im,args:[null]},{func:"E0",ret:J.kn,args:[P.a,P.a]},{func:"ZY",ret:J.im,args:[P.a]},{func:"Vv",ret:J.kn,args:[W.cv,J.O,J.O,W.JQ]},{func:"vY",ret:B.xO,args:[null]},{func:"xv",ret:J.im,args:[[J.Q,B.aM]]},{func:"Yg",ret:J.im,args:[[J.Q,B.aM]],opt:[J.kn]},!1,{func:"NT"},{func:"bh",args:[null,null]},{func:"aB",args:[null]},{func:"TS",args:[null,J.O]},{func:"WD",args:[J.O]},{func:"rf",args:[P.a]},{func:"BG",args:[null],opt:[null]},{func:"bb",args:[null,P.mE]},{func:"lv",args:[P.wv,null]},{func:"Pt",ret:J.O,args:[J.im]},{func:"YI",void:true,args:[P.a]},{func:"jV",void:true,args:[W.KV]},{func:"AB",args:[P.EH,J.O,J.O],opt:[J.kn]},{func:"S4",args:[{func:"X0",void:true}]},{func:"AA",ret:B.nN,args:[{func:"X0",void:true}]},{func:"Bg",args:[J.O,null,null]},{func:"M2",args:[B.Uh]},{func:"Ug",args:[B.aM]},];$=null
 I = I.$finishIsolateConstructor(I)
 $=new I()
 function convertToFastObject(properties) {
