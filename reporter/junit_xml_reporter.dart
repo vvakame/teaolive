@@ -13,7 +13,7 @@ import '../tests/helper/test_util.dart' as testutil;
 class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
 
   File _output;
-  OutputStream _stream;
+  RandomAccessFile _stream;
 
   TeaoliveJUnitXMLReporter.withFile(this._output) {
     _init();
@@ -28,7 +28,7 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
     if(_output.existsSync()){
       _output.deleteSync();
     }
-    _stream = _output.openOutputStream(FileMode.WRITE);
+    _stream = _output.openSync(mode: FileMode.WRITE);
   }
 
   void onRunnerStart(){
@@ -106,7 +106,7 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
     writeLine("</testsuites>");
   }
 
-  void writeTestSuiteStart(TestPiece suite, int tests, [int errors = 0, int failures = 0]){
+  void writeTestSuiteStart(TestPiece suite, int tests, {int errors : 0, int failures : 0}){
     num time = suite.microseconds / 1000 / 1000; // JUnit use "second".
     writeLine('<testsuite name="${escape(suite.description)}" errors="${errors}" failures="${failures}" tests="${tests}" time="${time}">');
   }

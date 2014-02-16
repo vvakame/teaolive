@@ -7,8 +7,6 @@ import '../teaolive.dart';
  */
 class TeaoliveTapReporter implements TeaoliveReporter {
 
-  TeaoliveReporter(){}
-
   void onRunnerStart(){}
 
   void onSuiteResult(TestPiece suite){}

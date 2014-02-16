@@ -1,5 +1,7 @@
 library teaolive_test;
 
+import 'dart:async';
+
 import 'helper/test_util.dart';
 
 import '../teaolive.dart';
@@ -108,7 +110,7 @@ void testCase(){
       // under new environment
       InjectableReporter reporter = new InjectableReporter();
       StringBuffer buffer = new StringBuffer();
-      reporter.addOnSuiteResult((TestPiece suite) => buffer.add("ok"));
+      reporter.addOnSuiteResult((TestPiece suite) => buffer.write("ok"));
       setTeaoliveReporter(reporter);
 
       addTest((){
@@ -135,7 +137,7 @@ void testCase(){
       // under new environment
       InjectableReporter reporter = new InjectableReporter();
       StringBuffer buffer = new StringBuffer();
-      reporter.addOnSpecResult((TestPiece spec) => buffer.add("ok"));
+      reporter.addOnSpecResult((TestPiece spec) => buffer.write("ok"));
       setTeaoliveReporter(reporter);
 
       addTest((){
@@ -162,7 +164,7 @@ void testCase(){
       // under new environment
       InjectableReporter reporter = new InjectableReporter();
       StringBuffer buffer = new StringBuffer();
-      reporter.addOnRunnerResult((TeaoliveRunner runner) => buffer.add("ok"));
+      reporter.addOnRunnerResult((TeaoliveRunner runner) => buffer.write("ok"));
       setTeaoliveReporter(reporter);
 
       addTest((){
@@ -187,10 +189,10 @@ void testCase(){
       // under new environment
       InjectableReporter reporter = new InjectableReporter();
       StringBuffer buffer = new StringBuffer();
-      reporter.addOnRunnerStart(() => buffer.add("RunnerStart "));
-      reporter.addOnSuiteResult((TestPiece suite) => buffer.add("Suite "));
-      reporter.addOnSpecResult((TestPiece spec) => buffer.add("Spec "));
-      reporter.addOnRunnerResult((TeaoliveRunner runner) => buffer.add("RunnerEnd"));
+      reporter.addOnRunnerStart(() => buffer.write("RunnerStart "));
+      reporter.addOnSuiteResult((TestPiece suite) => buffer.write("Suite "));
+      reporter.addOnSpecResult((TestPiece spec) => buffer.write("Spec "));
+      reporter.addOnRunnerResult((TeaoliveRunner runner) => buffer.write("RunnerEnd"));
       setTeaoliveReporter(reporter);
 
       addTest((){
@@ -218,8 +220,8 @@ void testCase(){
       expect("hoge").toBe("hoge"); // same object
       {
         StringBuffer buffer = new StringBuffer();
-        buffer.add("ho");
-        buffer.add("ge");
+        buffer.write("ho");
+        buffer.write("ge");
         expect("hoge").not.toBe(buffer.toString()); // not same object
       }
     });
@@ -294,8 +296,8 @@ void testCase(){
       expect("hoge").toEqual("hoge");
       {
         StringBuffer buffer = new StringBuffer();
-        buffer.add("ho");
-        buffer.add("ge");
+        buffer.write("ho");
+        buffer.write("ge");
         expect("hoge").toEqual(buffer.toString());
       }
     });
@@ -332,14 +334,14 @@ void testCase(){
       };
       expect(raiseException).toThrow();
       expect(raiseException).toThrow((var e) => e is UnsupportedError);
-      expect(raiseException).not.toThrow((var e) => e is IllegalArgumentException);
+      expect(raiseException).not.toThrow((var e) => e is ArgumentError);
       try{
         expect(1).toThrow();
         fail("actual is not function");
       } on AssertionException catch (e){
       }
       try{
-        expect((var v){}).toThrow((var e) => e is IllegalArgumentException);
+        expect((var v){}).toThrow((var e) => e is ArgumentError);
         fail("ClosureArgumentMismatchException");
       } on AssertionException catch (e){
       }
@@ -384,75 +386,75 @@ void testCase(){
       addTest((){
         describe("beforeEach", (){
           beforeEach((){
-            builder.add("b1 ");
+            builder.write("b1 ");
           });
           it("b1 m1 ", (){
-            builder.add("m1 ");
+            builder.write("m1 ");
           });
         });
         describe("afterEach", (){
           afterEach((){
-            builder.add("a2 ");
+            builder.write("a2 ");
           });
           it("m2 a2 ", (){
-            builder.add("m2 ");
+            builder.write("m2 ");
           });
         });
         describe("beforeEach twice", (){
           beforeEach((){
-            builder.add("b3-1 ");
+            builder.write("b3-1 ");
           });
           beforeEach((){
-            builder.add("b3-2 ");
+            builder.write("b3-2 ");
           });
           it("b3-1 b3-2 m3 ", (){
-            builder.add("m3 ");
+            builder.write("m3 ");
           });
         });
         describe("afterEach twice", (){
           afterEach((){
-            builder.add("a4-1 ");
+            builder.write("a4-1 ");
           });
           afterEach((){
-            builder.add("a4-2 ");
+            builder.write("a4-2 ");
           });
           it("m4 a4-2 a4-1 ", (){
-            builder.add("m4 ");
+            builder.write("m4 ");
           });
         });
         describe("multi spec", (){
           beforeEach((){
-            builder.add("b5 ");
+            builder.write("b5 ");
           });
           afterEach((){
-            builder.add("a5 ");
+            builder.write("a5 ");
           });
           it("b5 m5-1 a5 ", (){
-            builder.add("m5-1 ");
+            builder.write("m5-1 ");
           });
           it("b5 m5-2 a5 ", (){
-            builder.add("m5-2 ");
+            builder.write("m5-2 ");
           });
         });
         describe("nested(outer)", (){
           beforeEach((){
-            builder.add("b6-o ");
+            builder.write("b6-o ");
           });
           afterEach((){
-            builder.add("a6-o ");
+            builder.write("a6-o ");
           });
           it("b6-o m6-o a6-o ", (){
-            builder.add("m6-o ");
+            builder.write("m6-o ");
           });
           describe("nested(inner)", (){
             beforeEach((){
-              builder.add("b6-i ");
+              builder.write("b6-i ");
             });
             afterEach((){
-              builder.add("a6-i ");
+              builder.write("a6-i ");
             });
             it("b6-o b6-i m6-i a6-i a6-o ", (){
-              builder.add("m6-i ");
+              builder.write("m6-i ");
             });
           });
         });
@@ -524,11 +526,11 @@ void testCase(){
 
   describe("asynchronous specs", (){
     it("createGuardian", (){
-      Guardian completer = createGuardian();
+      var completer = createGuardian();
       asyncResult((){
         expect(1).toBe(1);
       });
-      completer.arrival();
+      completer.complete();
     });
 
     it("use Future", (){

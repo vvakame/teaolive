@@ -1,6 +1,9 @@
 .idea/
 .project
 .children
+.settings/
+
+packages/
 
 *.dart.js
 *.dart.js_

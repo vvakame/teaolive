@@ -15,13 +15,13 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
   final String _classPrefix;
 
   TeaoliveHtmlReporter(): _classPrefix = "" {
-    _parent = document.query("#teaolive-result");
+    _parent = querySelector("#teaolive-result");
   }
   TeaoliveHtmlReporter.withParent(this._parent): _classPrefix = "";
   TeaoliveHtmlReporter.withParentAndPrefix(this._parent, this._classPrefix);
 
   void onRunnerStart(){
-    _parent.innerHTML = "test is started...";
+    _parent.innerHtml = "test is started...";
   }
 
   void onSuiteResult(TestPiece suite){}
@@ -46,7 +46,7 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
   void addHeader(final Element parent, TestPiece piece){
     final DivElement el = new DivElement();
     el.classes.add("${_classPrefix}header-frame");
-    el.innerHTML = "Teaolive test result. Elapsed time is ${piece.microseconds / 1000 / 1000} seconds.";
+    el.innerHtml = "Teaolive test result. Elapsed time is ${piece.microseconds / 1000 / 1000} seconds.";
     parent.nodes.add(el);
   }
 
@@ -65,7 +65,7 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
         return;
       }
       final SpanElement node = new SpanElement();
-      node.innerHTML = "${count} ${type} ${result}";
+      node.innerHtml = "${count} ${type} ${result}";
       node.classes.add("${_classPrefix}summary");
       node.classes.add("${_classPrefix}${type}");
       node.classes.add("${_classPrefix}${result}");
@@ -94,7 +94,7 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
 
     DivElement description = new DivElement();
     description.classes.add("description");
-    description.innerHTML = piece.description;
+    description.innerHtml = piece.description;
 
     el.nodes.add(description);
 
@@ -112,9 +112,9 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
       el.nodes.add(error);
 
       if(piece.errorMessage != null){
-        error.innerHTML = "${error.innerHTML} ${piece.errorMessage}";
+        error.innerHtml = "${error.innerHtml} ${piece.errorMessage}";
       } else {
-        error.innerHTML = "${error.innerHTML} unknown error ${piece.error}";
+        error.innerHtml = "${error.innerHtml} unknown error ${piece.error}";
       }
       if(piece.error is AssertionException == false){
         final Element pre = new Element.tag("pre");

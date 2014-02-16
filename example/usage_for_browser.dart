@@ -17,6 +17,6 @@ void main(){
   addTest(hoge.testCase);
   addTest(foobar.testCase);
 
-  setTeaoliveReporter(new TeaoliveHtmlReporter.withParent(document.query("#result"))); // if you want to run from command-line. remove this line.
+  setTeaoliveReporter(new TeaoliveHtmlReporter.withParent(document.querySelector("#result"))); // if you want to run from command-line. remove this line.
   teaoliveRun();
 }

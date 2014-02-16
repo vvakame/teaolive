@@ -16,7 +16,7 @@
 
 library teaolive;
 
-import 'dart:coreimpl';
+import 'dart:async';
 
 import 'reporter/tap_reporter.dart';
 
@@ -117,7 +117,7 @@ Expectation expect(var actual){
  */
 void fail([String description]){
   if(description !=null){
-    throw new AssertionException.msg(description);
+    throw new AssertionException.message(description);
   } else {
     throw new AssertionException();
   }
@@ -127,9 +127,9 @@ void fail([String description]){
  * create guardian for async test.
  * this method is used with [Guardian] and [asyncResult].
  */
-Guardian createGuardian(){
+Completer<dynamic> createGuardian(){
   assert(_environment.runner.currentRunning != null);
-  Guardian completer = new Guardian();
+  var completer = new Completer<dynamic>();
   _environment.runner.currentRunning.guardians.add(completer.future);
   return completer;
 }
@@ -180,18 +180,6 @@ abstract class Expectation<T> {
 }
 
 /**
- * guardian for async test.
- * this is wrapper of [Completer].
- */
-class Guardian extends CompleterImpl {
-  void arrival(){
-    if(future.isComplete == false){
-      complete(null);
-    }
-  }
-}
-
-/**
  * start testing.
  * [describe] and [it] functions were already call?
  */
@@ -216,7 +204,7 @@ void setTeaoliveReporter(TeaoliveReporter reporter) {
  */
 abstract class TeaoliveReporter {
 
-  factory TeaoliveReporter() = TeaoliveTapReporter;
+  factory TeaoliveReporter() => new TeaoliveTapReporter();
 
   /** this method called when start test running. */
   void onRunnerStart();
@@ -287,7 +275,7 @@ class TeaoliveRunner extends TestPiece {
 
   TestPiece currentRunning;
 
-  TeaoliveRunner(): super._runner(){
+  TeaoliveRunner(): super(){
     currentRunning = this;
   }
 
@@ -343,7 +331,7 @@ class TestPiece {
   String errorMessage;
   dynamic trace;
 
-  TestPiece._runner(): _runner = true {
+  TestPiece(): _runner = true {
     this.description = "testing root";
     this._test = (){};
     _init();
@@ -387,7 +375,7 @@ class TestPiece {
       return;
     }
 
-    _stopwatch = new Stopwatch.start();
+    _stopwatch = new Stopwatch()..start();
 
     TeaoliveRunner runner = _environment.runner;
     TestPiece restore = runner.currentRunning;
@@ -560,7 +548,7 @@ class Chain {
         task((){
           run();
         });
-      } catch(var e, var trace){
+      } catch(e, trace){
         if(_handler != null){
           _handler(e, trace);
         }
@@ -577,7 +565,7 @@ class Chain {
         Function task = _finalizer[0];
         _finalizer.removeRange(0, 1);
         task();
-      } catch(var e, var trace){
+      } catch(e, trace){
         // is it ok...?
       } finally {
         _finish();
@@ -590,7 +578,7 @@ class AssertionException implements Exception {
   final String msg;
 
   AssertionException(): super(), msg = "";
-  AssertionException.msg(this.msg) : super();
+  AssertionException.message(this.msg) : super();
 }
 
 class Matcher {
@@ -642,7 +630,7 @@ class _ExpectationImpl<T> implements Expectation<T> {
   _ExpectationImpl get not{
 
     _op op = (buffer, result){
-      buffer.add("not ");
+      buffer.write("not ");
       return !result;
     };
     return new _ExpectationImpl._actualWithOp(this, op);
@@ -650,87 +638,87 @@ class _ExpectationImpl<T> implements Expectation<T> {
 
   void toBe(T _expect){
     if(_opBool(identical(_expect, _actual)) == false){
-      throw new AssertionException.msg("expected is ${_opPrefix()}<${_expect}>, but got <${_actual}>.");
+      throw new AssertionException.message("expected is ${_opPrefix()}<${_expect}>, but got <${_actual}>.");
     }
   }
 
   void toBeLessThan(T _expect){
     _checkNull(_expect, _actual);
-    if(_opBool(_expect.dynamic > _actual.dynamic) == false){
-      throw new AssertionException.msg("don't expect the result, ${_opPrefix()}<${_expect}> > <${_actual}>");
+    if(_opBool((_expect as dynamic) > (_actual as dynamic)) == false){
+      throw new AssertionException.message("don't expect the result, ${_opPrefix()}<${_expect}> > <${_actual}>");
     }
   }
 
   void toBeLessThanOrEqual(T _expect){
     _checkNull(_expect, _actual);
-    if(_opBool(_expect.dynamic >= _actual.dynamic) == false){
-      throw new AssertionException.msg("don't expect the result, ${_opPrefix()}<${_expect}> >= <${_actual}>");
+    if(_opBool((expect as dynamic) >= (_actual as dynamic)) == false){
+      throw new AssertionException.message("don't expect the result, ${_opPrefix()}<${_expect}> >= <${_actual}>");
     }
   }
 
   void toBeGreaterThan(T _expect){
     _checkNull(_expect, _actual);
-    if(_opBool(_expect.dynamic < _actual.dynamic) == false){
-      throw new AssertionException.msg("don't expect the result, ${_opPrefix()}<${_expect}> < <${_actual}>");
+    if(_opBool((_expect as dynamic) < (_actual as dynamic)) == false){
+      throw new AssertionException.message("don't expect the result, ${_opPrefix()}<${_expect}> < <${_actual}>");
     }
   }
 
   void toBeGreaterThanOrEqual(T _expect){
     _checkNull(_expect, _actual);
-    if(_opBool(_expect.dynamic <= _actual.dynamic) == false){
-      throw new AssertionException.msg("don't expect the result, ${_opPrefix()}<${_expect}> <= <${_actual}>");
+    if(_opBool((_expect as dynamic) <= (_actual as dynamic)) == false){
+      throw new AssertionException.message("don't expect the result, ${_opPrefix()}<${_expect}> <= <${_actual}>");
     }
   }
 
   void toEqual(T _expect){
-    if(_opBool(_expect.dynamic == _actual.dynamic) == false){
-      throw new AssertionException.msg("expected is ${_opPrefix()}<${_expect}>, but got <${_actual}>.");
+    if(_opBool((_expect as dynamic) == (_actual as dynamic)) == false){
+      throw new AssertionException.message("expected is ${_opPrefix()}<${_expect}>, but got <${_actual}>.");
     }
   }
 
   void toBeTrue(){
     _checkBool(_actual);
-    toBe(true.dynamic);
+    toBe(true);
   }
 
   void toBeFalse(){
     _checkBool(_actual);
-    toBe(false.dynamic);
+    toBe(false);
   }
 
   void toBeNull(){
-    if(_opBool(null == _actual.dynamic) == false){
-      throw new AssertionException.msg("expected is ${_opPrefix()} null, but got <${_actual}>.");
+    if(_opBool(null == _actual) == false){
+      throw new AssertionException.message("expected is ${_opPrefix()} null, but got <${_actual}>.");
     }
   }
 
   void toThrow([bool judge(var e)]){
     _checkFunction(_actual);
     try{
-      Function func = _actual.dynamic;
+      Function func = (_actual as dynamic);
       func();
       fail("function not raise a exception");
-    } on ClosureArgumentMismatchException catch(e){
-      throw new AssertionException.msg("actual function is argument mismatch. please use the 'void actual()'");
-    } catch(var e, var trace){
+    // } on ClosureArgumentMismatchException catch(e){
+    //   throw new AssertionException.message("actual function is argument mismatch. please use the 'void actual()'");
+    } catch(e, trace){
       if(judge != null && _opBool(judge(e)) == false){
-        throw new AssertionException.msg("don't expect the result, ${_opPrefix()}throw <${e}>");
+        throw new AssertionException.message("don't expect the result, ${_opPrefix()}throw <${e}>");
       }
     }
   }
 
   dynamic get to => dynamic;
 
-  dynamic noSuchMethod(String name, List args) {
-    final Matcher matcher = _environment.matchers[name];
+  dynamic noSuchMethod(Invocation invocation) {
+    final Matcher matcher = _environment.matchers[invocation.memberName];
     if(matcher == null){
-      throw new NoSuchMethodException(this, name, args);
+      throw new NoSuchMethodError(this, invocation.memberName, invocation.positionalArguments, invocation.namedArguments);
     }
 
-    var expected = args.length != 0 ? args[0] : null;
+    var expected = invocation.positionalArguments.length != 0 ? invocation.positionalArguments[0] : null;
     bool result = matcher.test(_actual, expected);
     if(_opBool(result) == false){
-      throw new AssertionException.msg(matcher.message(_opPrefix(), _actual, expected));
+      throw new AssertionException.message(matcher.message(_opPrefix(), _actual, expected));
     }
   }
 
@@ -752,21 +740,21 @@ class _ExpectationImpl<T> implements Expectation<T> {
 
   void _checkNull(T _expect, T __actual){
     if(_expect == null){
-      throw new AssertionException.msg("expect value is null");
+      throw new AssertionException.message("expect value is null");
     } else if(__actual == null) {
-      throw new AssertionException.msg("actual value is null");
+      throw new AssertionException.message("actual value is null");
     }
   }
 
   void _checkBool(T actual){
     if(actual is bool == false){
-      throw new AssertionException.msg("actual<${actual}> is not bool");
+      throw new AssertionException.message("actual<${actual}> is not bool");
     }
   }
 
   void _checkFunction(T actual){
     if(actual is Function == false){
-      throw new AssertionException.msg("actual<${actual}> is not Function");
+      throw new AssertionException.message("actual<${actual}> is not Function");
     }
   }
 }

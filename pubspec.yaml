@@ -1,0 +1,6 @@
+name: Teaolive
+author: vvakame
+homepage: http://vvakame.github.io/teaolive/
+description: BDD testing framework for Dart
+dependencies:
+  http: "= 0.9.2+3"

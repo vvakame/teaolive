@@ -7,8 +7,6 @@ import '../teaolive.dart';
  */
 class TeaoliveTextReporter implements TeaoliveReporter {
 
-  TeaoliveReporter(){}
-
   void onRunnerStart(){
     print("test is started...");
     print("");
@@ -64,9 +62,9 @@ class TeaoliveTextReporter implements TeaoliveReporter {
   void put(String msg, int depth){
     StringBuffer buffer = new StringBuffer();
     for(int i = 0; i < depth; i++){
-      buffer.add("  ");
+      buffer.write("  ");
     }
-    buffer.add(msg);
+    buffer.write(msg);
     print(buffer.toString());
   }
 }
