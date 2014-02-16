@@ -32,7 +32,7 @@ void main() {
   //
   // Teaolive can include test case from other file. If you want.
   addTest(testCase);
-  
+
   // ### Setup Reporters.
   //
   // Create the `TeaoliveHtmlReporter` and `TeaoliveTapReporter`, which calls to provide results of each spec and each suite. The Reporter is responsible for presenting results to the user.
@@ -67,7 +67,7 @@ void testCase() {
       expect(true).toBe(true);
     });
   });
-  
+
   // ### It's Just Functions
   //
   // Since `describe` and `it` blocks are functions, they can contain any executable code necessary to implement the test. JavaScript scoping rules apply, so variables declared in a `describe` are available to any `it` block inside the suite.
@@ -78,7 +78,7 @@ void testCase() {
       expect(a).toBe(true);
     });
   });
-  
+
   // ## Expectations
   //
   // Expectations are built with the function `expect` which takes a value, called the actual. It is chained with a Matcher function, which takes the expected value.
@@ -122,7 +122,7 @@ void testCase() {
         String a = "foo";
         StringBuffer b = new StringBuffer();
         b.add("foo");
-        
+
         expect(b.toString()).toEqual(a);
       });
     });
@@ -185,13 +185,13 @@ void testCase() {
 
       expect(foo).not.toThrow();
       expect(bar).toThrow();
-      
+
       Function raiseException = (){
         throw new UnsupportedOperationException("for test");
       };
       expect(raiseException).toThrow((var e) => e is UnsupportedOperationException);
     });
-    
+
     it("The custom matcher provides a test that you define", (){
       Function tester = (var actual, var expected) => actual == 3;
       Function message = (String pre, var actual, var expected){
@@ -203,7 +203,7 @@ void testCase() {
       expect(10).not.to.Three();
     });
   });
-  
+
   // ## Grouping Related Specs with `describe`
   //
   // The `describe` function is for grouping related specs. The string parameter is for naming the collection of specs, and will be contatenated with specs to make a spec's full name. This aids in finding specs in a large suite. If you name them well, your specs read as full sentences in traditional BDD style.
@@ -211,7 +211,7 @@ void testCase() {
     it("is just a function, so it can contain any code", () {
       int foo = 0;
       foo += 1;
- 
+
       expect(foo).toEqual(1);
     });
 
@@ -303,7 +303,7 @@ void testCase() {
       expect(foo).toEqual(1);
     });
   });
-  
+
   // ## Asynchronous Support
   //
   // Teaolive also has support for running specs that require testing asynchronous operations.
@@ -314,7 +314,7 @@ void testCase() {
       // Specs are written by guardian and asyncResult. you should make a guardian before start async process. you must call `arrival` when finish async process.
       // If you have a `Future`, call `asyncWait` with it.
       Guardian guardian = createGuardian();
-      
+
       bool flag = false;
 
       window.setTimeout(() {
