@@ -1,4 +1,6 @@
-part of teaolive;
+library teaolive_reporter_combinator;
+
+import '../teaolive.dart';
 
 /**
  * If you want to use more than one reporter, please use this class.

@@ -1,27 +1,7 @@
-library teaolive_test;
-
-import 'dart:async';
-
-import '../lib/teaolive_browser.dart';
+part of teaolive_test;
 
 // DO NOT USE print FUNCTION!!
 // We can't change the standard output stream in the current version of Dart.
-
-void main(){
-
-  addTest(testCase);
-
-  // setTeaoliveReporter(new combinator.TeaoliveReporterCombinator([new html.TeaoliveHtmlReporter(), new tap.TeaoliveTapReporter()]));
-  setTeaoliveReporter(
-    new TeaoliveReporterCombinator(
-      [
-        new TeaoliveTextReporter(),
-        new TeaoliveTapReporter()
-      ]
-    ));
-
-  teaoliveRun();
-}
 
 void testCase(){
   describe("empty describe", (){});

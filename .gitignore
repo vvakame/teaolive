@@ -11,3 +11,5 @@ packages/
 *.js.map
 *.dart.precompiled.js
 
+teaolive_report.xml
+

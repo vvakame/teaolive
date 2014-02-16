@@ -28,7 +28,6 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
     if(_output.existsSync()){
       _output.deleteSync();
     }
-    _stream = _output.openSync(mode: FileMode.WRITE);
   }
 
   void onRunnerStart(){
@@ -39,6 +38,8 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
   void onSpecResult(TestPiece spec){}
 
   void onRunnerResult(TeaoliveRunner runner){
+    _stream = _output.openSync(mode: FileMode.WRITE);
+
     writeXmlDocType();
     writeTestSuitesStart();
 
@@ -46,7 +47,7 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
 
     writeTestSuitesEnd();
 
-    _stream.close();
+    _stream.closeSync();
   }
 
   void writeTopLevelTestSuites(List<TestPiece> tests){
@@ -154,7 +155,7 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
   }
 
   void write(String str){
-    _stream.writeString(str);
+    _stream.writeStringSync(str);
   }
 
   void writeLine(String str){

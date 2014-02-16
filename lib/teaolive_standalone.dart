@@ -16,7 +16,6 @@
 
 library teaolive;
 
-import './src/teaolive.dart';
 export './src/teaolive.dart';
 
 export './src/helper/test_util.dart';
@@ -26,4 +25,4 @@ export './src/reporter/text_reporter.dart';
 
 export './src/reporter/junit_xml_reporter.dart';
 
-part './src/reporter/reporter_combinator.dart';
+export './src/reporter/reporter_combinator.dart';

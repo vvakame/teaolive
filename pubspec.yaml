@@ -1,6 +1,6 @@
 name: teaolive
 author: vvakame <vvakame+dev@gmail.com>
-version: 0.0.5
+version: 0.0.6
 homepage: http://vvakame.github.io/teaolive/
 description: BDD testing framework for Dart
 dependencies:
