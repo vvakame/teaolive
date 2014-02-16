@@ -1,7 +1,7 @@
-#library('foobar_test');
+library foobar_test;
 
 // #import('package:teaolive/teaolive.dart');
-#import('../../teaolive.dart');
+import '../../teaolive.dart';
 
 void testCase(){
   describe("sample foobar test case.", (){

@@ -1,9 +1,9 @@
-#library('teaolive_html_reporter');
+library teaolive_html_reporter;
 
-#import('dart:html');
+import 'dart:html';
 
-#import('../teaolive.dart');
-#import('../tests/helper/test_util.dart');
+import '../teaolive.dart';
+import '../tests/helper/test_util.dart';
 
 /**
  * For implementation of HTML Reporters of [TeaoliveReporter].

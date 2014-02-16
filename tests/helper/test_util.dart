@@ -1,6 +1,6 @@
-#library('teaolive_test_util');
+library teaolive_test_util;
 
-#import('../../teaolive.dart');
+import '../../teaolive.dart';
 
 class InjectableReporter implements TeaoliveReporter {
 

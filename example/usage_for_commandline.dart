@@ -1,12 +1,12 @@
-#library('teaolive-usage');
+library teaolive_usage;
 
 // #import('package:teaolive/teaolive.dart');
-#import('../teaolive.dart');
+import '../teaolive.dart';
 
-#import('tests/sample_test.dart', prefix: "sample");
-#import('tests/hoge_test.dart', prefix: "hoge");
-#import('tests/foobar_test.dart', prefix: "foobar");
-#import('tests/server_side_async.dart', prefix: "async");
+import 'tests/sample_test.dart' as sample;
+import 'tests/hoge_test.dart' as hoge;
+import 'tests/foobar_test.dart' as foobar;
+import 'tests/server_side_async.dart' as async;
 
 void main(){
 

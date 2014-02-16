@@ -1,14 +1,14 @@
-#library('teaolive_test');
+library teaolive_test;
 
-#import('helper/test_util.dart');
+import 'helper/test_util.dart';
 
-#import('../teaolive.dart');
+import '../teaolive.dart';
 
-#import('../reporter/tap_reporter.dart', prefix: 'tap');
-#import('../reporter/reporter_combinator.dart', prefix: 'combinator');
+import '../reporter/tap_reporter.dart' as tap;
+import '../reporter/reporter_combinator.dart' as combinator;
 
 // #import('../reporter/html_reporter.dart', prefix: 'html');
-#import('../reporter/junit_xml_reporter.dart', prefix: 'junit');
+import '../reporter/junit_xml_reporter.dart' as junit;
 
 // DO NOT USE print FUNCTION!!
 // We can't change the standard output stream in the current version of Dart.
@@ -328,10 +328,10 @@ void testCase(){
 
     it("toThrow matcher is catch exceptions",(){
       Function raiseException = (){
-        throw new UnsupportedOperationException("for test");
+        throw new UnsupportedError("for test");
       };
       expect(raiseException).toThrow();
-      expect(raiseException).toThrow((var e) => e is UnsupportedOperationException);
+      expect(raiseException).toThrow((var e) => e is UnsupportedError);
       expect(raiseException).not.toThrow((var e) => e is IllegalArgumentException);
       try{
         expect(1).toThrow();
@@ -532,7 +532,7 @@ void testCase(){
     });
 
     it("use Future", (){
-      Completer<Dynamic> completer = new Completer();
+      Completer<dynamic> completer = new Completer();
       asyncWait(completer.future);
       asyncResult((){
         expect(1).toBe(1);

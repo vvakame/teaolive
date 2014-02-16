@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-#library('teaolive');
+library teaolive;
 
-#import('dart:coreimpl');
+import 'dart:coreimpl';
 
-#import('reporter/tap_reporter.dart');
+import 'reporter/tap_reporter.dart';
 
 /** Task. Represent an action, such as testing and cleanup. */
 typedef void Task();
@@ -153,7 +153,7 @@ void asyncResult(Task task){
 /**
  * The interface for the [expect]. methods that exist in this interface are available.
  */
-interface Expectation<T> {
+abstract class Expectation<T> {
   Expectation<T> get not;
 
   void toBe(T obj);
@@ -176,7 +176,7 @@ interface Expectation<T> {
 
   void toThrow([bool judge(var e)]);
 
-  Dynamic get to;
+  dynamic get to;
 }
 
 /**
@@ -214,9 +214,9 @@ void setTeaoliveReporter(TeaoliveReporter reporter) {
  * this class takes the test results and convert it to a human-readable format.
  * and more. if reporter output the [TAP](http://en.wikipedia.org/wiki/Test_Anything_Protocol) format. Dart can be a CI friendly.
  */
-interface TeaoliveReporter default TeaoliveTapReporter {
+abstract class TeaoliveReporter {
 
-  TeaoliveReporter();
+  factory TeaoliveReporter() = TeaoliveTapReporter;
 
   /** this method called when start test running. */
   void onRunnerStart();
@@ -339,9 +339,9 @@ class TestPiece {
   List<Future> guardians;
   List<Task> asyncResults;
 
-  Dynamic error;
+  dynamic error;
   String errorMessage;
-  Dynamic trace;
+  dynamic trace;
 
   TestPiece._runner(): _runner = true {
     this.description = "testing root";
@@ -411,7 +411,7 @@ class TestPiece {
 
       _test();
 
-      Futures.wait(guardians).then((var v){
+      Future.wait(guardians).then((var v){
         asyncResults.forEach((Task task) => task());
         next();
       });
@@ -423,7 +423,7 @@ class TestPiece {
     })
     .finish((){
       _run((){
-        microseconds = _stopwatch.elapsedInUs();
+        microseconds = _stopwatch.elapsedMicroseconds;
         _stopwatch.stop();
         _stopwatch = null;
 
@@ -719,9 +719,9 @@ class _ExpectationImpl<T> implements Expectation<T> {
     }
   }
 
-  Dynamic get to => dynamic;
+  dynamic get to => dynamic;
 
-  Dynamic noSuchMethod(String name, List args) {
+  dynamic noSuchMethod(String name, List args) {
     final Matcher matcher = _environment.matchers[name];
     if(matcher == null){
       throw new NoSuchMethodException(this, name, args);
