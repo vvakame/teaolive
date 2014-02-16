@@ -5,22 +5,12 @@
 // It's really cool product when use with CoffeeScript.
 library teaolive_introduction;
 
-// import html library.
+// import async library.
 // this introduction is an assumption run on Browser.
-import 'dart:html';
+import 'dart:async';
 
 // import main library.
-import 'packages/teaolive/teaolive.dart';
-
-// import reporter combinator library.
-// this introduction uses TAP reporter and HTML reporter both.
-import 'packages/teaolive/reporter/reporter_combinator.dart' as combinator;
-// import [TAP](http://en.wikipedia.org/wiki/Test_Anything_Protocol) format reporter.
-// this reporter output to standard output by `print`.
-import 'packages/teaolive/reporter/tap_reporter.dart' as tap;
-// import HTML format reporter. this reporter construct DOM parts.
-// Scroll down the page to see the results of the above specs. All of the specs should pass.
-import 'packages/teaolive/reporter/html_reporter.dart' as html;
+import 'package:teaolive/teaolive_browser.dart';
 
 // ## The Runner and Reporter
 //
@@ -38,10 +28,10 @@ void main() {
   // Create the `TeaoliveHtmlReporter` and `TeaoliveTapReporter`, which calls to provide results of each spec and each suite. The Reporter is responsible for presenting results to the user.
   // this instroduction is setup about [TAP](http://en.wikipedia.org/wiki/Test_Anything_Protocol) format reporter and HTML format reporter.
   setTeaoliveReporter(
-    new combinator.TeaoliveReporterCombinator(
+    new TeaoliveReporterCombinator(
       [
-        new html.TeaoliveHtmlReporter(),
-        new tap.TeaoliveTapReporter()
+        new TeaoliveHtmlReporter(),
+        new TeaoliveTapReporter()
       ]
     ));
 
@@ -121,7 +111,7 @@ void testCase() {
       it("should work for objects", () {
         String a = "foo";
         StringBuffer b = new StringBuffer();
-        b.add("foo");
+        b.write("foo");
 
         expect(b.toString()).toEqual(a);
       });
@@ -313,14 +303,14 @@ void testCase() {
 
       // Specs are written by guardian and asyncResult. you should make a guardian before start async process. you must call `arrival` when finish async process.
       // If you have a `Future`, call `asyncWait` with it.
-      Guardian guardian = createGuardian();
+      var guardian = createGuardian();
 
       bool flag = false;
 
-      window.setTimeout(() {
+      new Future.delayed(new Duration(milliseconds: 500), () {
         flag = true;
-        guardian.arrival();
-      }, 500);
+        guardian.complete();
+      });
 
       // usually. process blocked by guardian or Future. It is an opportunity to restart when completed or arrival.
       asyncResult((){
