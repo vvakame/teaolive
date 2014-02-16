@@ -7,7 +7,7 @@ void testCase(){
   describe("sample hoge test case.", (){
     it("ok",(){
     });
-    
+
     it("ng", (){
       throw "dame dayo!";
     });

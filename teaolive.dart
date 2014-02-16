@@ -154,14 +154,14 @@ void asyncResult(Task task){
  * The interface for the [expect]. methods that exist in this interface are available.
  */
 interface Expectation<T> {
-  Expectation<T> get not();
-  
+  Expectation<T> get not;
+
   void toBe(T obj);
-  
+
   void toEqual(T obj);
-  
+
   void toBeLessThan(T obj);
-  
+
   void toBeLessThanOrEqual(T obj);
 
   void toBeGreaterThan(T obj);
@@ -169,14 +169,14 @@ interface Expectation<T> {
   void toBeGreaterThanOrEqual(T obj);
 
   void toBeTrue();
-  
+
   void toBeFalse();
 
   void toBeNull();
-  
+
   void toThrow([bool judge(var e)]);
-  
-  Dynamic get to();
+
+  Dynamic get to;
 }
 
 /**
@@ -220,10 +220,10 @@ interface TeaoliveReporter default TeaoliveTapReporter {
 
   /** this method called when start test running. */
   void onRunnerStart();
-  
+
   /** this method called when finish test running. */
   void onRunnerResult(TeaoliveRunner runner);
-  
+
   /** this method called when finish one of [describe]. */
   void onSuiteResult(TestPiece piece);
 
@@ -266,31 +266,31 @@ void _checkEnvironment() {
 class TeaoliveEnvironment {
   TeaoliveReporter reporter;
   final TeaoliveRunner runner;
-  
+
   Map<String, Matcher> matchers;
-  
+
   TeaoliveEnvironment():
     runner = new TeaoliveRunner(),
     reporter = new TeaoliveReporter(),
     matchers = new Map();
-  
+
   void run() {
     runner.run();
   }
-  
+
   void addMatcher(Matcher matcher){
     matchers[matcher.name] = matcher;
   }
 }
 
 class TeaoliveRunner extends TestPiece {
-  
+
   TestPiece currentRunning;
 
   TeaoliveRunner(): super._runner(){
     currentRunning = this;
   }
-  
+
   void run([Task nextTask]){
     if(nextTask == null){
       nextTask = (){
@@ -306,7 +306,7 @@ class TeaoliveRunner extends TestPiece {
     piece.parent = _findAncestorSuite(currentRunning);
     piece.parent.tests.add(piece);
   }
-  
+
   TestPiece _findAncestorSuite(TestPiece current){
     if(current == null){
       return null;
@@ -338,11 +338,11 @@ class TestPiece {
 
   List<Future> guardians;
   List<Task> asyncResults;
-  
+
   Dynamic error;
   String errorMessage;
   Dynamic trace;
-  
+
   TestPiece._runner(): _runner = true {
     this.description = "testing root";
     this._test = (){};
@@ -374,11 +374,11 @@ class TestPiece {
     guardians = new List<Future>();
     asyncResults = new List<Task>();
   }
-  
+
   bool isRunner() => _runner;
   bool isSuite() => !_runner && _describe;
   bool isSpec() => !_runner && !_describe;
-  
+
   void run([final Task nextTask]){
     if(ignore){
       start = true;
@@ -386,7 +386,7 @@ class TestPiece {
       nextTask();
       return;
     }
-    
+
     _stopwatch = new Stopwatch.start();
 
     TeaoliveRunner runner = _environment.runner;
@@ -394,7 +394,7 @@ class TestPiece {
     runner.currentRunning = this;
 
     start = true;
-    
+
     new Chain().trapException((var e, var _trace){
       if(e is AssertionException){
         errorMessage = e.msg;
@@ -432,14 +432,14 @@ class TestPiece {
         } else if(isSpec()){
           _environment.reporter.onSpecResult(this);
         }
-        
+
         runner.currentRunning = restore;
-        nextTask(); 
+        nextTask();
       });
     })
     .run();
   }
-  
+
   void _run(final Task nextTask){
     for(TestPiece piece in tests){
       if(piece.start || piece.finish){
@@ -452,7 +452,7 @@ class TestPiece {
     }
     _run_finish(nextTask);
   }
-  
+
   void _run_finish(Task nextTask){
     finish = true;
     if(error == null){
@@ -473,7 +473,7 @@ class TestPiece {
 
     nextTask();
   }
-  
+
   void add(TestPiece piece){
     assert(piece != null);
     if(isRunner() || isSuite()){
@@ -483,7 +483,7 @@ class TestPiece {
       parent.add(piece);
     }
   }
-  
+
   List<Task> _collectBeforeTask([TestPiece piece, List<Task> tasks]){
     if(parent == null){
       return new List<Task>();
@@ -521,7 +521,7 @@ class TestPiece {
 
     return reverse;
   }
-  
+
   void _collectAfterTask_collect(TestPiece piece, [List<Task> tasks]){
     if(piece.parent != null){
       _collectAfterTask_collect(piece.parent, tasks);
@@ -534,24 +534,24 @@ class Chain {
   Function _handler;
   List<Function> _tasks;
   List<Function> _finalizer;
-  
+
   Chain(): _tasks = new List<Function>(), _finalizer = new List<Function>();
-  
+
   Chain chain(void task(Task next)){
     _tasks.add(task);
     return this;
   }
-  
+
   Chain finish(void task()){
     _finalizer.add(task);
     return this;
   }
-  
+
   Chain trapException(void handler(var e, var trace)){
     _handler = handler;
     return this;
   }
-  
+
   void run(){
     if(_tasks.length != 0){
       try {
@@ -570,7 +570,7 @@ class Chain {
       _finish();
     }
   }
-  
+
   void _finish(){
     if(_finalizer.length != 0){
       try {
@@ -588,20 +588,20 @@ class Chain {
 
 class AssertionException implements Exception {
   final String msg;
-  
+
   AssertionException(): super(), msg = "";
   AssertionException.msg(this.msg) : super();
 }
 
 class Matcher {
-  
+
   final String name;
   Function _tester;
   Function _consMessage;
-  
+
   var _expect;
   var _actual;
-  
+
   Matcher(): name = "Be" {
     _tester = (var expected, var actual) => expected == actual;
     _consMessage = (String pre, var actual, var expected) => "expected is ${pre}<${expected}>, but got <${actual}>.";
@@ -617,17 +617,17 @@ class Matcher {
     _actual = actual;
     return _tester(actual, expected);
   }
-  
+
   String message(String pre, var actual, var expected) => _consMessage(pre, actual, expected);
 }
 
 typedef bool _op(StringBuffer buffer, bool result);
 class _ExpectationImpl<T> implements Expectation<T> {
-  
+
   T _actual;
-  
+
   List<_op> _opList;
-  
+
   _ExpectationImpl.actual(T this._actual): _opList = new List<_op>();
 
   _ExpectationImpl._actualWithOp(_ExpectationImpl expectation, _op op): _opList = new List<_op>(){
@@ -638,8 +638,8 @@ class _ExpectationImpl<T> implements Expectation<T> {
 
   Function _createOp(){
   }
-  
-  _ExpectationImpl get not(){
+
+  _ExpectationImpl get not{
 
     _op op = (buffer, result){
       buffer.add("not ");
@@ -647,13 +647,13 @@ class _ExpectationImpl<T> implements Expectation<T> {
     };
     return new _ExpectationImpl._actualWithOp(this, op);
   }
-  
+
   void toBe(T _expect){
-    if(_opBool(_expect === _actual) == false){
+    if(_opBool(identical(_expect, _actual)) == false){
       throw new AssertionException.msg("expected is ${_opPrefix()}<${_expect}>, but got <${_actual}>.");
     }
   }
-  
+
   void toBeLessThan(T _expect){
     _checkNull(_expect, _actual);
     if(_opBool(_expect.dynamic > _actual.dynamic) == false){
@@ -692,7 +692,7 @@ class _ExpectationImpl<T> implements Expectation<T> {
     _checkBool(_actual);
     toBe(true.dynamic);
   }
-  
+
   void toBeFalse(){
     _checkBool(_actual);
     toBe(false.dynamic);
@@ -703,14 +703,14 @@ class _ExpectationImpl<T> implements Expectation<T> {
       throw new AssertionException.msg("expected is ${_opPrefix()} null, but got <${_actual}>.");
     }
   }
-  
+
   void toThrow([bool judge(var e)]){
     _checkFunction(_actual);
     try{
       Function func = _actual.dynamic;
       func();
       fail("function not raise a exception");
-    } catch(ClosureArgumentMismatchException e){
+    } on ClosureArgumentMismatchException catch(e){
       throw new AssertionException.msg("actual function is argument mismatch. please use the 'void actual()'");
     } catch(var e, var trace){
       if(judge != null && _opBool(judge(e)) == false){
@@ -719,21 +719,21 @@ class _ExpectationImpl<T> implements Expectation<T> {
     }
   }
 
-  Dynamic get to() => dynamic;
-  
+  Dynamic get to => dynamic;
+
   Dynamic noSuchMethod(String name, List args) {
     final Matcher matcher = _environment.matchers[name];
     if(matcher == null){
       throw new NoSuchMethodException(this, name, args);
     }
- 
+
     var expected = args.length != 0 ? args[0] : null;
     bool result = matcher.test(_actual, expected);
     if(_opBool(result) == false){
       throw new AssertionException.msg(matcher.message(_opPrefix(), _actual, expected));
     }
   }
-  
+
   String _opPrefix(){
     StringBuffer buffer = new StringBuffer();
     for(_op op in _opList){
@@ -741,7 +741,7 @@ class _ExpectationImpl<T> implements Expectation<T> {
     }
     return buffer.toString();
   }
-  
+
   bool _opBool(bool result){
     StringBuffer buffer = new StringBuffer();
     for(_op op in _opList){
@@ -749,7 +749,7 @@ class _ExpectationImpl<T> implements Expectation<T> {
     }
     return result;
   }
-  
+
   void _checkNull(T _expect, T __actual){
     if(_expect == null){
       throw new AssertionException.msg("expect value is null");
@@ -757,7 +757,7 @@ class _ExpectationImpl<T> implements Expectation<T> {
       throw new AssertionException.msg("actual value is null");
     }
   }
-  
+
   void _checkBool(T actual){
     if(actual is bool == false){
       throw new AssertionException.msg("actual<${actual}> is not bool");

@@ -6,14 +6,14 @@
  * print text report.
  */
 class TeaoliveTextReporter implements TeaoliveReporter {
-  
+
   TeaoliveReporter(){}
-  
+
   void onRunnerStart(){
     print("test is started...");
     print("");
   }
-  
+
   void onSuiteResult(TestPiece suite){}
 
   void onSpecResult(TestPiece spec){}
@@ -23,7 +23,7 @@ class TeaoliveTextReporter implements TeaoliveReporter {
       printPiece(piece, 0);
     }
   }
-  
+
   void printPiece(TestPiece piece, int depth){
     if(piece.isSuite()){
       printSuite(piece, depth);
@@ -31,7 +31,7 @@ class TeaoliveTextReporter implements TeaoliveReporter {
       printSpec(piece, depth);
     }
   }
-  
+
   void printSuite(TestPiece suite, int depth){
     if(suite.ignore){
       put("describe ${suite.description} is skipped", depth);
@@ -39,13 +39,13 @@ class TeaoliveTextReporter implements TeaoliveReporter {
       put("describe ${suite.description} is success!", depth);
     } else {
       put("describe ${suite.description} is failure...", depth);
-      
+
       for(TestPiece piece in suite.tests){
         printPiece(piece, depth + 1);
       }
     }
   }
-  
+
   void printSpec(TestPiece spec, int depth){
     if(spec.ignore){
       put("it ${spec.description} is skipped", depth);
@@ -60,7 +60,7 @@ class TeaoliveTextReporter implements TeaoliveReporter {
       }
     }
   }
-  
+
   void put(String msg, int depth){
     StringBuffer buffer = new StringBuffer();
     for(int i = 0; i < depth; i++){

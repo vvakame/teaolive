@@ -10,27 +10,27 @@
  * this class is working with teaolive.html and teaolive.css.
  */
 class TeaoliveHtmlReporter implements TeaoliveReporter {
-  
+
   Element _parent;
   final String _classPrefix;
-  
+
   TeaoliveHtmlReporter(): _classPrefix = "" {
     _parent = document.query("#teaolive-result");
   }
   TeaoliveHtmlReporter.withParent(this._parent): _classPrefix = "";
   TeaoliveHtmlReporter.withParentAndPrefix(this._parent, this._classPrefix);
-  
+
   void onRunnerStart(){
     _parent.innerHTML = "test is started...";
   }
-  
+
   void onSuiteResult(TestPiece suite){}
 
   void onSpecResult(TestPiece spec){}
 
   void onRunnerResult(TeaoliveRunner runner){
     _parent.nodes.clear();
-    
+
     addHeader(_parent, runner);
     addSummary(_parent, runner);
 
@@ -42,7 +42,7 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
     }
     _parent.nodes.add(el);
   }
-  
+
   void addHeader(final Element parent, TestPiece piece){
     final DivElement el = new DivElement();
     el.classes.add("${_classPrefix}header-frame");
@@ -58,7 +58,7 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
     } else {
       el.classes.add("${_classPrefix}failure");
     }
-    
+
     Function construct = (Function counter, String type, String result, [bool force = false]){
       int count = counter(piece.tests);
       if(count == 0 && force == false){
@@ -71,7 +71,7 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
       node.classes.add("${_classPrefix}${result}");
       el.nodes.add(node);
     };
-    
+
     construct(countSuccessDescribe, "describe", "passed", true);
     construct(countFailureDescribe, "describe", "failed");
     construct(countIgnoreDescribe, "describe", "ignored");
@@ -79,19 +79,19 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
     construct(countSuccessIt, "it", "passed", true);
     construct(countFailureIt, "it", "failed");
     construct(countIgnoreIt, "it", "ignored");
-    
+
     parent.nodes.add(el);
   }
 
   void addPiece(final Element parent, final TestPiece piece){
-    
+
     final Element el = new Element.tag("div");
     if(piece.isSuite()) {
       el.classes.add("${_classPrefix}describe");
     } else {
       el.classes.add("${_classPrefix}it");
     }
-    
+
     DivElement description = new DivElement();
     description.classes.add("description");
     description.innerHTML = piece.description;
@@ -106,7 +106,7 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
 
     } else if(piece.isSpec()) {
       el.classes.add("${_classPrefix}failure");
-      
+
       DivElement error = new DivElement();
       error.classes.add("error");
       el.nodes.add(error);
@@ -122,7 +122,7 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
         error.nodes.add(pre);
       }
     }
-    
+
     parent.nodes.add(el);
 
     for(TestPiece child in piece.tests){

@@ -11,29 +11,29 @@
  * typically, this class generate 'teaolive_report.xml'.
  */
 class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
-  
+
   File _output;
   OutputStream _stream;
-  
+
   TeaoliveJUnitXMLReporter.withFile(this._output) {
     _init();
   }
-  
+
   TeaoliveJUnitXMLReporter(){
     _output = new File('teaolive_report.xml');
     _init();
   }
-  
+
   void _init(){
     if(_output.existsSync()){
       _output.deleteSync();
     }
     _stream = _output.openOutputStream(FileMode.WRITE);
   }
-  
+
   void onRunnerStart(){
   }
-  
+
   void onSuiteResult(TestPiece suite){}
 
   void onSpecResult(TestPiece spec){}
@@ -41,14 +41,14 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
   void onRunnerResult(TeaoliveRunner runner){
     writeXmlDocType();
     writeTestSuitesStart();
-    
+
     writeTopLevelTestSuites(runner.tests);
-    
+
     writeTestSuitesEnd();
-    
+
     _stream.close();
   }
-  
+
   void writeTopLevelTestSuites(List<TestPiece> tests){
 
     for(TestPiece piece in tests){
@@ -61,7 +61,7 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
         writeTestSuiteStart(piece, testCount, failures: failures);
         writeTestSuites(piece);
         writeTestSuiteEnd();
-        
+
       } else {
         int errors = piece.result ? 0 : 1;
         writeTestSuiteStart(piece, 1, errors: errors);
@@ -70,7 +70,7 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
       }
     }
   }
-  
+
   void writeTestSuites(TestPiece suite){
     for(TestPiece piece in suite.tests){
       if(piece.isSuite()){
@@ -88,24 +88,24 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
       }
     }
   }
-  
+
   void writeSpec(TestPiece piece){
     assert(piece.isSpec());
     writeTestCaseSuccess(piece);
   }
-  
+
   void writeXmlDocType(){
     writeLine("<?xml version='1.0' encoding='utf-8'?>");
   }
-  
+
   void writeTestSuitesStart(){
     writeLine("<testsuites>");
   }
-  
+
   void writeTestSuitesEnd(){
     writeLine("</testsuites>");
   }
-  
+
   void writeTestSuiteStart(TestPiece suite, int tests, [int errors = 0, int failures = 0]){
     num time = suite.microseconds / 1000 / 1000; // JUnit use "second".
     writeLine('<testsuite name="${escape(suite.description)}" errors="${errors}" failures="${failures}" tests="${tests}" time="${time}">');
@@ -114,7 +114,7 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
   void writeTestSuiteEnd(){
     writeLine("</testsuite>");
   }
-  
+
   void writeTestCaseSuccess(TestPiece spec){
     num time = spec.microseconds / 1000 / 1000; // JUnit use "second".
     var className = "unknown";
@@ -156,7 +156,7 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
   void write(String str){
     _stream.writeString(str);
   }
-  
+
   void writeLine(String str){
     write(str);
     write("\n");

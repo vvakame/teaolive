@@ -12,7 +12,7 @@
 #import('tests/foobar_test.dart', prefix: "foobar");
 
 void main(){
-  
+
   addTest(sample.testCase);
   addTest(hoge.testCase);
   addTest(foobar.testCase);

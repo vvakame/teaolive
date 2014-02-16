@@ -6,11 +6,11 @@
  * Generate a [TAP](http://en.wikipedia.org/wiki/Test_Anything_Protocol) format report.
  */
 class TeaoliveTapReporter implements TeaoliveReporter {
-    
+
   TeaoliveReporter(){}
 
   void onRunnerStart(){}
-  
+
   void onSuiteResult(TestPiece suite){}
 
   void onSpecResult(TestPiece spec){}
@@ -19,12 +19,12 @@ class TeaoliveTapReporter implements TeaoliveReporter {
     printHeader(runner);
     printBody(runner);
   }
-  
+
   void printHeader(TeaoliveRunner runner){
     int specTotal = countSpec(runner);
     writeLine("1..${specTotal}");
   }
-  
+
   int countSpec(TeaoliveRunner runner){
     int sum = 0;
     for(TestPiece piece in runner.tests){
@@ -32,7 +32,7 @@ class TeaoliveTapReporter implements TeaoliveReporter {
     }
     return sum;
   }
-  
+
   int _countSpec(TestPiece piece){
     if(piece.isSpec()){
       return 1;
@@ -44,7 +44,7 @@ class TeaoliveTapReporter implements TeaoliveReporter {
       return sum;
     }
   }
-  
+
   void printBody(TeaoliveRunner runner){
     for(TestPiece piece in runner.tests){
       if(piece.isRunner() || piece.isSuite()){
@@ -56,12 +56,12 @@ class TeaoliveTapReporter implements TeaoliveReporter {
   }
 
   int _seq = 0;
-  
+
   int getNo(){
     _seq++;
     return _seq;
   }
-  
+
   void processSuite(TestPiece suite){
     if(suite.ignore){
       writeLine("# describe ${suite.description} # SKIP");
@@ -90,7 +90,7 @@ class TeaoliveTapReporter implements TeaoliveReporter {
       }
     }
   }
-  
+
   void writeLine(String str){
     print(str);
   }
