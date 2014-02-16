@@ -30,7 +30,7 @@ It does not rely on browser. Thus it&rsquo;s suited for Server Application or We
 It&rsquo;s really cool product when use with CoffeeScript.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>#<span class="k">library</span><span class="p">(</span><span class="s1">&#39;teaolive_introduction&#39;</span><span class="p">);</span></pre></div>
+        <div class='highlight'><pre><span class="k">library</span> <span class="n">teaolive_introduction</span><span class="p">;</span></pre></div>
       </td>
     </tr>
     <tr id='section-2'>
@@ -38,11 +38,11 @@ It&rsquo;s really cool product when use with CoffeeScript.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-2">&#182;</a>
         </div>
-        <p>import html library.
+        <p>import async library.
 this introduction is an assumption run on Browser.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>#<span class="k">import</span><span class="p">(</span><span class="s1">&#39;dart:html&#39;</span><span class="p">);</span></pre></div>
+        <div class='highlight'><pre><span class="k">import</span> <span class="s1">&#39;dart:async&#39;</span><span class="p">;</span></pre></div>
       </td>
     </tr>
     <tr id='section-3'>
@@ -53,43 +53,7 @@ this introduction is an assumption run on Browser.</p>
         <p>import main library.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>#<span class="k">import</span><span class="p">(</span><span class="s1">&#39;packages/teaolive/teaolive.dart&#39;</span><span class="p">);</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-4'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-4">&#182;</a>
-        </div>
-        <p>import reporter combinator library.
-this introduction uses TAP reporter and HTML reporter both.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre>#<span class="k">import</span><span class="p">(</span><span class="s1">&#39;packages/teaolive/reporter/reporter_combinator.dart&#39;</span><span class="p">,</span> <span class="nl">prefix:</span> <span class="s1">&#39;combinator&#39;</span><span class="p">);</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-5'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-5">&#182;</a>
-        </div>
-        <p>import <a href="http://en.wikipedia.org/wiki/Test_Anything_Protocol">TAP</a> format reporter.
-this reporter output to standard output by <code>print</code>.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre>#<span class="k">import</span><span class="p">(</span><span class="s1">&#39;packages/teaolive/reporter/tap_reporter.dart&#39;</span><span class="p">,</span> <span class="nl">prefix:</span> <span class="s1">&#39;tap&#39;</span><span class="p">);</span></pre></div>
-      </td>
-    </tr>
-    <tr id='section-6'>
-      <td class=docs>
-        <div class="pilwrap">
-          <a class="pilcrow" href="#section-6">&#182;</a>
-        </div>
-        <p>import HTML format reporter. this reporter construct DOM parts.
-Scroll down the page to see the results of the above specs. All of the specs should pass.</p>
-      </td>
-      <td class=code>
-        <div class='highlight'><pre>#<span class="k">import</span><span class="p">(</span><span class="s1">&#39;packages/teaolive/reporter/html_reporter.dart&#39;</span><span class="p">,</span> <span class="nl">prefix:</span> <span class="s1">&#39;html&#39;</span><span class="p">);</span></pre></div>
+        <div class='highlight'><pre><span class="k">import</span> <span class="s1">&#39;package:teaolive/teaolive_browser.dart&#39;</span><span class="p">;</span></pre></div>
       </td>
     </tr>
     <tr id='section-The_Runner_and_Reporter'>
@@ -117,8 +81,7 @@ Scroll down the page to see the results of the above specs. All of the specs sho
 <p>Teaolive can include test case from other file. If you want.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">addTest</span><span class="p">(</span><span class="n">testCase</span><span class="p">);</span>
-  </pre></div>
+        <div class='highlight'><pre>  <span class="n">addTest</span><span class="p">(</span><span class="n">testCase</span><span class="p">);</span></pre></div>
       </td>
     </tr>
     <tr id='section-Setup_Reporters.'>
@@ -133,10 +96,10 @@ this instroduction is setup about <a href="http://en.wikipedia.org/wiki/Test_Any
       </td>
       <td class=code>
         <div class='highlight'><pre>  <span class="n">setTeaoliveReporter</span><span class="p">(</span>
-    <span class="k">new</span> <span class="n">combinator</span><span class="p">.</span><span class="n">TeaoliveReporterCombinator</span><span class="p">(</span>
+    <span class="k">new</span> <span class="n">TeaoliveReporterCombinator</span><span class="p">(</span>
       <span class="p">[</span>
-        <span class="k">new</span> <span class="n">html</span><span class="p">.</span><span class="n">TeaoliveHtmlReporter</span><span class="p">(),</span>
-        <span class="k">new</span> <span class="n">tap</span><span class="p">.</span><span class="n">TeaoliveTapReporter</span><span class="p">()</span>
+        <span class="k">new</span> <span class="n">TeaoliveHtmlReporter</span><span class="p">(),</span>
+        <span class="k">new</span> <span class="n">TeaoliveTapReporter</span><span class="p">()</span>
       <span class="p">]</span>
     <span class="p">));</span></pre></div>
       </td>
@@ -165,7 +128,7 @@ Scroll down to see the results of all of these specs.</p>
         </div>
         <h2>Suites: <code>describe</code> Your Tests</h2>
 
-<p>A test suite begins with a call to the global function <code>describe</code> with two parameters: a string and a function. The string is a name or title for a spec suite &ndash; usually what is under test. The function is a block of code that implements the suite.</p>
+<p>A test suite begins with a call to the global function <code>describe</code> with two parameters: a string and a function. The string is a name or title for a spec suite - usually what is under test. The function is a block of code that implements the suite.</p>
 
 <h2>Specs</h2>
 
@@ -178,8 +141,7 @@ Scroll down to see the results of all of these specs.</p>
     <span class="n">it</span><span class="p">(</span><span class="s2">&quot;contains spec with an expectation&quot;</span><span class="p">,</span> <span class="p">(){</span>
       <span class="n">expect</span><span class="p">(</span><span class="kc">true</span><span class="p">).</span><span class="n">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
     <span class="p">});</span>
-  <span class="p">});</span>
-  </pre></div>
+  <span class="p">});</span></pre></div>
       </td>
     </tr>
     <tr id='section-It&amp;rsquo;s_Just_Functions'>
@@ -198,8 +160,7 @@ Scroll down to see the results of all of these specs.</p>
       <span class="n">a</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
       <span class="n">expect</span><span class="p">(</span><span class="n">a</span><span class="p">).</span><span class="n">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
     <span class="p">});</span>
-  <span class="p">});</span>
-  </pre></div>
+  <span class="p">});</span></pre></div>
       </td>
     </tr>
     <tr id='section-Expectations'>
@@ -230,10 +191,10 @@ Scroll down to see the results of all of these specs.</p>
     <span class="p">});</span></pre></div>
       </td>
     </tr>
-    <tr id='section-15'>
+    <tr id='section-12'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-15">&#182;</a>
+          <a class="pilcrow" href="#section-12">&#182;</a>
         </div>
         <p>Any matcher can evaluate to a negative assertion by chaining the call to <code>expect</code> with a <code>not</code> before calling the matcher.</p>
       </td>
@@ -251,7 +212,7 @@ Scroll down to see the results of all of these specs.</p>
         </div>
         <h3>Included Matchers</h3>
 
-<p> as a rich set of matchers included. Each is used here &ndash; all expectations and specs pass.</p>
+<p> as a rich set of matchers included. Each is used here - all expectations and specs pass.</p>
 
 <p>There is also the ability to write custom matchers for when a project&rsquo;s domain calls for specific assertions that are not included below.</p>
       </td>
@@ -275,9 +236,9 @@ Scroll down to see the results of all of these specs.</p>
 
       <span class="n">it</span><span class="p">(</span><span class="s2">&quot;should work for objects&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
         <span class="kt">String</span> <span class="n">a</span> <span class="o">=</span> <span class="s2">&quot;foo&quot;</span><span class="p">;</span>
-        <span class="kt">String</span><span class="n">Buffer</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">String</span><span class="n">Buffer</span><span class="p">();</span>
-        <span class="n">b</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">);</span>
-        
+        <span class="n">StringBuffer</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuffer</span><span class="p">();</span>
+        <span class="n">b</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">);</span>
+
         <span class="n">expect</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">toString</span><span class="p">()).</span><span class="n">toEqual</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
       <span class="p">});</span>
     <span class="p">});</span>
@@ -340,13 +301,13 @@ Scroll down to see the results of all of these specs.</p>
 
       <span class="n">expect</span><span class="p">(</span><span class="n">foo</span><span class="p">).</span><span class="n">not</span><span class="p">.</span><span class="n">toThrow</span><span class="p">();</span>
       <span class="n">expect</span><span class="p">(</span><span class="n">bar</span><span class="p">).</span><span class="n">toThrow</span><span class="p">();</span>
-      
+
       <span class="n">Function</span> <span class="n">raiseException</span> <span class="o">=</span> <span class="p">(){</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="n">UnsupportedOperationException</span><span class="p">(</span><span class="s2">&quot;for test&quot;</span><span class="p">);</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="n">UnsupportedError</span><span class="p">(</span><span class="s2">&quot;for test&quot;</span><span class="p">);</span>
       <span class="p">};</span>
-      <span class="n">expect</span><span class="p">(</span><span class="n">raiseException</span><span class="p">).</span><span class="n">toThrow</span><span class="p">((</span><span class="kd">var</span> <span class="n">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">e</span> <span class="k">is</span> <span class="n">UnsupportedOperationException</span><span class="p">);</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">raiseException</span><span class="p">).</span><span class="n">toThrow</span><span class="p">((</span><span class="kd">var</span> <span class="n">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">e</span> <span class="k">is</span> <span class="n">UnsupportedError</span><span class="p">);</span>
     <span class="p">});</span>
-    
+
     <span class="n">it</span><span class="p">(</span><span class="s2">&quot;The custom matcher provides a test that you define&quot;</span><span class="p">,</span> <span class="p">(){</span>
       <span class="n">Function</span> <span class="n">tester</span> <span class="o">=</span> <span class="p">(</span><span class="kd">var</span> <span class="n">actual</span><span class="p">,</span> <span class="kd">var</span> <span class="n">expected</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="n">actual</span> <span class="o">==</span> <span class="m">3</span><span class="p">;</span>
       <span class="n">Function</span> <span class="n">message</span> <span class="o">=</span> <span class="p">(</span><span class="kt">String</span> <span class="n">pre</span><span class="p">,</span> <span class="kd">var</span> <span class="n">actual</span><span class="p">,</span> <span class="kd">var</span> <span class="n">expected</span><span class="p">){</span>
@@ -357,8 +318,7 @@ Scroll down to see the results of all of these specs.</p>
       <span class="n">expect</span><span class="p">(</span><span class="m">3</span><span class="p">).</span><span class="n">to</span><span class="p">.</span><span class="n">Three</span><span class="p">();</span>
       <span class="n">expect</span><span class="p">(</span><span class="m">10</span><span class="p">).</span><span class="n">not</span><span class="p">.</span><span class="n">to</span><span class="p">.</span><span class="n">Three</span><span class="p">();</span>
     <span class="p">});</span>
-  <span class="p">});</span>
-  </pre></div>
+  <span class="p">});</span></pre></div>
       </td>
     </tr>
     <tr id='section-Grouping_Related_Specs_with_&lt;code&gt;describe&lt;/code&gt;'>
@@ -371,11 +331,11 @@ Scroll down to see the results of all of these specs.</p>
 <p>The <code>describe</code> function is for grouping related specs. The string parameter is for naming the collection of specs, and will be contatenated with specs to make a spec&rsquo;s full name. This aids in finding specs in a large suite. If you name them well, your specs read as full sentences in traditional BDD style.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">describe</span><span class="p">(</span><span class="s2">&quot;A spec&quot;</span><span class="p">,</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
+        <div class='highlight'><pre>  <span class="n">describe</span><span class="p">(</span><span class="s2">&quot;A spec&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
     <span class="n">it</span><span class="p">(</span><span class="s2">&quot;is just a function, so it can contain any code&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
       <span class="kt">int</span> <span class="n">foo</span> <span class="o">=</span> <span class="m">0</span><span class="p">;</span>
       <span class="n">foo</span> <span class="o">+=</span> <span class="m">1</span><span class="p">;</span>
- 
+
       <span class="n">expect</span><span class="p">(</span><span class="n">foo</span><span class="p">).</span><span class="n">toEqual</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
     <span class="p">});</span>
 
@@ -398,7 +358,7 @@ Scroll down to see the results of all of these specs.</p>
 
 <p>To help a test suite DRY up any duplicated setup and teardown code,  provides the global <code>beforeEach</code> and <code>afterEach</code> functions. As the name implies the <code>beforeEach</code> function is called once before each spec in the <code>describe</code> is run and the <code>afterEach</code> function is called once after each spec.</p>
 
-<p>Here is the same set of specs written a little differently. The variable under test is defined at the top-level scope &mdash; the <code>describe</code> block &mdash;  and initialization code is moved into a <code>beforeEach</code> function. The <code>afterEach</code> function resets the variable before continuing.</p>
+<p>Here is the same set of specs written a little differently. The variable under test is defined at the top-level scope &ndash; the <code>describe</code> block &ndash;  and initialization code is moved into a <code>beforeEach</code> function. The <code>afterEach</code> function resets the variable before continuing.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>  <span class="n">describe</span><span class="p">(</span><span class="s2">&quot;A spec (with setup and tear-down)&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
@@ -490,8 +450,7 @@ Scroll down to see the results of all of these specs.</p>
     <span class="n">xit</span><span class="p">(</span><span class="s2">&quot;is just a function, so it can contain any code&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
       <span class="n">expect</span><span class="p">(</span><span class="n">foo</span><span class="p">).</span><span class="n">toEqual</span><span class="p">(</span><span class="m">1</span><span class="p">);</span>
     <span class="p">});</span>
-  <span class="p">});</span>
-  </pre></div>
+  <span class="p">});</span></pre></div>
       </td>
     </tr>
     <tr id='section-Asynchronous_Support'>
@@ -504,39 +463,39 @@ Scroll down to see the results of all of these specs.</p>
 <p>Teaolive also has support for running specs that require testing asynchronous operations.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="n">describe</span><span class="p">(</span><span class="s2">&quot;Asynchronous specs&quot;</span><span class="p">,</span> <span class="n">function</span><span class="p">()</span> <span class="p">{</span>
+        <div class='highlight'><pre>  <span class="n">describe</span><span class="p">(</span><span class="s2">&quot;Asynchronous specs&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span>
 
     <span class="n">it</span><span class="p">(</span><span class="s2">&quot;should support async execution of test preparation and exepectations&quot;</span><span class="p">,</span> <span class="p">()</span> <span class="p">{</span></pre></div>
       </td>
     </tr>
-    <tr id='section-22'>
+    <tr id='section-19'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-22">&#182;</a>
+          <a class="pilcrow" href="#section-19">&#182;</a>
         </div>
         <p>Specs are written by guardian and asyncResult. you should make a guardian before start async process. you must call <code>arrival</code> when finish async process.
 If you have a <code>Future</code>, call <code>asyncWait</code> with it.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>      <span class="n">Guardian</span> <span class="n">guardian</span> <span class="o">=</span> <span class="n">createGuardian</span><span class="p">();</span>
-      
+        <div class='highlight'><pre>      <span class="kd">var</span> <span class="n">guardian</span> <span class="o">=</span> <span class="n">createGuardian</span><span class="p">();</span>
+
       <span class="kt">bool</span> <span class="n">flag</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
 
-      <span class="n">window</span><span class="p">.</span><span class="n">setTimeout</span><span class="p">(()</span> <span class="p">{</span>
+      <span class="k">new</span> <span class="n">Future</span><span class="p">.</span><span class="n">delayed</span><span class="p">(</span><span class="k">new</span> <span class="n">Duration</span><span class="p">(</span><span class="nl">milliseconds:</span> <span class="m">500</span><span class="p">),</span> <span class="p">()</span> <span class="p">{</span>
         <span class="n">flag</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
-        <span class="n">guardian</span><span class="p">.</span><span class="n">arrival</span><span class="p">();</span>
-      <span class="p">},</span> <span class="m">500</span><span class="p">);</span></pre></div>
+        <span class="n">guardian</span><span class="p">.</span><span class="n">complete</span><span class="p">();</span>
+      <span class="p">});</span></pre></div>
       </td>
     </tr>
-    <tr id='section-23'>
+    <tr id='section-20'>
       <td class=docs>
         <div class="pilwrap">
-          <a class="pilcrow" href="#section-23">&#182;</a>
+          <a class="pilcrow" href="#section-20">&#182;</a>
         </div>
         <p>usually. process blocked by guardian or Future. It is an opportunity to restart when completed or arrival.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>      <span class="n">asyncResult</span><span class="p">((){</span>
+        <div class='highlight'><pre>      <span class="o">as</span><span class="n">yncResult</span><span class="p">((){</span>
         <span class="n">expect</span><span class="p">(</span><span class="n">flag</span><span class="p">).</span><span class="n">toBeTrue</span><span class="p">();</span>
       <span class="p">});</span>
     <span class="p">});</span>
