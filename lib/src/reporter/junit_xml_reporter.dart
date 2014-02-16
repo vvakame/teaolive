@@ -1,9 +1,4 @@
-library teaolive_junit_xml_reporter;
-
-import 'dart:io';
-
-import '../teaolive.dart';
-import '../tests/helper/test_util.dart' as testutil;
+part of teaolive;
 
 /**
  * Generate a JUnit XML format report.
@@ -56,8 +51,8 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
         continue;
       }
       if(piece.isSuite()){
-        int testCount = testutil.countIt(piece.tests) - testutil.countIgnoreIt(piece.tests);
-        int failures = testutil.countFailureIt(piece.tests);
+        int testCount = countIt(piece.tests) - countIgnoreIt(piece.tests);
+        int failures = countFailureIt(piece.tests);
         writeTestSuiteStart(piece, testCount, failures: failures);
         writeTestSuites(piece);
         writeTestSuiteEnd();

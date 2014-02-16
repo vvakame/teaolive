@@ -1,7 +1,7 @@
 library teaolive_usage;
 
 // #import('package:teaolive/teaolive.dart');
-import '../teaolive.dart';
+import '../lib/teaolive.dart';
 
 import 'tests/sample_test.dart' as sample;
 import 'tests/hoge_test.dart' as hoge;

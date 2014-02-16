@@ -3,7 +3,7 @@ library server_side_async_test;
 import 'package:http/http.dart' as http;
 
 // #import('package:teaolive/teaolive.dart');
-import '../../teaolive.dart';
+import '../../lib/teaolive.dart';
 
 void testCase(){
   describe("asynchronous test", (){

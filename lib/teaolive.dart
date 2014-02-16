@@ -16,9 +16,17 @@
 
 library teaolive;
 
+import 'dart:io';
+import 'dart:html' hide File;
 import 'dart:async';
 
-import 'reporter/tap_reporter.dart';
+part './src/helper/test_util.dart';
+
+part './src/reporter/html_reporter.dart';
+part './src/reporter/junit_xml_reporter.dart';
+part './src/reporter/reporter_combinator.dart';
+part './src/reporter/tap_reporter.dart';
+part './src/reporter/text_reporter.dart';
 
 /** Task. Represent an action, such as testing and cleanup. */
 typedef void Task();

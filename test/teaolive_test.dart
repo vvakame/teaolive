@@ -2,15 +2,9 @@ library teaolive_test;
 
 import 'dart:async';
 
-import 'helper/test_util.dart';
+import 'package:teaolive/teaolive.dart' as teaolive;
 
-import '../teaolive.dart';
-
-import '../reporter/tap_reporter.dart' as tap;
-import '../reporter/reporter_combinator.dart' as combinator;
-
-// #import('../reporter/html_reporter.dart', prefix: 'html');
-import '../reporter/junit_xml_reporter.dart' as junit;
+import '../lib/teaolive.dart';
 
 // DO NOT USE print FUNCTION!!
 // We can't change the standard output stream in the current version of Dart.
@@ -21,10 +15,10 @@ void main(){
 
   // setTeaoliveReporter(new combinator.TeaoliveReporterCombinator([new html.TeaoliveHtmlReporter(), new tap.TeaoliveTapReporter()]));
   setTeaoliveReporter(
-    new combinator.TeaoliveReporterCombinator(
+    new teaolive.TeaoliveReporterCombinator(
       [
-        new junit.TeaoliveJUnitXMLReporter(),
-        new tap.TeaoliveTapReporter()
+        new TeaoliveJUnitXMLReporter(),
+        new TeaoliveTapReporter()
       ]
     ));
 

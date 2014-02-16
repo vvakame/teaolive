@@ -4,8 +4,7 @@ import 'dart:html';
 
 // #import('package:teaolive/teaolive.dart');
 // #import('package:teaolive/libs/teaolive_html_reporter.dart');
-import '../teaolive.dart';
-import '../reporter/html_reporter.dart'; // if you want to run from command-line. remove this line.
+import '../lib/teaolive.dart';
 
 import 'tests/sample_test.dart' as sample;
 import 'tests/hoge_test.dart' as hoge;

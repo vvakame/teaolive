@@ -1,6 +1,4 @@
-library teaolive_tap_reporter;
-
-import '../teaolive.dart';
+part of teaolive;
 
 /**
  * Generate a [TAP](http://en.wikipedia.org/wiki/Test_Anything_Protocol) format report.
