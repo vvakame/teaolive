@@ -3,24 +3,24 @@
 // Teaolive is a Behavior Driven Development testing framework for Dart.<br>
 // It does not rely on browser. Thus it's suited for Server Application or Web Application. I like [Jasmine](http://pivotal.github.com/jasmine/) Test Framework.<br>
 // It's really cool product when use with CoffeeScript.
-#library('teaolive_introduction');
+library teaolive_introduction;
 
 // import html library.
 // this introduction is an assumption run on Browser.
-#import('dart:html');
+import 'dart:html';
 
 // import main library.
-#import('packages/teaolive/teaolive.dart');
+import 'packages/teaolive/teaolive.dart';
 
 // import reporter combinator library.
 // this introduction uses TAP reporter and HTML reporter both.
-#import('packages/teaolive/reporter/reporter_combinator.dart', prefix: 'combinator');
+import 'packages/teaolive/reporter/reporter_combinator.dart' as combinator;
 // import [TAP](http://en.wikipedia.org/wiki/Test_Anything_Protocol) format reporter.
 // this reporter output to standard output by `print`.
-#import('packages/teaolive/reporter/tap_reporter.dart', prefix: 'tap');
+import 'packages/teaolive/reporter/tap_reporter.dart' as tap;
 // import HTML format reporter. this reporter construct DOM parts.
 // Scroll down the page to see the results of the above specs. All of the specs should pass.
-#import('packages/teaolive/reporter/html_reporter.dart', prefix: 'html');
+import 'packages/teaolive/reporter/html_reporter.dart' as html;
 
 // ## The Runner and Reporter
 //
@@ -187,9 +187,9 @@ void testCase() {
       expect(bar).toThrow();
 
       Function raiseException = (){
-        throw new UnsupportedOperationException("for test");
+        throw new UnsupportedError("for test");
       };
-      expect(raiseException).toThrow((var e) => e is UnsupportedOperationException);
+      expect(raiseException).toThrow((var e) => e is UnsupportedError);
     });
 
     it("The custom matcher provides a test that you define", (){
@@ -207,7 +207,7 @@ void testCase() {
   // ## Grouping Related Specs with `describe`
   //
   // The `describe` function is for grouping related specs. The string parameter is for naming the collection of specs, and will be contatenated with specs to make a spec's full name. This aids in finding specs in a large suite. If you name them well, your specs read as full sentences in traditional BDD style.
-  describe("A spec", function() {
+  describe("A spec", () {
     it("is just a function, so it can contain any code", () {
       int foo = 0;
       foo += 1;
@@ -307,7 +307,7 @@ void testCase() {
   // ## Asynchronous Support
   //
   // Teaolive also has support for running specs that require testing asynchronous operations.
-  describe("Asynchronous specs", function() {
+  describe("Asynchronous specs", () {
 
     it("should support async execution of test preparation and exepectations", () {
 
