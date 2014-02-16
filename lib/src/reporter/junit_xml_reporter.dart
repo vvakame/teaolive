@@ -1,4 +1,9 @@
-part of teaolive;
+library teaolive_junit_xml_reporter;
+
+import 'dart:io';
+
+import '../teaolive.dart';
+import '../helper/test_util.dart';
 
 /**
  * Generate a JUnit XML format report.

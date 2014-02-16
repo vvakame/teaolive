@@ -1,4 +1,6 @@
 name: teaolive_usage
 description: usage of Teolive
 dependencies:
+  browser: any
   http: any
+  teaolive: 0.0.5

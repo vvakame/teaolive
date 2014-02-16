@@ -1,4 +1,6 @@
-part of teaolive;
+library teaolive_text_reporter;
+
+import '../teaolive.dart';
 
 /**
  * print text report.

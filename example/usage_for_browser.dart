@@ -2,9 +2,7 @@ library teaolive_usage;
 
 import 'dart:html';
 
-// #import('package:teaolive/teaolive.dart');
-// #import('package:teaolive/libs/teaolive_html_reporter.dart');
-import '../lib/teaolive.dart';
+import 'package:teaolive/teaolive_browser.dart';
 
 import 'tests/sample_test.dart' as sample;
 import 'tests/hoge_test.dart' as hoge;

@@ -2,9 +2,7 @@ library teaolive_test;
 
 import 'dart:async';
 
-import 'package:teaolive/teaolive.dart' as teaolive;
-
-import '../lib/teaolive.dart';
+import '../lib/teaolive_browser.dart';
 
 // DO NOT USE print FUNCTION!!
 // We can't change the standard output stream in the current version of Dart.
@@ -15,9 +13,9 @@ void main(){
 
   // setTeaoliveReporter(new combinator.TeaoliveReporterCombinator([new html.TeaoliveHtmlReporter(), new tap.TeaoliveTapReporter()]));
   setTeaoliveReporter(
-    new teaolive.TeaoliveReporterCombinator(
+    new TeaoliveReporterCombinator(
       [
-        new TeaoliveJUnitXMLReporter(),
+        new TeaoliveTextReporter(),
         new TeaoliveTapReporter()
       ]
     ));
