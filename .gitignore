@@ -3,3 +3,6 @@
 .children
 
 .git/
+
+packages
+build/

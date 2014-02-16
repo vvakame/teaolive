@@ -2,4 +2,5 @@ name: teaolive_introduction
 author: vvakame
 description: A sample application
 dependencies:
+  browser: any
   teaolive: 0.0.5
