@@ -19,25 +19,25 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
     _init();
   }
 
-  TeaoliveJUnitXMLReporter(){
+  TeaoliveJUnitXMLReporter() {
     _output = new File('teaolive_report.xml');
     _init();
   }
 
-  void _init(){
-    if(_output.existsSync()){
+  void _init() {
+    if (_output.existsSync()) {
       _output.deleteSync();
     }
   }
 
-  void onRunnerStart(){
+  void onRunnerStart() {
   }
 
-  void onSuiteResult(TestPiece suite){}
+  void onSuiteResult(TestPiece suite) {}
 
-  void onSpecResult(TestPiece spec){}
+  void onSpecResult(TestPiece spec) {}
 
-  void onRunnerResult(TeaoliveRunner runner){
+  void onRunnerResult(TeaoliveRunner runner) {
     _stream = _output.openSync(mode: FileMode.WRITE);
 
     writeXmlDocType();
@@ -50,13 +50,13 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
     _stream.closeSync();
   }
 
-  void writeTopLevelTestSuites(List<TestPiece> tests){
+  void writeTopLevelTestSuites(List<TestPiece> tests) {
 
-    for(TestPiece piece in tests){
-      if(piece.ignore){
+    for (TestPiece piece in tests) {
+      if (piece.ignore) {
         continue;
       }
-      if(piece.isSuite()){
+      if (piece.isSuite()) {
         int testCount = countIt(piece.tests) - countIgnoreIt(piece.tests);
         int failures = countFailureIt(piece.tests);
         writeTestSuiteStart(piece, testCount, failures: failures);
@@ -72,17 +72,17 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
     }
   }
 
-  void writeTestSuites(TestPiece suite){
-    for(TestPiece piece in suite.tests){
-      if(piece.isSuite()){
+  void writeTestSuites(TestPiece suite) {
+    for (TestPiece piece in suite.tests) {
+      if (piece.isSuite()) {
         writeTestSuites(piece);
         continue;
-      } else if(piece.ignore){
+      } else if (piece.ignore) {
         continue;
       }
-      if(piece.result){
+      if (piece.result) {
         writeTestCaseSuccess(piece);
-      } else if(piece.error is AssertionException) {
+      } else if (piece.error is AssertionException) {
         writeTestCaseFailure(piece);
       } else {
         writeTestCaseError(piece);
@@ -90,41 +90,41 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
     }
   }
 
-  void writeSpec(TestPiece piece){
+  void writeSpec(TestPiece piece) {
     assert(piece.isSpec());
     writeTestCaseSuccess(piece);
   }
 
-  void writeXmlDocType(){
+  void writeXmlDocType() {
     writeLine("<?xml version='1.0' encoding='utf-8'?>");
   }
 
-  void writeTestSuitesStart(){
+  void writeTestSuitesStart() {
     writeLine("<testsuites>");
   }
 
-  void writeTestSuitesEnd(){
+  void writeTestSuitesEnd() {
     writeLine("</testsuites>");
   }
 
-  void writeTestSuiteStart(TestPiece suite, int tests, {int errors : 0, int failures : 0}){
+  void writeTestSuiteStart(TestPiece suite, int tests, {int errors : 0, int failures : 0}) {
     num time = suite.microseconds / 1000 / 1000; // JUnit use "second".
     writeLine('<testsuite name="${escape(suite.description)}" errors="${errors}" failures="${failures}" tests="${tests}" time="${time}">');
   }
 
-  void writeTestSuiteEnd(){
+  void writeTestSuiteEnd() {
     writeLine("</testsuite>");
   }
 
-  void writeTestCaseSuccess(TestPiece spec){
+  void writeTestCaseSuccess(TestPiece spec) {
     num time = spec.microseconds / 1000 / 1000; // JUnit use "second".
     var className = "unknown";
     writeLine('<testcase name="${escape(spec.description)}" classname="${escape(className)}" time="${time}" />');
   }
 
-  void writeTestCaseFailure(TestPiece spec){
+  void writeTestCaseFailure(TestPiece spec) {
     var reason = spec.errorMessage;
-    if(reason == null){
+    if (reason == null) {
       reason = "unknown";
     }
     var className = spec.error.toString();
@@ -136,9 +136,9 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
     writeLine('</testcase>');
   }
 
-  void writeTestCaseError(TestPiece spec){
+  void writeTestCaseError(TestPiece spec) {
     var reason = spec.errorMessage;
-    if(reason == null){
+    if (reason == null) {
       reason = "unknown";
     }
     var className = spec.error.toString();
@@ -150,15 +150,15 @@ class TeaoliveJUnitXMLReporter implements TeaoliveReporter {
     writeLine('</testcase>');
   }
 
-  String escape(String str){
+  String escape(String str) {
     return str.replaceAll('"', "\\\"").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
   }
 
-  void write(String str){
+  void write(String str) {
     _stream.writeStringSync(str);
   }
 
-  void writeLine(String str){
+  void writeLine(String str) {
     write(str);
     write("\n");
   }

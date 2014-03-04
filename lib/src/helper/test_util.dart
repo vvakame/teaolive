@@ -54,13 +54,13 @@ class Sniffer implements TeaoliveReporter {
 
   Sniffer();
 
-  void onRunnerStart(){}
+  void onRunnerStart() {}
 
-  void onSuiteResult(TestPiece suite){}
+  void onSuiteResult(TestPiece suite) {}
 
-  void onSpecResult(TestPiece spec){}
+  void onSpecResult(TestPiece spec) {}
 
-  void onRunnerResult(TeaoliveRunner runner){
+  void onRunnerResult(TeaoliveRunner runner) {
     _runner = runner;
   }
 
@@ -83,42 +83,42 @@ class Sniffer implements TeaoliveReporter {
   }
 }
 
-int countSuccessDescribe(List<TestPiece> tests){
+int countSuccessDescribe(List<TestPiece> tests) {
   return _countResult(tests, (TestPiece piece) => piece.isSuite() && piece.result);
 }
 
-int countIgnoreDescribe(List<TestPiece> tests, [bool recursive = false]){
+int countIgnoreDescribe(List<TestPiece> tests, [bool recursive = false]) {
   return _countResult(tests, (TestPiece piece) => piece.isSuite() && piece.ignore);
 }
 
-int countFailureDescribe(List<TestPiece> tests){
+int countFailureDescribe(List<TestPiece> tests) {
   return _countResult(tests, (TestPiece piece) => piece.isSuite() && !piece.ignore && !piece.result);
 }
 
-int countDescribe(List<TestPiece> tests){
+int countDescribe(List<TestPiece> tests) {
   return _countResult(tests, (TestPiece piece) => piece.isSuite());
 }
 
-int countSuccessIt(List<TestPiece> tests, [bool recursive = false]){
+int countSuccessIt(List<TestPiece> tests, [bool recursive = false]) {
   return _countResult(tests, (TestPiece piece) => piece.isSpec() && piece.result);
 }
 
-int countIgnoreIt(List<TestPiece> tests){
+int countIgnoreIt(List<TestPiece> tests) {
   return _countResult(tests, (TestPiece piece) => piece.isSpec() && piece.ignore);
 }
 
-int countFailureIt(List<TestPiece> tests){
+int countFailureIt(List<TestPiece> tests) {
   return _countResult(tests, (TestPiece piece) => piece.isSpec() && !piece.ignore && !piece.result);
 }
 
-int countIt(List<TestPiece> tests){
+int countIt(List<TestPiece> tests) {
   return _countResult(tests, (TestPiece piece) => piece.isSpec());
 }
 
-int _countResult(List<TestPiece> pieces, bool counter(TestPiece)){
+int _countResult(List<TestPiece> pieces, bool counter(TestPiece)) {
   int result = 0;
-  for(TestPiece piece in pieces){
-    if(counter(piece)){
+  for (TestPiece piece in pieces) {
+    if (counter(piece)) {
       result += 1;
     }
     result += _countResult(piece.tests, counter);

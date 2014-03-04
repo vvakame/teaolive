@@ -9,7 +9,7 @@ class TeaoliveReporterCombinator implements TeaoliveReporter {
 
   List<TeaoliveReporter> reporters;
 
-  TeaoliveReporterCombinator(this.reporters){
+  TeaoliveReporterCombinator(this.reporters) {
     assert(reporters != null);
   }
 

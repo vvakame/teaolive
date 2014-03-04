@@ -13,3 +13,5 @@ packages/
 
 teaolive_report.xml
 
+test/junit_output.xml
+test/teaolive_report.xml
