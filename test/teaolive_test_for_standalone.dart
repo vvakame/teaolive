@@ -14,12 +14,8 @@ void main(){
   addTest(testCase);
 
   setTeaoliveReporter(
-    new TeaoliveReporterCombinator(
-      [
-        new TeaoliveJUnitXMLReporter(),
-        new TeaoliveTapReporter()
-      ]
-    ));
+      new TeaoliveReporterCombinator(
+          [new TeaoliveJUnitXMLReporter(), new TeaoliveTapReporter()]));
 
   teaoliveRun();
 }

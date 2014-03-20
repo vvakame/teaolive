@@ -23,25 +23,12 @@ class TeaoliveTapReporter implements TeaoliveReporter {
     writeLine("1..${specTotal}");
   }
 
-  int countSpec(TeaoliveRunner runner) {
-    int sum = 0;
-    for (TestPiece piece in runner.tests) {
-      sum += _countSpec(piece);
-    }
-    return sum;
-  }
+  int countSpec(TeaoliveRunner runner) =>
+      runner.tests.fold(0, (s, TestPiece piece) => s + _countSpec(piece));
 
-  int _countSpec(TestPiece piece) {
-    if (piece.isSpec()) {
-      return 1;
-    } else {
-      int sum = 0;
-      for (TestPiece child in piece.tests) {
-        sum += _countSpec(child);
-      }
-      return sum;
-    }
-  }
+  int _countSpec(TestPiece piece) => piece.isSpec() ?
+      1 :
+      piece.tests.fold(0, (s, TestPiece child) => s + _countSpec(child));
 
   void printBody(TeaoliveRunner runner) {
     for (TestPiece piece in runner.tests) {
@@ -55,10 +42,7 @@ class TeaoliveTapReporter implements TeaoliveReporter {
 
   int _seq = 0;
 
-  int getNo() {
-    _seq++;
-    return _seq;
-  }
+  int getNo() => ++_seq;
 
   void processSuite(TestPiece suite) {
     if (suite.ignore) {
@@ -82,7 +66,8 @@ class TeaoliveTapReporter implements TeaoliveReporter {
       writeLine("ok ${getNo()} it ${spec.description}");
     } else {
       if (spec.errorMessage != null) {
-        writeLine("not ok ${getNo()} it ${spec.description}, ${spec.errorMessage}");
+        writeLine("not ok ${getNo()} it ${spec.description}, "
+                  "${spec.errorMessage}");
       } else {
         writeLine("not ok ${getNo()} it ${spec.description}");
       }

@@ -3,11 +3,11 @@ part of teaolive_test;
 // DO NOT USE print FUNCTION!!
 // We can't change the standard output stream in the current version of Dart.
 
-void testCase(){
-  describe("empty describe", (){});
+void testCase() {
+  describe("empty describe", () {});
 
-  describe("save environment", (){
-    it("save and restore", (){
+  describe("save environment", () {
+    it("save and restore", () {
       TeaoliveEnvironment env = getCurrentTeaoliveEnvironment();
       resetTeoliveEnvironment();
 
@@ -15,21 +15,18 @@ void testCase(){
       Sniffer sniffer = new Sniffer();
       setTeaoliveReporter(sniffer);
 
-      addTest((){
-        describe("success describe", (){
-          it("success it", (){
-          });
+      addTest(() {
+        describe("success describe", () {
+          it("success it", () {});
         });
-        describe("failure describe", (){
-          it("failure it", (){
+        describe("failure describe", () {
+          it("failure it", () {
             expect(1).toBe(2);
           });
         });
-        describe("ignore describe, (this describe be success)", (){
-          xit("ignore it", (){
-          });
-          xdescribe("ignore describe", (){
-          });
+        describe("ignore describe, (this describe be success)", () {
+          xit("ignore it", () {});
+          xdescribe("ignore describe", () {});
         });
       });
 
@@ -49,8 +46,8 @@ void testCase(){
     });
   });
 
-  describe("reporter", (){
-    it("call addOnRunnerStart", (){
+  describe("reporter", () {
+    it("call addOnRunnerStart", () {
       TeaoliveEnvironment env = getCurrentTeaoliveEnvironment();
       resetTeoliveEnvironment();
 
@@ -60,10 +57,9 @@ void testCase(){
       reporter.addOnRunnerStart(() => result = "ok");
       setTeaoliveReporter(reporter);
 
-      addTest((){
-        describe("success describe", (){
-          it("success it", (){
-          });
+      addTest(() {
+        describe("success describe", () {
+          it("success it", () {});
         });
       });
 
@@ -75,7 +71,7 @@ void testCase(){
       expect(result).toEqual("ok");
     });
 
-    it("call onSuiteResult", (){
+    it("call onSuiteResult", () {
       TeaoliveEnvironment env = getCurrentTeaoliveEnvironment();
       resetTeoliveEnvironment();
 
@@ -85,13 +81,11 @@ void testCase(){
       reporter.addOnSuiteResult((TestPiece suite) => buffer.write("ok"));
       setTeaoliveReporter(reporter);
 
-      addTest((){
-        describe("success describe1", (){
-          it("success it", (){
-          });
+      addTest(() {
+        describe("success describe1", () {
+          it("success it", () {});
         });
-        describe("success describe2", (){
-        });
+        describe("success describe2", () {});
       });
 
       teaoliveRun();
@@ -102,7 +96,7 @@ void testCase(){
       expect(buffer.toString()).toEqual("okok");
     });
 
-    it("call onSpecResult", (){
+    it("call onSpecResult", () {
       TeaoliveEnvironment env = getCurrentTeaoliveEnvironment();
       resetTeoliveEnvironment();
 
@@ -112,13 +106,11 @@ void testCase(){
       reporter.addOnSpecResult((TestPiece spec) => buffer.write("ok"));
       setTeaoliveReporter(reporter);
 
-      addTest((){
-        describe("success describe1", (){
-          it("success it", (){
-          });
+      addTest(() {
+        describe("success describe1", () {
+          it("success it", () {});
         });
-        describe("success describe2", (){
-        });
+        describe("success describe2", () {});
       });
 
       teaoliveRun();
@@ -129,7 +121,7 @@ void testCase(){
       expect(buffer.toString()).toEqual("ok");
     });
 
-    it("call onRunnerResult", (){
+    it("call onRunnerResult", () {
       TeaoliveEnvironment env = getCurrentTeaoliveEnvironment();
       resetTeoliveEnvironment();
 
@@ -139,10 +131,9 @@ void testCase(){
       reporter.addOnRunnerResult((TeaoliveRunner runner) => buffer.write("ok"));
       setTeaoliveReporter(reporter);
 
-      addTest((){
-        describe("success describe", (){
-          it("success it", (){
-          });
+      addTest(() {
+        describe("success describe", () {
+          it("success it", () {});
         });
       });
 
@@ -154,7 +145,7 @@ void testCase(){
       expect(buffer.toString()).toEqual("ok");
     });
 
-    it("all", (){
+    it("all", () {
       TeaoliveEnvironment env = getCurrentTeaoliveEnvironment();
       resetTeoliveEnvironment();
 
@@ -164,13 +155,13 @@ void testCase(){
       reporter.addOnRunnerStart(() => buffer.write("RunnerStart "));
       reporter.addOnSuiteResult((TestPiece suite) => buffer.write("Suite "));
       reporter.addOnSpecResult((TestPiece spec) => buffer.write("Spec "));
-      reporter.addOnRunnerResult((TeaoliveRunner runner) => buffer.write("RunnerEnd"));
+      reporter.addOnRunnerResult((TeaoliveRunner runner) =>
+          buffer.write("RunnerEnd"));
       setTeaoliveReporter(reporter);
 
-      addTest((){
-        describe("success describe", (){
-          it("success it", (){
-          });
+      addTest(() {
+        describe("success describe", () {
+          it("success it", () {});
         });
       });
 
@@ -183,8 +174,8 @@ void testCase(){
     });
   });
 
-  describe("matchers", (){
-    it("toBe matcher compare by ===", (){
+  describe("matchers", () {
+    it("toBe matcher compare by ===", () {
       expect(1).toBe(1);
       expect(1).not.toBe(2);
       expect(1).not.toBe(null);
@@ -192,75 +183,74 @@ void testCase(){
       expect("hoge").toBe("hoge"); // same object
       {
         StringBuffer buffer = new StringBuffer();
-        buffer.write("ho");
-        buffer.write("ge");
+        buffer..write("ho")..write("ge");
         expect("hoge").not.toBe(buffer.toString()); // not same object
       }
     });
 
-    it("toBeLessThan matcher compare by >", (){
+    it("toBeLessThan matcher compare by >", () {
       expect(1).toBeLessThan(2);
       expect(1).not.toBeLessThan(1);
       try{
         expect(null).toBeLessThan(1);
         fail("null can't define operator");
-      } on AssertionException catch (e){
+      } on AssertionException catch (e) {
       }
       try{
         expect(1).toBeLessThan(null);
         fail("null can't define operator");
-      } on AssertionException catch (e){
+      } on AssertionException catch (e) {
       }
     });
 
-    it("toBeLessThanOrEqual matcher compare by >=", (){
+    it("toBeLessThanOrEqual matcher compare by >=", () {
       expect(1).toBeLessThanOrEqual(2);
       expect(1).toBeLessThanOrEqual(1);
       expect(1).not.toBeLessThanOrEqual(0);
       try{
         expect(null).toBeLessThanOrEqual(1);
         fail("null can't define operator");
-      } on AssertionException catch (e){
+      } on AssertionException catch (e) {
       }
       try{
         expect(1).toBeLessThanOrEqual(null);
         fail("null can't define operator");
-      } on AssertionException catch (e){
+      } on AssertionException catch (e) {
       }
     });
 
-    it("toBeGreaterThan matcher compare by <", (){
+    it("toBeGreaterThan matcher compare by <", () {
       expect(2).toBeGreaterThan(1);
       expect(2).not.toBeGreaterThan(2);
       try{
         expect(null).toBeGreaterThan(1);
         fail("null can't define operator");
-      } on AssertionException catch (e){
+      } on AssertionException catch (e) {
       }
       try{
         expect(1).toBeGreaterThan(null);
         fail("null can't define operator");
-      } on AssertionException catch (e){
+      } on AssertionException catch (e) {
       }
     });
 
-    it("toBeGreaterThanOrEqual matcher compare by <=", (){
+    it("toBeGreaterThanOrEqual matcher compare by <=", () {
       expect(2).toBeGreaterThanOrEqual(1);
       expect(2).toBeGreaterThanOrEqual(2);
       expect(0).not.toBeGreaterThanOrEqual(1);
       try{
         expect(null).toBeGreaterThanOrEqual(1);
         fail("null can't define operator");
-      } on AssertionException catch (e){
+      } on AssertionException catch (e) {
       }
       try{
         expect(1).toBeGreaterThanOrEqual(null);
         fail("null can't define operator");
-      } on AssertionException catch (e){
+      } on AssertionException catch (e) {
       }
     });
 
-    it("toEqual matcher compare by ==", (){
+    it("toEqual matcher compare by ==", () {
       expect(1).toEqual(1);
       expect(1).not.toEqual(2);
       expect(1).not.toEqual(null);
@@ -274,34 +264,34 @@ void testCase(){
       }
     });
 
-    it("toBeTrue matcher compare to true", (){
+    it("toBeTrue matcher compare to true", () {
       expect(true).toBeTrue();
       expect(false).not.toBeTrue();
       try{
         expect(null).toBeTrue();
         fail("null is not bool");
-      } on AssertionException catch (e){
+      } on AssertionException catch (e) {
       }
     });
 
-    it("toBeFalse matcher compare to false", (){
+    it("toBeFalse matcher compare to false", () {
       expect(false).toBeFalse();
       expect(true).not.toBeFalse();
       try{
         expect(null).toBeFalse();
         fail("null is not bool");
-      } on AssertionException catch (e){
+      } on AssertionException catch (e) {
       }
     });
 
-    it("toBeNull matcher is check null",(){
+    it("toBeNull matcher is check null",() {
       expect(1).not.toBeNull();
       expect(null).toBeNull();
       expect("hoge").not.toBeNull();
     });
 
-    it("toThrow matcher is catch exceptions",(){
-      Function raiseException = (){
+    it("toThrow matcher is catch exceptions",() {
+      Function raiseException = () {
         throw new UnsupportedError("for test");
       };
       expect(raiseException).toThrow();
@@ -310,16 +300,16 @@ void testCase(){
       try{
         expect(1).toThrow();
         fail("actual is not function");
-      } on AssertionException catch (e){
+      } on AssertionException catch (e) {
       }
       try{
-        expect((var v){}).toThrow((var e) => e is ArgumentError);
+        expect((var v) {}).toThrow((var e) => e is ArgumentError);
         fail("ClosureArgumentMismatchException");
-      } on AssertionException catch (e){
+      } on AssertionException catch (e) {
       }
     });
 
-    it("custom matcher",(){
+    it("custom matcher",() {
       // default, same toBe
       addMatcher(new Matcher());
 
@@ -328,7 +318,7 @@ void testCase(){
 
       // testing to be 3
       Function tester = (var actual, var expected) => actual == 3;
-      Function message = (String pre, var actual, var expected){
+      Function message = (String pre, var actual, var expected) {
         return "${pre}<${actual}> is not 3!!!";
       };
       addMatcher(new Matcher.create("Three", tester, message));
@@ -344,8 +334,8 @@ void testCase(){
     });
   });
 
-  describe("operator functions", (){
-    it("beforeEach and afterEach", (){
+  describe("operator functions", () {
+    it("beforeEach and afterEach", () {
       TeaoliveEnvironment env = getCurrentTeaoliveEnvironment();
       resetTeoliveEnvironment();
 
@@ -355,77 +345,77 @@ void testCase(){
 
       StringBuffer builder = new StringBuffer();
 
-      addTest((){
-        describe("beforeEach", (){
-          beforeEach((){
+      addTest(() {
+        describe("beforeEach", () {
+          beforeEach(() {
             builder.write("b1 ");
           });
-          it("b1 m1 ", (){
+          it("b1 m1 ", () {
             builder.write("m1 ");
           });
         });
-        describe("afterEach", (){
-          afterEach((){
+        describe("afterEach", () {
+          afterEach(() {
             builder.write("a2 ");
           });
-          it("m2 a2 ", (){
+          it("m2 a2 ", () {
             builder.write("m2 ");
           });
         });
-        describe("beforeEach twice", (){
-          beforeEach((){
+        describe("beforeEach twice", () {
+          beforeEach(() {
             builder.write("b3-1 ");
           });
-          beforeEach((){
+          beforeEach(() {
             builder.write("b3-2 ");
           });
-          it("b3-1 b3-2 m3 ", (){
+          it("b3-1 b3-2 m3 ", () {
             builder.write("m3 ");
           });
         });
-        describe("afterEach twice", (){
-          afterEach((){
+        describe("afterEach twice", () {
+          afterEach(() {
             builder.write("a4-1 ");
           });
-          afterEach((){
+          afterEach(() {
             builder.write("a4-2 ");
           });
-          it("m4 a4-2 a4-1 ", (){
+          it("m4 a4-2 a4-1 ", () {
             builder.write("m4 ");
           });
         });
-        describe("multi spec", (){
-          beforeEach((){
+        describe("multi spec", () {
+          beforeEach(() {
             builder.write("b5 ");
           });
-          afterEach((){
+          afterEach(() {
             builder.write("a5 ");
           });
-          it("b5 m5-1 a5 ", (){
+          it("b5 m5-1 a5 ", () {
             builder.write("m5-1 ");
           });
-          it("b5 m5-2 a5 ", (){
+          it("b5 m5-2 a5 ", () {
             builder.write("m5-2 ");
           });
         });
-        describe("nested(outer)", (){
-          beforeEach((){
+        describe("nested(outer)", () {
+          beforeEach(() {
             builder.write("b6-o ");
           });
-          afterEach((){
+          afterEach(() {
             builder.write("a6-o ");
           });
-          it("b6-o m6-o a6-o ", (){
+          it("b6-o m6-o a6-o ", () {
             builder.write("m6-o ");
           });
-          describe("nested(inner)", (){
-            beforeEach((){
+          describe("nested(inner)", () {
+            beforeEach(() {
               builder.write("b6-i ");
             });
-            afterEach((){
+            afterEach(() {
               builder.write("a6-i ");
             });
-            it("b6-o b6-i m6-i a6-i a6-o ", (){
+            it("b6-o b6-i m6-i a6-i a6-o ", () {
               builder.write("m6-i ");
             });
           });
@@ -442,8 +432,8 @@ void testCase(){
     });
   });
 
-  describe("capture exception", (){
-    it("save stack trace", (){
+  describe("capture exception", () {
+    it("save stack trace", () {
       TeaoliveEnvironment env = getCurrentTeaoliveEnvironment();
       resetTeoliveEnvironment();
 
@@ -451,15 +441,15 @@ void testCase(){
       Sniffer sniffer = new Sniffer();
       setTeaoliveReporter(sniffer);
 
-      addTest((){
-        describe("...", (){
-          it("unknown exception", (){
+      addTest(() {
+        describe("...", () {
+          it("unknown exception", () {
             throw "unexpected error";
           });
-          it("assertion error", (){
+          it("assertion error", () {
             expect(1).toBe(2);
           });
-          it("success", (){
+          it("success", () {
           });
         });
       });
@@ -496,19 +486,19 @@ void testCase(){
     });
   });
 
-  describe("asynchronous specs", (){
-    it("createGuardian", (){
+  describe("asynchronous specs", () {
+    it("createGuardian", () {
       var completer = createGuardian();
-      asyncResult((){
+      asyncResult(() {
         expect(1).toBe(1);
       });
       completer.complete();
     });
 
-    it("use Future", (){
+    it("use Future", () {
       Completer<dynamic> completer = new Completer();
       asyncWait(completer.future);
-      asyncResult((){
+      asyncResult(() {
         expect(1).toBe(1);
       });
       completer.complete(null);
