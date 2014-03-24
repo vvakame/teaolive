@@ -4,7 +4,7 @@ packages:
   browser:
     description: browser
     source: hosted
-    version: "0.9.1"
+    version: "0.10.0+1"
   http:
     description: http
     source: hosted
@@ -12,8 +12,8 @@ packages:
   path:
     description: path
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0"
   stack_trace:
     description: stack_trace
     source: hosted
-    version: "0.9.1"
+    version: "0.9.3"
