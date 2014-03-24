@@ -114,7 +114,9 @@ int countIt(List<TestPiece> tests) {
 int _countResult(List<TestPiece> pieces, bool counter(TestPiece)) {
   int result = 0;
   for (TestPiece piece in pieces) {
-    if (counter(piece)) result++;
+    if (counter(piece)){
+      result++;
+    }
     result += _countResult(piece.tests, counter);
   }
   return result;

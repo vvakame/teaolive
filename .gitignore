@@ -3,13 +3,16 @@
 .children
 .settings/
 
+# Don’t commit the following directories created by pub.
+build/
 packages/
 
+# Or the files created by dart2js.
 *.dart.js
-*.dart.js_
+*.dart.precompiled.js
+*.js_
 *.js.deps
 *.js.map
-*.dart.precompiled.js
 
 teaolive_report.xml
 
