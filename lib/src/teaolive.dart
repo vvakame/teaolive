@@ -32,7 +32,8 @@ void describe(String description, Task test) {
 }
 
 /**
- * If you do not want to use to [description] temporarily, you can use this function.
+ * If you do not want to use to [description] temporarily, you can use this
+ * function.
  */
 void xdescribe(String description, Task test) {
   _checkEnvironment();
@@ -148,7 +149,8 @@ void asyncResult(Task task) {
 }
 
 /**
- * The interface for the [expect]. methods that exist in this interface are available.
+ * The interface for the [expect]. methods that exist in this interface are
+ * available.
  */
 abstract class Expectation<T> {
   Expectation<T> get not;
@@ -197,7 +199,8 @@ void setTeaoliveReporter(TeaoliveReporter reporter) {
 
 /**
  * this class takes the test results and convert it to a human-readable format.
- * and more. if reporter output the [TAP](http://en.wikipedia.org/wiki/Test_Anything_Protocol) format. Dart can be a CI friendly.
+ * and more. if reporter output the [TAP](http://en.wikipedia.org/wiki/Test_Anything_Protocol)
+ * format. Dart can be a CI friendly.
  */
 abstract class TeaoliveReporter {
 
@@ -567,7 +570,7 @@ class _ExpectationImpl<T> implements Expectation<T> {
 
   T _actual;
 
-  List<_op> _opList = <_op>[];
+  final _opList = <_op>[];
 
   _ExpectationImpl.actual(this._actual);
 
@@ -606,7 +609,7 @@ class _ExpectationImpl<T> implements Expectation<T> {
 
   void toBeLessThanOrEqual(T _expect) {
     _checkNull(_expect, _actual);
-    if (!_opBool((expect as dynamic) >= (_actual as dynamic))) {
+    if (!_opBool((_expect as dynamic) >= (_actual as dynamic))) {
       throw new AssertionException.message(
           "don't expect the result, ${_opPrefix()}<${_expect}> >= <${_actual}>");
     }

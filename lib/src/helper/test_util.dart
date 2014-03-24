@@ -4,47 +4,41 @@ import '../teaolive.dart';
 
 class InjectableReporter implements TeaoliveReporter {
 
-  List<Function> onRunnerStartListener;
-  List<Function> onSuiteResultListener;
-  List<Function> onSpecResultListener;
-  List<Function> onRunnerResultListener;
-
-  InjectableReporter():
-    onRunnerStartListener = new List(),
-    onSuiteResultListener = new List(),
-    onSpecResultListener = new List(),
-    onRunnerResultListener = new List();
+  final _onRunnerStartListener = <Function>[];
+  final _onSuiteResultListener = <Function>[];
+  final _onSpecResultListener = <Function>[];
+  final _onRunnerResultListener = <Function>[];
 
   void addOnRunnerStart(void listener()) {
-    onRunnerStartListener.add(listener);
+    _onRunnerStartListener.add(listener);
   }
 
   void addOnSuiteResult(void listener(TestPiece suite)) {
-    onSuiteResultListener.add(listener);
+    _onSuiteResultListener.add(listener);
   }
 
   void addOnSpecResult(void listener(TestPiece spec)) {
-    onSpecResultListener.add(listener);
+    _onSpecResultListener.add(listener);
   }
 
   void addOnRunnerResult(void listener(TeaoliveRunner runner)) {
-    onRunnerResultListener.add(listener);
+    _onRunnerResultListener.add(listener);
   }
 
   void onRunnerStart() {
-    onRunnerStartListener.forEach((Function func) => func());
+    _onRunnerStartListener.forEach((Function func) => func());
   }
 
   void onSuiteResult(TestPiece suite) {
-    onSuiteResultListener.forEach((Function func) => func(suite));
+    _onSuiteResultListener.forEach((Function func) => func(suite));
   }
 
   void onSpecResult(TestPiece spec) {
-    onSpecResultListener.forEach((Function func) => func(spec));
+    _onSpecResultListener.forEach((Function func) => func(spec));
   }
 
   void onRunnerResult(TeaoliveRunner runner) {
-    onRunnerResultListener.forEach((Function func) => func(runner));
+    _onRunnerResultListener.forEach((Function func) => func(runner));
   }
 }
 
@@ -83,16 +77,15 @@ class Sniffer implements TeaoliveReporter {
   }
 }
 
-int countSuccessDescribe(List<TestPiece> tests) {
-  return _countResult(tests, (TestPiece piece) => piece.isSuite() && piece.result);
-}
+int countSuccessDescribe(List<TestPiece> tests) =>
+    _countResult(tests, (TestPiece piece) => piece.isSuite() && piece.result);
 
-int countIgnoreDescribe(List<TestPiece> tests, [bool recursive = false]) {
-  return _countResult(tests, (TestPiece piece) => piece.isSuite() && piece.ignore);
-}
+int countIgnoreDescribe(List<TestPiece> tests, [bool recursive = false]) =>
+    _countResult(tests, (TestPiece piece) => piece.isSuite() && piece.ignore);
 
 int countFailureDescribe(List<TestPiece> tests) {
-  return _countResult(tests, (TestPiece piece) => piece.isSuite() && !piece.ignore && !piece.result);
+  return _countResult(tests, (TestPiece piece) =>
+      piece.isSuite() && !piece.ignore && !piece.result);
 }
 
 int countDescribe(List<TestPiece> tests) {
@@ -100,15 +93,18 @@ int countDescribe(List<TestPiece> tests) {
 }
 
 int countSuccessIt(List<TestPiece> tests, [bool recursive = false]) {
-  return _countResult(tests, (TestPiece piece) => piece.isSpec() && piece.result);
+  return _countResult(tests, (TestPiece piece) =>
+      piece.isSpec() && piece.result);
 }
 
 int countIgnoreIt(List<TestPiece> tests) {
-  return _countResult(tests, (TestPiece piece) => piece.isSpec() && piece.ignore);
+  return _countResult(tests, (TestPiece piece) =>
+      piece.isSpec() && piece.ignore);
 }
 
 int countFailureIt(List<TestPiece> tests) {
-  return _countResult(tests, (TestPiece piece) => piece.isSpec() && !piece.ignore && !piece.result);
+  return _countResult(tests, (TestPiece piece) =>
+      piece.isSpec() && !piece.ignore && !piece.result);
 }
 
 int countIt(List<TestPiece> tests) {
@@ -118,9 +114,7 @@ int countIt(List<TestPiece> tests) {
 int _countResult(List<TestPiece> pieces, bool counter(TestPiece)) {
   int result = 0;
   for (TestPiece piece in pieces) {
-    if (counter(piece)) {
-      result += 1;
-    }
+    if (counter(piece)) result++;
     result += _countResult(piece.tests, counter);
   }
   return result;

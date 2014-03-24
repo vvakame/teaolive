@@ -60,7 +60,7 @@ class TeaoliveTextReporter implements TeaoliveReporter {
   }
 
   void put(String msg, int depth) {
-    StringBuffer buffer = new StringBuffer();
+    final buffer = new StringBuffer();
     for (int i = 0; i < depth; i++) {
       buffer.write("  ");
     }

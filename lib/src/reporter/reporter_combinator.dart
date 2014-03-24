@@ -7,25 +7,28 @@ import '../teaolive.dart';
  */
 class TeaoliveReporterCombinator implements TeaoliveReporter {
 
-  List<TeaoliveReporter> reporters;
+  List<TeaoliveReporter> _reporters;
 
-  TeaoliveReporterCombinator(this.reporters) {
-    assert(reporters != null);
+  TeaoliveReporterCombinator(this._reporters) {
+    assert(_reporters != null);
   }
 
   void onRunnerStart() {
-    reporters.forEach((TeaoliveReporter reporter) => reporter.onRunnerStart());
+    _reporters.forEach((TeaoliveReporter reporter) => reporter.onRunnerStart());
   }
 
   void onSuiteResult(TestPiece suite) {
-    reporters.forEach((TeaoliveReporter reporter) => reporter.onSuiteResult(suite));
+    _reporters.forEach((TeaoliveReporter reporter) =>
+        reporter.onSuiteResult(suite));
   }
 
   void onSpecResult(TestPiece spec) {
-    reporters.forEach((TeaoliveReporter reporter) => reporter.onSpecResult(spec));
+    _reporters.forEach((TeaoliveReporter reporter) =>
+        reporter.onSpecResult(spec));
   }
 
   void onRunnerResult(TeaoliveRunner runner) {
-    reporters.forEach((TeaoliveReporter reporter) => reporter.onRunnerResult(runner));
+    _reporters.forEach((TeaoliveReporter reporter) =>
+        reporter.onRunnerResult(runner));
   }
 }
