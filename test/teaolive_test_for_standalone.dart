@@ -9,7 +9,7 @@ import '../lib/teaolive_standalone.dart';
 
 part './teaolive_test.dart';
 
-void main(){
+void main() {
 
   addTest(testCase);
 

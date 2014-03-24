@@ -155,8 +155,7 @@ void testCase() {
       reporter.addOnRunnerStart(() => buffer.write("RunnerStart "));
       reporter.addOnSuiteResult((TestPiece suite) => buffer.write("Suite "));
       reporter.addOnSpecResult((TestPiece spec) => buffer.write("Spec "));
-      reporter.addOnRunnerResult((TeaoliveRunner runner) =>
-          buffer.write("RunnerEnd"));
+      reporter.addOnRunnerResult((TeaoliveRunner runner) => buffer.write("RunnerEnd"));
       setTeaoliveReporter(reporter);
 
       addTest(() {
@@ -183,7 +182,9 @@ void testCase() {
       expect("hoge").toBe("hoge"); // same object
       {
         StringBuffer buffer = new StringBuffer();
-        buffer..write("ho")..write("ge");
+        buffer
+            ..write("ho")
+            ..write("ge");
         expect("hoge").not.toBe(buffer.toString()); // not same object
       }
     });
@@ -191,12 +192,12 @@ void testCase() {
     it("toBeLessThan matcher compare by >", () {
       expect(1).toBeLessThan(2);
       expect(1).not.toBeLessThan(1);
-      try{
+      try {
         expect(null).toBeLessThan(1);
         fail("null can't define operator");
       } on AssertionException catch (e) {
       }
-      try{
+      try {
         expect(1).toBeLessThan(null);
         fail("null can't define operator");
       } on AssertionException catch (e) {
@@ -207,12 +208,12 @@ void testCase() {
       expect(1).toBeLessThanOrEqual(2);
       expect(1).toBeLessThanOrEqual(1);
       expect(1).not.toBeLessThanOrEqual(0);
-      try{
+      try {
         expect(null).toBeLessThanOrEqual(1);
         fail("null can't define operator");
       } on AssertionException catch (e) {
       }
-      try{
+      try {
         expect(1).toBeLessThanOrEqual(null);
         fail("null can't define operator");
       } on AssertionException catch (e) {
@@ -222,12 +223,12 @@ void testCase() {
     it("toBeGreaterThan matcher compare by <", () {
       expect(2).toBeGreaterThan(1);
       expect(2).not.toBeGreaterThan(2);
-      try{
+      try {
         expect(null).toBeGreaterThan(1);
         fail("null can't define operator");
       } on AssertionException catch (e) {
       }
-      try{
+      try {
         expect(1).toBeGreaterThan(null);
         fail("null can't define operator");
       } on AssertionException catch (e) {
@@ -238,12 +239,12 @@ void testCase() {
       expect(2).toBeGreaterThanOrEqual(1);
       expect(2).toBeGreaterThanOrEqual(2);
       expect(0).not.toBeGreaterThanOrEqual(1);
-      try{
+      try {
         expect(null).toBeGreaterThanOrEqual(1);
         fail("null can't define operator");
       } on AssertionException catch (e) {
       }
-      try{
+      try {
         expect(1).toBeGreaterThanOrEqual(null);
         fail("null can't define operator");
       } on AssertionException catch (e) {
@@ -267,7 +268,7 @@ void testCase() {
     it("toBeTrue matcher compare to true", () {
       expect(true).toBeTrue();
       expect(false).not.toBeTrue();
-      try{
+      try {
         expect(null).toBeTrue();
         fail("null is not bool");
       } on AssertionException catch (e) {
@@ -277,39 +278,39 @@ void testCase() {
     it("toBeFalse matcher compare to false", () {
       expect(false).toBeFalse();
       expect(true).not.toBeFalse();
-      try{
+      try {
         expect(null).toBeFalse();
         fail("null is not bool");
       } on AssertionException catch (e) {
       }
     });
 
-    it("toBeNull matcher is check null",() {
+    it("toBeNull matcher is check null", () {
       expect(1).not.toBeNull();
       expect(null).toBeNull();
       expect("hoge").not.toBeNull();
     });
 
-    it("toThrow matcher is catch exceptions",() {
+    it("toThrow matcher is catch exceptions", () {
       Function raiseException = () {
         throw new UnsupportedError("for test");
       };
       expect(raiseException).toThrow();
       expect(raiseException).toThrow((var e) => e is UnsupportedError);
       expect(raiseException).not.toThrow((var e) => e is ArgumentError);
-      try{
+      try {
         expect(1).toThrow();
         fail("actual is not function");
       } on AssertionException catch (e) {
       }
-      try{
+      try {
         expect((var v) {}).toThrow((var e) => e is ArgumentError);
         fail("ClosureArgumentMismatchException");
       } on AssertionException catch (e) {
       }
     });
 
-    it("custom matcher",() {
+    it("custom matcher", () {
       // default, same toBe
       addMatcher(new Matcher());
 

@@ -55,11 +55,11 @@ class TeaoliveHtmlReporter implements TeaoliveReporter {
   void addSummary(final Element parent, TestPiece piece) {
     final el = new Element.div();
 
-    el.classes..add("${_classPrefix}summary-frame")
-              ..add("${_classPrefix}" + (piece.result ? "success" : "failure"));
+    el.classes
+        ..add("${_classPrefix}summary-frame")
+        ..add("${_classPrefix}" + (piece.result ? "success" : "failure"));
 
-    Function construct = (Function counter, String type, String result,
-                          [bool force = false]) {
+    Function construct = (Function counter, String type, String result, [bool force = false]) {
       int count = counter(piece.tests);
       if (count == 0 && force == false) return;
 

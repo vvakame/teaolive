@@ -2,12 +2,12 @@ library foobar_test;
 
 import 'package:teaolive/src/teaolive.dart';
 
-void testCase(){
-  describe("sample foobar test case.", (){
-    it("ok",(){
+void testCase() {
+  describe("sample foobar test case.", () {
+    it("ok", () {
     });
 
-    it("ng", (){
+    it("ng", () {
       throw "dame dayo!";
     });
   });

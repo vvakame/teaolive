@@ -4,13 +4,13 @@ import 'package:http/http.dart' as http;
 
 import 'package:teaolive/src/teaolive.dart';
 
-void testCase(){
-  describe("asynchronous test", (){
-    afterEach((){
+void testCase() {
+  describe("asynchronous test", () {
+    afterEach(() {
       print("afterEach");
     });
 
-    it("use guardian", (){
+    it("use guardian", () {
       var guardian = createGuardian();
       String payload;
 
@@ -25,7 +25,7 @@ void testCase(){
           guardian.completeError(e);
         });
 
-      asyncResult((){
+      asyncResult(() {
         expect(payload.length).not.toBe(0);
       });
     });

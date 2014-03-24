@@ -9,7 +9,7 @@ import '../lib/teaolive_browser.dart';
 
 part './teaolive_test.dart';
 
-void main(){
+void main() {
 
   addTest(testCase);
 
