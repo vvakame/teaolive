@@ -3,7 +3,7 @@
 ## A Dart Testing Framework
 
 Teaolive is a Behavior Driven Development testing framework for Dart. It does not rely on browser. Thus it's suited for Server Application or Web Application.
-I like Jasmine Test Framework. (http://pivotal.github.com/jasmine/)
+I like Jasmine Test Framework. (https://jasmine.github.io/)
 It's really cool when use with CoffeeScript.
 
 ## How to run
